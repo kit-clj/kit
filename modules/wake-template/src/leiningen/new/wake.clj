@@ -1,12 +1,16 @@
 (ns leiningen.new.wake
   (:require
     [leiningen.core.main :as main]
+    [leiningen.new.templates
+     :refer [renderer
+             name-to-path
+             ->files
+             sanitize
+             sanitize-ns
+             project-name]]
     [leiningen.new.options.base :as base]
     [leiningen.new.options.helpers :as helpers]
-    [clojure.set :as set])
-  (:use
-    [leiningen.new.templates :only [name-to-path sanitize-ns ->files]]))
-
+    [clojure.set :as set]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Files & Data for Template
@@ -18,10 +22,10 @@
     ;; If needed, can have conditional files here
     ))
 
-
 (defn template-data [name options]
   (let [full? (helpers/option? "+full" options)]
-    {:name      name
+    {:full-name name
+     :name      (project-name name)
      :ns-name   (sanitize-ns name)
      :sanitized (name-to-path name)
 
@@ -83,5 +87,4 @@
   (check-options options)
   (let [data (template-data name options)]
     (main/info "Generating wake project.")
-    (apply ->files data
-           (app-files data))))
+    (apply ->files data (app-files data))))
