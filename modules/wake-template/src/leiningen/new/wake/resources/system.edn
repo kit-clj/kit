@@ -1,0 +1,46 @@
+{
+ :system/env
+ #profile {:dev  :dev
+           :test :test
+           :prod :prod}
+ {{#metrics?}}
+ :metrics/prometheus
+ {}{{/metrics?}}
+ {{#repl?}}
+ :repl/server
+ {:port #long #or [#env REPL_PORT 7000]
+  :host #or [#env REPL_HOST "0.0.0.0"]}{{/repl?}}
+ {{#redis?}}
+ :cache/redis
+ {:ttl  3600
+  :conn {:pool {}
+         :spec {:uri #env REDIS_URI}}}{{/redis?}}
+
+ :server/undertow
+ {:port    #long #or [#env PORT 3000]
+  :handler #ig/ref :handler/ring}
+
+ :handler/ring
+ {:router   #ig/ref :router/api
+  :metrics  #ig/ref :metrics/prometheus
+  :api-path "/api"
+  }
+
+ :router/api
+ {:base-path "/api"
+  :env       #ig/ref :system/env
+
+  :metrics   #ig/ref :metrics/prometheus
+  }
+ {{#quartz?}}
+ :cronut/scheduler
+ {:schedule []}{{/quartz?}}
+ {{#selmer?}}
+ :templating/selmer
+ {} {{/selmer?}}
+
+  ;; sql
+  ;; crux
+  ;; oauth
+
+ }
