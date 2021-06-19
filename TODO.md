@@ -2,8 +2,8 @@
 ## TODO Areas
 
 - Documentation
-- Build script for generating modules
-- Template
+- Build script for generating modules -- @Dmitri
+- Template working -- @Nik
 - Finish modules / cleanup
 - Migrate to deps.edn?
 - Front end
