@@ -2,7 +2,7 @@
 ## TODO Areas
 
 - Documentation
-- Build script for generating modules -- @Dmitri
+- Build script for generating modules -- @Dmitri -- part of the REPL! Just have it as a library
 - Template working -- @Nik
 - Finish modules / cleanup
 - Migrate to deps.edn?
