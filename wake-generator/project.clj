@@ -7,6 +7,6 @@
                  [hato "0.8.1"]
                  [selmer "1.12.40"]
                  [clj-jgit "1.0.1"]
-                 [clj-fmt "0.7.0"]
+                 [cljfmt "0.7.0"]
                  [org.clojure/tools.logging "1.1.0"]]
   :repl-options {:init-ns wake.generator.core})
