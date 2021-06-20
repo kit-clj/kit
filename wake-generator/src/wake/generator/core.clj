@@ -24,7 +24,10 @@
                      asset-path)
         path       (str base-path asset-path)]
     (try
-      (:body (hc/get path))
+      (let [{:keys [content-type body]} (hc/get path {:as :byte-array})]
+        (if (= content-type :text/plain)
+          (String. ^bytes body)
+          body))
       (catch Exception e
         (println "failed to read asset:" path "\ncause:" (.getMessage e))))))
 
@@ -34,17 +37,21 @@
 (defn write-binary [bytes target-path]
   (io/copy bytes (io/file target-path)))
 
-(defn write-asset [ctx asset target-path]
-  ((if (string? asset) write-string write-binary)
-   asset (selmer/render target-path ctx)))
+(defn write-asset [asset path]
+  (io/make-parents path)
+  ((if (string? asset) write-string write-binary) asset path))
 
 (defmulti handle-action (fn [_ [id]] id))
 
+(comment
+  (ns-unmap 'wake.generator.core 'handle-action))
+
 (defmethod handle-action :assets [{:keys [template-path] :as ctx} [_ assets]]
   (doseq [[asset-path target-path] assets]
-    (let [asset (->> (read-asset template-path asset-path)
-                     (render-asset ctx))]
-      (write-asset ctx asset target-path))))
+    (write-asset
+      (->> (read-asset template-path asset-path)
+           (render-asset ctx))
+      (render-template ctx target-path))))
 
 (defmethod handle-action :injections [_ [_ injections]]
   (println "todo injections"))
@@ -66,10 +73,11 @@
 
     #_"project.clj"
 
-    "resources/img/luminus.png1")
+    "resources/img/luminus.png")
 
 
-  (let [ctx    {:template-path "https://github.com/luminus-framework/luminus-template/blob/master/resources/leiningen/new/luminus/core"
+  (let [ctx    {:template-path "https://raw.githubusercontent.com/luminus-framework/luminus-template/master/resources/leiningen/new/luminus/core"
+                :project-ns    "myapp"
                 :sanitized     "myapp"
                 :name          "myapp"}
         config {:actions [[:assets [["project.clj" "project.clj"]
