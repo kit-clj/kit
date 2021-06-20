@@ -6,5 +6,6 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [hato "0.8.1"]
                  [selmer "1.12.40"]
-                 [clj-jgit "1.0.1"]]
+                 [clj-jgit "1.0.1"]
+                 [org.clojure/tools.logging "1.1.0"]]
   :repl-options {:init-ns wake.generator.core})
