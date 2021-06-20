@@ -13,11 +13,15 @@
 (comment
   (ns-unmap 'wake.generator.modules.injections 'inject))
 
-(defmethod inject :edn [{:keys [path target value]}]
-  (let [data (binding [*read-eval* false]
-               (read-string path))]
-    ;;todo apply updates
-    (spit path (format-clj data))))
+(defmethod inject :edn [{:keys [path query action value]}]
+  (let [data   (binding [*read-eval* false]
+                 (read-string path))
+        action (case action
+                 :conj conj
+                 :merge merge)]
+    (->> (update-in data query action value)
+         (format-clj)
+         (spit path))))
 
 (defmethod inject :clj [{:keys [path target value]}]
   (let [data (binding [*read-eval* false]
@@ -29,5 +33,6 @@
   (inject {:type   :clj
            :path   "generated/src/myapp/edge/db/crux.clj"
            :target ['config]
-           :value})
+           :action :merge
+           :value  {:foo :bar}})
   )
