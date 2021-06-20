@@ -39,7 +39,9 @@
 
 (defn write-asset [asset path]
   (io/make-parents path)
-  ((if (string? asset) write-string write-binary) asset path))
+  (if (.exists (io/file path))
+    (println "asset already exists:" path)
+    ((if (string? asset) write-string write-binary) asset path)))
 
 (defmulti handle-action (fn [_ [id]] id))
 
@@ -80,7 +82,7 @@
                 :project-ns    "myapp"
                 :sanitized     "myapp"
                 :name          "myapp"}
-        config {:actions [[:assets [["project.clj" "project.clj"]
+        config {:actions [[:assets [["project.clj" "generated/project.clj"]
                                     ["resources/img/luminus.png" "generated/resources/img/luminus.png"]
                                     ["src/config.clj" "generated/src/<<sanitized>>/edge/db/crux.clj"]]]
 

@@ -1,38 +1,10 @@
-(defproject myapp "0.1.0-SNAPSHOT"
-
+(defproject wake-generator "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
-
-  :dependencies []
-
-  :min-lein-version ""
-  
-  :target-path "target/%s/"
-  :main ^:skip-aot myapp.core
-
-  :plugins [] 
-
-  :profiles
-  {:uberjar {:omit-source true
-             :aot :all
-             :uberjar-name "myapp.jar"
-             :source-paths ["env/prod/clj" ]
-             :resource-paths ["env/prod/resources"]}
-
-   :dev           [:project/dev :profiles/dev]
-   :test          [:project/dev :project/test :profiles/test]
-
-   :project/dev  {:jvm-opts ["-Dconf=dev-config.edn" ]
-                  :dependencies []
-                  :plugins      [] 
-                  
-                  :source-paths ["env/dev/clj" ]
-                  :resource-paths ["env/dev/resources"]
-                  :repl-options {:init-ns user
-                                 :timeout 120000}
-                  :injections [(require 'pjstadig.humane-test-output)
-                               (pjstadig.humane-test-output/activate!)]}
-   :project/test {:jvm-opts ["-Dconf=test-config.edn" ]
-                  :resource-paths ["env/test/resources"] }
-   :profiles/dev {}
-   :profiles/test {}})
+  :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+            :url "https://www.eclipse.org/legal/epl-2.0/"}
+  :dependencies [[org.clojure/clojure "1.10.3"]
+                 [hato "0.8.1"]
+                 [selmer "1.12.40"]
+                 [clj-jgit "1.0.1"]]
+  :repl-options {:init-ns wake.generator.core})
