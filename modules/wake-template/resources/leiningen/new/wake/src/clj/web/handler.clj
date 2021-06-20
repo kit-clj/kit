@@ -21,3 +21,11 @@
          :not-acceptable
          (constantly {:status 406, :body "Not acceptable"})}))
     {:middleware [(middleware/wrap-base)]}))
+
+(defmethod ig/init-key :router/routes
+  [_ {:keys [routes]}]
+  (apply concat routes))
+
+(defmethod ig/init-key :router/core
+  [_ {:keys [routes] :as opts}]
+  (ring/router ["" opts routes]))

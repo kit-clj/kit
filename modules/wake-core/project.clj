@@ -13,4 +13,5 @@
 
             :dependencies [[aero]
                            [integrant]
-                           [org.clojure/tools.logging]])
+                           [org.clojure/tools.logging]
+                           [ch.qos.logback/logback-classic]])

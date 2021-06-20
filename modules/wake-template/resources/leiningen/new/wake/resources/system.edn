@@ -21,17 +21,23 @@
   :handler #ig/ref :handler/ring}
 
  :handler/ring
- {:router   #ig/ref :router/api
+ {:router   #ig/ref :router/core
   :metrics  #ig/ref :metrics/prometheus
   :api-path "/api"
   }
 
- :router/api
+ :reitit.routes/api
  {:base-path "/api"
   :env       #ig/ref :system/env
 
   :metrics   #ig/ref :metrics/prometheus
   }
+
+ :router/routes
+ {:routes #ig/refset :reitit/routes}
+
+ :router/core
+ {:routes #ig/ref :router/routes}
  {{#quartz?}}
  :cronut/scheduler
  {:schedule []}{{/quartz?}}
