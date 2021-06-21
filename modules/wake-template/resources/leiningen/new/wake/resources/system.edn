@@ -4,13 +4,16 @@
            :test :test
            :prod :prod}
  {{#metrics?}}
+
  :metrics/prometheus
  {}{{/metrics?}}
  {{#repl?}}
+
  :repl/server
  {:port #long #or [#env REPL_PORT 7000]
   :host #or [#env REPL_HOST "0.0.0.0"]}{{/repl?}}
  {{#redis?}}
+
  :cache/redis
  {:ttl  3600
   :conn {:pool {}
@@ -39,14 +42,39 @@
  :router/core
  {:routes #ig/ref :router/routes}
  {{#quartz?}}
+
  :cronut/scheduler
  {:schedule []}{{/quartz?}}
  {{#selmer?}}
+
  :templating/selmer
  {} {{/selmer?}}
+ {{#crux?}}
 
-  ;; sql
-  ;; crux
-  ;; oauth
+ ;; https://opencrux.com/reference/configuration.html
+ :db.crux/node
+ {:crux.http-server/server {:port 3000}}
+ {{/crux?}}
+ {{#sql?}}
 
- }
+ :db.sql/connection
+ #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/{{sanitized}}?user={{sanitized}}&password={{sanitized}}"}
+           :test {}
+           :prod {:jdbc-url   #env JDBC_URL
+                  :init-size  1
+                  :min-idle   1
+                  :max-idle   8
+                  :max-active 32}
+
+ :db.sql/query-fn
+ {:conn     #ig/ref :db.sql/connection
+  :options  {}
+  :filename "queries.sql"}
+
+ :db.sql/migrations
+ {:store            :database
+  :db               {:datasource #ig/ref :db/connection}
+  :migrate-on-init? true}
+ {{/sql?}}
+
+}

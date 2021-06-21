@@ -8,7 +8,7 @@ RUN lein uberjar
 
 FROM adoptopenjdk/openjdk11:alpine-slim
 
-COPY --from=build /target/uberjar/{{app}.jar /{{app}}/{{app}}.jar
+COPY --from=build /target/uberjar/{{app}}.jar /{{app}}/{{app}}.jar
 
 EXPOSE $PORT
 EXPOSE $REPL_PORT

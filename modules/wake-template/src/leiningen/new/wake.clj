@@ -18,7 +18,7 @@
 (defn app-files [data]
   (concat
     (base/files data)
-
+    ;; TODO: SQL files add: queries.sql and migrations folder
     ;; If needed, can have conditional files here
     ))
 

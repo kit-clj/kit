@@ -7,13 +7,20 @@
 
 (def template-name "wake")
 
-(defn render-template [template options]
-  (selmer/render
-    #_(str "<% safe %>" template "<% endsafe %>")
-    (str "{% safe %}" template "{% endsafe %}")
-    options
-    ;; switch to using tags that allow using curly braces in templates
-    #_{:tag-open \< :tag-close \> :filter-open \< :filter-close \>}))
+(defn selmer-renderer
+  [text options]
+  (selmer/render (str "{% safe %}" text "{% endsafe %}")
+                 options
+                 ;; switch to using tags that allow using curly braces in templates
+                 ;; TODO @dmitri what is this??? I commented it out because the template
+                 ;; cannot inject the variables otherwise
+                 ;{:tag-open \< :tag-close \> :filter-open \< :filter-close \>}
+                 ))
+
+(def render-text (renderer template-name
+                           ;; TODO: @dmitri maybe you can fix this so it works, otherwise let's drop selmer
+                           ;selmer-renderer
+                           ))
 
 (defn resource-input
   "Get resource input stream. Useful for binary resources like images."
@@ -27,7 +34,7 @@
   ([resource-path]
    (resource-input resource-path))
   ([resource-path data]
-   (render-template resource-path data)))
+   (render-text resource-path data)))
 
 (defn option? [option-name options]
   (boolean
