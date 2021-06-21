@@ -1,4 +1,4 @@
-(ns {{ns-name}}.web.controllers.health
+(ns <<ns-name>>.web.controllers.health
   (:require
     [ring.util.http-response :as http-response]
     [wake.version :as version])
@@ -11,4 +11,4 @@
     {:time (str (Date. (System/currentTimeMillis)))
      :app  {:status  "up"
             :message ""
-            :version (version/project-version "" "{{ns-name}}")}}))
+            :version (version/project-version "" "<<ns-name>>")}}))

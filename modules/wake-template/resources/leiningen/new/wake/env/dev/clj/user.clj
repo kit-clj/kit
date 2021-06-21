@@ -9,7 +9,7 @@
     [integrant.core :as ig]
     [integrant.repl :refer [clear go halt prep init reset reset-all]]
     [integrant.repl.state :as state]
-    [{{ns-name}}.core :refer [start-app]]))
+    [<<ns-name>>.core :refer [start-app]]))
 
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
 
@@ -18,13 +18,13 @@
 (defn dev-prep!
   []
   (integrant.repl/set-prep! (fn []
-                              (-> ({{ns-name}}.config/system-config {:profile :dev})
+                              (-> (<<ns-name>>.config/system-config {:profile :dev})
                                   (ig/prep)))))
 
 (defn test-prep!
   []
   (integrant.repl/set-prep! (fn []
-                              (-> ({{ns-name}}.config/system-config {:profile :test})
+                              (-> (<<ns-name>>.config/system-config {:profile :test})
                                   (ig/prep)))))
 
 ;; Can change this to test-prep! if want to run tests as the test profile in your repl

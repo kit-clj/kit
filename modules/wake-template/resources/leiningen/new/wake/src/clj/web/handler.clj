@@ -1,6 +1,6 @@
-(ns {{ns-name}}.web.handler
+(ns <<ns-name>>.web.handler
   (:require
-    [{{ns-name}}.web.middleware.core :as middleware]
+    [<<ns-name>>.web.middleware.core :as middleware]
     [integrant.core :as ig]
     [reitit.ring :as ring]
     [reitit.swagger-ui :as swagger-ui]))

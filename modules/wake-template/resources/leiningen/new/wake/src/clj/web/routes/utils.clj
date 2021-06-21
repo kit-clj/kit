@@ -1,4 +1,4 @@
-(ns {{ns-name}}.web.routes.utils)
+(ns <<ns-name>>.web.routes.utils)
 
 (def route-data-path [:reitit.core/match :data])
 

@@ -1,4 +1,4 @@
-(ns {{ns-name}}.web.middleware.exception
+(ns <<ns-name>>.web.middleware.exception
   (:require
     [clojure.tools.logging :as log]
     [reitit.ring.middleware.exception :as exception]))

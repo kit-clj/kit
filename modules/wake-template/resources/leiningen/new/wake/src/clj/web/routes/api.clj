@@ -1,8 +1,8 @@
-(ns {{ns-name}}.web.routes.api
+(ns <<ns-name>>.web.routes.api
   (:require
-    [{{ns-name}}.web.controllers.health :as health]
-    [{{ns-name}}.web.middleware.exception :as exception]
-    [{{ns-name}}.web.middleware.formats :as formats]
+    [<<ns-name>>.web.controllers.health :as health]
+    [<<ns-name>>.web.middleware.exception :as exception]
+    [<<ns-name>>.web.middleware.formats :as formats]
     [integrant.core :as ig]
     [reitit.coercion.malli :as malli]
     [reitit.ring.coercion :as coercion]
@@ -15,7 +15,7 @@
   [base-path
    ["/swagger.json"
     {:get {:no-doc  true
-           :swagger {:info {:title "{{app}} API"}}
+           :swagger {:info {:title "<<app>> API"}}
            :handler (swagger/create-swagger-handler)}}]
    ["/health"
     {:get health/healthcheck!}]])

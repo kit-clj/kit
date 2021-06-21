@@ -40,8 +40,7 @@
      :selmer?   (or full? (helpers/option? "+selmer" options))
 
      :metrics?  (not (helpers/option? "+bare" options))
-     :repl?     (not (helpers/option? "+bare" options))
-     }))
+     :repl?     (not (helpers/option? "+bare" options))}))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

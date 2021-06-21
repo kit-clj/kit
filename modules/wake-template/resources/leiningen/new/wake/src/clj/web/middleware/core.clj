@@ -1,6 +1,6 @@
-(ns {{ns-name}}.web.middleware.core
+(ns <<ns-name>>.web.middleware.core
   (:require
-    [{{ns-name}}.env :as env]
+    [<<ns-name>>.env :as env]
     [iapetos.collector.ring :as prometheus-ring]))
 
 (defn wrap-base

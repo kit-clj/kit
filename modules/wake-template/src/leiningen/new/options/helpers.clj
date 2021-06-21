@@ -9,18 +9,12 @@
 
 (defn selmer-renderer
   [text options]
-  (selmer/render (str "{% safe %}" text "{% endsafe %}")
-                 options
-                 ;; switch to using tags that allow using curly braces in templates
-                 ;; TODO @dmitri what is this??? I commented it out because the template
-                 ;; cannot inject the variables otherwise
-                 ;{:tag-open \< :tag-close \> :filter-open \< :filter-close \>}
-                 ))
+  (selmer/render
+    (str "<% safe %>" text "<% endsafe %>")
+    options
+    {:tag-open \< :tag-close \> :filter-open \< :filter-close \>}))
 
-(def render-text (renderer template-name
-                           ;; TODO: @dmitri maybe you can fix this so it works, otherwise let's drop selmer
-                           ;selmer-renderer
-                           ))
+(def render-text (renderer template-name selmer-renderer))
 
 (defn resource-input
   "Get resource input stream. Useful for binary resources like images."

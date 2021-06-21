@@ -1,6 +1,6 @@
-(ns {{ns-name}}.test-utils
+(ns <<ns-name>>.test-utils
   (:require
-    [{{ns-name}}.core :as core]))
+    [<<ns-name>>.core :as core]))
 
 (defn system-state []
   (or @core/system state/system))

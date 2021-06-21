@@ -1,23 +1,20 @@
-(defproject {{name}} "0.1.0-SNAPSHOT"
+(defproject <<name>> "0.1.0-SNAPSHOT"
             :description "TODO"
             :url "TODO"
             :license {:name "TODO"
                       :url  "TODO"}
 
-            :dependencies [
-                           [org.clojure/clojure "1.10.3"]
-
+            :dependencies [[org.clojure/clojure "1.10.3"]
                            [wake-core "0.1.0-SNAPSHOT"]
-                           {{#crux?}}[wake-crux "0.1.0-SNAPSHOT"]{{/crux?}}
-                           {{#sql?}}[wake-sql "0.1.0-SNAPSHOT"]{{/sql?}}
-                           {{#hato?}}[wake-hato "0.1.0-SNAPSHOT"]{{/hato?}}
-                           {{#oauth?}}[wake-oauth "0.1.0-SNAPSHOT"]{{/oauth?}}
-                           {{#quartz?}}[wake-quartz "0.1.0-SNAPSHOT"]{{/quartz?}}
-                           {{#redis?}}[wake-redis "0.1.0-SNAPSHOT"]{{/redis?}}
-                           {{#selmer?}}[wake-selmer "0.1.0-SNAPSHOT"]{{/selmer?}}
-                           {{#metrics?}}[wake-metrics "0.1.0-SNAPSHOT"]{{/metrics?}}
-                           {{#repl?}}[wake-repl "0.1.0-SNAPSHOT"]{{/repl?}}
-                           ]
+                           <% if crux? %>[wake-crux "0.1.0-SNAPSHOT"]<% endif %>
+                           <% if sql? %>[wake-sql "0.1.0-SNAPSHOT"]<% endif %>
+                           <% if hato? %>[wake-hato "0.1.0-SNAPSHOT"]<% endif %>
+                           <% if oauth? %>[wake-oauth "0.1.0-SNAPSHOT"]<% endif %>
+                           <% if quartz? %>[wake-quartz "0.1.0-SNAPSHOT"]<% endif %>
+                           <% if redis? %>[wake-redis "0.1.0-SNAPSHOT"]<% endif %>
+                           <% if selmer? %>[wake-selmer "0.1.0-SNAPSHOT"]<% endif %>
+                           <% if metrics? %>[wake-metrics "0.1.0-SNAPSHOT"]<% endif %>
+                           <% if repl? %>[wake-repl "0.1.0-SNAPSHOT"]<% endif %>]
 
             :min-lein-version "2.0.0"
 
@@ -25,12 +22,12 @@
             :test-paths ["test/clj"]
             :resource-paths ["resources"]
             :target-path "target/%s/"
-            :main ^:skip-aot {{name}}.core
+            :main ^:skip-aot <<name>>.core
 
             :profiles
             {:uberjar       {:omit-source    true
                              :aot            :all
-                             :uberjar-name   "{{name}}.jar"
+                             :uberjar-name   "<<name>>.jar"
                              :source-paths   ["env/prod/clj"]
                              :resource-paths ["env/prod/resources"]}
 

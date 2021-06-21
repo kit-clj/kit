@@ -1,9 +1,9 @@
-(ns {{ns-name}}.core
+(ns <<ns-name>>.core
   (:require
     [clojure.tools.logging :as log]
     [integrant.core :as ig]
-    [{{ns-name}}.config :as config]
-    [{{ns-name}}.env :refer [defaults]]
+    [<<ns-name>>.config :as config]
+    [<<ns-name>>.env :refer [defaults]]
 
     ;; Edges
     [wake.edge.cache.redis]

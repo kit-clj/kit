@@ -3,21 +3,18 @@
  #profile {:dev  :dev
            :test :test
            :prod :prod}
- {{#metrics?}}
-
+<% if metrics? %>
  :metrics/prometheus
- {}{{/metrics?}}
- {{#repl?}}
-
+ {}<% endif %>
+<% if repl? %>
  :repl/server
  {:port #long #or [#env REPL_PORT 7000]
-  :host #or [#env REPL_HOST "0.0.0.0"]}{{/repl?}}
- {{#redis?}}
-
+  :host #or [#env REPL_HOST "0.0.0.0"]}<% endif %>
+ <% if redis? %>
  :cache/redis
  {:ttl  3600
   :conn {:pool {}
-         :spec {:uri #env REDIS_URI}}}{{/redis?}}
+         :spec {:uri #env REDIS_URI}}}<% endif %>
 
  :server/undertow
  {:port    #long #or [#env PORT 3000]
@@ -41,24 +38,21 @@
 
  :router/core
  {:routes #ig/ref :router/routes}
- {{#quartz?}}
-
+ <% if quartz? %>
  :cronut/scheduler
- {:schedule []}{{/quartz?}}
- {{#selmer?}}
-
+ {:schedule []}<% endif %>
+ <% if selmer? %>
  :templating/selmer
- {} {{/selmer?}}
- {{#crux?}}
-
+ {}<% endif %>
+ <% if crux? %>
  ;; https://opencrux.com/reference/configuration.html
  :db.crux/node
  {:crux.http-server/server {:port 3000}}
- {{/crux?}}
- {{#sql?}}
-
+ <% endif %>
+ <% if sql? %>
+ ;; todo handle different kinds of sql sqlite, mysql, etc
  :db.sql/connection
- #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/{{sanitized}}?user={{sanitized}}&password={{sanitized}}"}
+ #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<sanitized>>?user=<<sanitized>>&password=<<sanitized>>"}
            :test {}
            :prod {:jdbc-url   #env JDBC_URL
                   :init-size  1
@@ -75,6 +69,5 @@
  {:store            :database
   :db               {:datasource #ig/ref :db/connection}
   :migrate-on-init? true}
- {{/sql?}}
-
+ <% endif %>
 }

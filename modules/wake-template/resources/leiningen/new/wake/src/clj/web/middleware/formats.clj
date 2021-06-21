@@ -1,4 +1,4 @@
-(ns {{ns-name}}.web.middleware.formats
+(ns <<ns-name>>.web.middleware.formats
   (:require
     [luminus-transit.time :as time]
     [muuntaja.core :as m]))

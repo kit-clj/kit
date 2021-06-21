@@ -1,4 +1,4 @@
-(ns {{ns-name}}.config
+(ns <<ns-name>>.config
   (:require
     [wake.config :as config]))
 
