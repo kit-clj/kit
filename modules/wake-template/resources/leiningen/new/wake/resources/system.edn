@@ -21,16 +21,16 @@
   :handler #ig/ref :handler/ring}
 
  :handler/ring
- {:router   #ig/ref :router/core
-  :metrics  #ig/ref :metrics/prometheus
+ {:router   #ig/ref :router/core <% if metrics? %>
+  :metrics  #ig/ref :metrics/prometheus <% endif %>
   :api-path "/api"
   }
 
  :reitit.routes/api
  {:base-path "/api"
-  :env       #ig/ref :system/env
+  :env       #ig/ref :system/env <% if metrics? %>
 
-  :metrics   #ig/ref :metrics/prometheus
+  :metrics   #ig/ref :metrics/prometheus <% endif %>
   }
 
  :router/routes
@@ -47,7 +47,7 @@
  <% if crux? %>
  ;; https://opencrux.com/reference/configuration.html
  :db.crux/node
- {:crux.http-server/server {:port 3000}}
+ {:crux.http-server/server {:port 4000}}
  <% endif %>
  <% if sql? %>
  ;; todo handle different kinds of sql sqlite, mysql, etc

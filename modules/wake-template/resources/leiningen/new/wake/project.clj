@@ -23,7 +23,6 @@
                            <% if crux? %>[wake-crux "0.1.0-SNAPSHOT"]<% endif %>
                            <% if sql? %>[wake-sql "0.1.0-SNAPSHOT"]<% endif %>
                            <% if hato? %>[wake-hato "0.1.0-SNAPSHOT"]<% endif %>
-                           <% if oauth? %>[wake-oauth "0.1.0-SNAPSHOT"]<% endif %>
                            <% if quartz? %>[wake-quartz "0.1.0-SNAPSHOT"]<% endif %>
                            <% if redis? %>[wake-redis "0.1.0-SNAPSHOT"]<% endif %>
                            <% if selmer? %>[wake-selmer "0.1.0-SNAPSHOT"]<% endif %>

@@ -31,15 +31,12 @@
 
      :crux?     (or full? (helpers/option? "+crux" options))
      :sql?      (or full? (helpers/option? "+sql" options))
-     :hato?     (or full?
-                    (helpers/option? "+hato" options)
-                    (helpers/option? "+oauth" options))
-     :oauth?    (or full? (helpers/option? "+oauth" options))
+     :hato?     (or full? (helpers/option? "+hato" options))
+     :metrics?  (or full? (helpers/option? "+metrics" options))
      :quartz?   (or full? (helpers/option? "+quartz" options))
      :redis?    (or full? (helpers/option? "+redis" options))
      :selmer?   (or full? (helpers/option? "+selmer" options))
 
-     :metrics?  (not (helpers/option? "+bare" options))
      :repl?     (not (helpers/option? "+bare" options))}))
 
 
@@ -51,7 +48,6 @@
     "+full"
     "+crux"
     "+hato"
-    "+oauth"
     "+quartz"
     "+redis"
     "+selmer"

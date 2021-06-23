@@ -11,4 +11,4 @@
     {:time (str (Date. (System/currentTimeMillis)))
      :app  {:status  "up"
             :message ""
-            :version (version/project-version "" "<<ns-name>>")}}))
+            :version (version/project-version "<<ns-name>>" "<<ns-name>>")}}))

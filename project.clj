@@ -1,5 +1,5 @@
 (defproject wake-parent "0.1.0-SNAPSHOT"
-  :description "Lightweight, modular backend framework for scalable production systems"
+  :description "Lightweight, modular framework for scalable production systems"
   :url "https://github.com/nikolap/wake"
   :license {:name "MIT License"
             :url  "http://opensource.org/licenses/MIT"}
@@ -30,7 +30,10 @@
                          [io.prometheus/simpleclient_common "0.11.0"]
                          [io.prometheus/simpleclient_hotspot "0.11.0"]
                          [io.prometheus/simpleclient_httpserver "0.11.0"]
-                         [io.prometheus/simpleclient_pushgateway "0.11.0"]]
+                         [io.prometheus/simpleclient_pushgateway "0.11.0"]
+
+                         ;; Wake lib referenced within modules
+                         [wake-core "0.1.0-SNAPSHOT"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.10.3"]
                                   [aero "1.1.6"]
                                   [integrant "0.8.0"]
@@ -60,7 +63,6 @@
                                   "modules/wake-crux/src"
                                   "modules/wake-hato/src"
                                   "modules/wake-metrics/src"
-                                  "modules/wake-oauth/src"
                                   "modules/wake-quartz/src"
                                   "modules/wake-redis/src"
                                   "modules/wake-repl/src"
