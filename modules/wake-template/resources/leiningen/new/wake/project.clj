@@ -5,7 +5,21 @@
                       :url  "TODO"}
 
             :dependencies [[org.clojure/clojure "1.10.3"]
+
+                           ;; Routing
+                           [metosin/reitit "0.5.13"]
+
+                           ;; Ring
+                           [metosin/ring-http-response "0.9.2"]
+                           [ring/ring-core "1.9.3"]
+
+                           ;; Data coercion
+                           [luminus-transit "0.1.2" :exclusions [com.cognitect/transit-clj]]
+                           [metosin/muuntaja "0.6.8"]
+
+                           ;; Wake Libs
                            [wake-core "0.1.0-SNAPSHOT"]
+                           [wake-undertow "0.1.0-SNAPSHOT"]
                            <% if crux? %>[wake-crux "0.1.0-SNAPSHOT"]<% endif %>
                            <% if sql? %>[wake-sql "0.1.0-SNAPSHOT"]<% endif %>
                            <% if hato? %>[wake-hato "0.1.0-SNAPSHOT"]<% endif %>

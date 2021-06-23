@@ -4,7 +4,7 @@
     [iapetos.collector.ring :as prometheus-ring]))
 
 (defn wrap-base
-  [{:keys [metrics] :as _opts}]
+  [{:keys [metrics] :as opts}]
   (fn [handler]
-    (cond-> ((:middleware env/defaults) handler)
+    (cond-> ((:middleware env/defaults) handler opts)
             (some? metrics) (prometheus-ring/wrap-metrics metrics))))

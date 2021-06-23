@@ -6,15 +6,19 @@
     [<<ns-name>>.env :refer [defaults]]
 
     ;; Edges
-    [wake.edge.cache.redis]
-    [wake.edge.db.crux]
-    [wake.edge.db.sql]
-    [wake.edge.http.hato]
-    [wake.edge.scheduling.quartz]
+    <% if redis? %>[wake.edge.cache.redis]<% endif %>
+    <% if crux? %>[wake.edge.db.crux]<% endif %>
+    <% if sql? %>[wake.edge.db.sql]<% endif %>
+    <% if hato? %>[wake.edge.http.hato]<% endif %>
+    <% if quartz? %>[wake.edge.scheduling.quartz]<% endif %>
+    <% if selmer? %>[wake.edge.templating.selmer]<% endif %>
+    <% if metrics? %>[wake.edge.utils.metrics]<% endif %>
+    <% if repl? %>[wake.edge.utils.repl]<% endif %>
     [wake.edge.server.undertow]
-    [wake.edge.templating.selmer]
-    [wake.edge.utils.metrics]
-    [wake.edge.utils.repl]
+    [<<ns-name>>.web.handler]
+
+    ;; Routes
+    [<<ns-name>>.web.routes.api]
     )
   (:gen-class))
 

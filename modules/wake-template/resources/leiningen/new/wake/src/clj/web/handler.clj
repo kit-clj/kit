@@ -6,7 +6,7 @@
     [reitit.swagger-ui :as swagger-ui]))
 
 (defmethod ig/init-key :handler/ring
-  [_ {:keys [router api-path]}]
+  [_ {:keys [router api-path] :as opts}]
   (ring/ring-handler
     router
     (ring/routes
@@ -20,7 +20,7 @@
          (constantly {:status 405, :body "Not allowed"})
          :not-acceptable
          (constantly {:status 406, :body "Not acceptable"})}))
-    {:middleware [(middleware/wrap-base)]}))
+    {:middleware [(middleware/wrap-base opts)]}))
 
 (defmethod ig/init-key :router/routes
   [_ {:keys [routes]}]
