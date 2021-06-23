@@ -5,7 +5,7 @@
                       :url  "TODO"}
 
             :dependencies [[org.clojure/clojure "1.10.3"]
-
+                           [org.clojure/tools.logging "1.1.0"]
                            ;; Routing
                            [metosin/reitit "0.5.13"]
 
