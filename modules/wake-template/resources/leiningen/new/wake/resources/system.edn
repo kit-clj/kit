@@ -47,7 +47,7 @@
  <% if crux? %>
  ;; https://opencrux.com/reference/configuration.html
  :db.crux/node
- {:crux.http-server/server {:port 4000}}
+ {}
  <% endif %>
  <% if sql? %>
  ;; todo handle different kinds of sql sqlite, mysql, etc
@@ -58,7 +58,7 @@
                   :init-size  1
                   :min-idle   1
                   :max-idle   8
-                  :max-active 32}
+                  :max-active 32}}
 
  :db.sql/query-fn
  {:conn     #ig/ref :db.sql/connection

@@ -1,4 +1,4 @@
-(defproject wake-sql "0.1.0-SNAPSHOT"
+(defproject wake-postgres "0.1.0-SNAPSHOT"
             :description "Modular backend framework for production systems"
             :url "https://github.com/nikolap/wake"
             :license {:name "MIT License"
@@ -11,7 +11,5 @@
             :parent-project {:path    "../../project.clj"
                              :inherit [:deploy-repositories :managed-dependencies]}
 
-            :dependencies [[integrant]
-                           [wake-core]
-                           [conman]
-                           [migratus]])
+            :dependencies [[org.postgresql/postgresql]
+                           [cheshire]])

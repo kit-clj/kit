@@ -8,7 +8,8 @@
     ;; Edges
     <% if redis? %>[wake.edge.cache.redis]<% endif %>
     <% if crux? %>[wake.edge.db.crux]<% endif %>
-    <% if sql? %>[wake.edge.db.sql]<% endif %>
+    <% if sql? %>[wake.edge.db.sql]
+    [wake.edge.db.postgres]<% endif %>
     <% if hato? %>[wake.edge.http.hato]<% endif %>
     <% if quartz? %>[wake.edge.scheduling.quartz]<% endif %>
     <% if selmer? %>[wake.edge.templating.selmer]<% endif %>

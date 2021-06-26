@@ -17,6 +17,8 @@
                          [com.troy-west/cronut "0.2.6"]
                          [conman "0.9.1"]
                          [migratus "1.3.5"]
+                         [cheshire "5.10.0"]
+                         [org.postgresql/postgresql "42.2.19"]
                          [juxt/crux-core "21.04-1.16.0-beta"]
                          [org.clojure/core.cache "1.0.207"]
                          [com.taoensso/carmine "3.1.0"]
@@ -45,6 +47,8 @@
                                   [com.troy-west/cronut "0.2.6"]
                                   [conman "0.9.1"]
                                   [migratus "1.3.5"]
+                                  [cheshire "5.10.0"]
+                                  [org.postgresql/postgresql "42.2.19"]
                                   [juxt/crux-core "21.04-1.16.0-beta"]
                                   [org.clojure/core.cache "1.0.207"]
                                   [com.taoensso/carmine "3.1.0"]
@@ -63,6 +67,7 @@
                                   "modules/wake-crux/src"
                                   "modules/wake-hato/src"
                                   "modules/wake-metrics/src"
+                                  "modules/wake-postgres/src"
                                   "modules/wake-quartz/src"
                                   "modules/wake-redis/src"
                                   "modules/wake-repl/src"

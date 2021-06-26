@@ -10,6 +10,7 @@
              project-name]]
     [leiningen.new.options.base :as base]
     [leiningen.new.options.helpers :as helpers]
+    [leiningen.new.options.sql :as sql]
     [clojure.set :as set]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18,9 +19,8 @@
 (defn app-files [data]
   (concat
     (base/files data)
-    ;; TODO: SQL files add: queries.sql and migrations folder
-    ;; If needed, can have conditional files here
-    ))
+    (when (:sql? data)
+      (sql/files data))))
 
 (defn template-data [name options]
   (let [full? (helpers/option? "+full" options)]
@@ -48,6 +48,7 @@
     "+full"
     "+crux"
     "+hato"
+    "+metrics"
     "+quartz"
     "+redis"
     "+selmer"

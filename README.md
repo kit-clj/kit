@@ -29,7 +29,8 @@ Additional profiles:
 - `+quartz` - Adds the `wake-quartz` module
 - `+redis` - Adds the `wake-redis` module
 - `+selmer` - Adds the `wake-selmer` module
-- `+full` - Adds the modules `wake-crux`, `wake-hato`, `wake-metrics`, wake-quartz`, `wake-redis`, `wake-selmer`, and `wake-sql`
+- `+sql` - Adds the `wake-sql` and `wake-postgres` modules
+- `+full` - Adds the modules `wake-crux`, `wake-hato`, `wake-metrics`, `wake-quartz`, `wake-redis`, `wake-selmer`, and `wake-sql`
 
 ## Modules
 
@@ -41,7 +42,7 @@ Additional profiles:
 - `wake-redis` - An extension of [core.cache](https://github.com/clojure/core.cache) for Redis via [carmine](https://github.com/ptaoussanis/carmine)
 - `wake-repl` - Socket REPL integrant binding
 - `wake-selmer` - Templating configuration with [selmer](https://github.com/yogthos/Selmer)
-- `wake-sql` - Generic SQL integrant binding. Uses [conman](https://github.com/luminus-framework/conman), [next.jdbc](https://github.com/seancorfield/next-jdbc), [hugsql](https://www.hugsql.org/), and [migratus](https://github.com/yogthos/migratus) directly, or implicitly
+- `wake-sql` - Generic SQL integrant binding. Uses [conman](https://github.com/luminus-framework/conman), [next.jdbc](https://github.com/seancorfield/next-jdbc), [hugsql](https://www.hugsql.org/), and [migratus](https://github.com/yogthos/migratus) directly, or implicitly. By default imports `wake-postgres` module which supports Postgresql
 - `wake-undertow` - Server binding via [luminus-undertow](https://github.com/luminus-framework/luminus-undertow)
 
 ## Documentation

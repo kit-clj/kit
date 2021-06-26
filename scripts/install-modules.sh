@@ -9,6 +9,7 @@ for ext in \
   wake-crux \
   wake-hato \
   wake-metrics \
+  wake-postgres \
   wake-quartz \
   wake-redis \
   wake-repl \
