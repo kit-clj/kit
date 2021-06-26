@@ -3,7 +3,8 @@
     [wake.generator.renderer :refer [render-template render-asset]]
     [clojure.java.io :as io]
     [clojure.tools.logging :as log])
-  (:import java.io.File java.nio.file.Files))
+  (:import java.io.File
+           java.nio.file.Files))
 
 (def modules "modules")
 
@@ -87,5 +88,7 @@
   (let [ctx {:project-ns "myapp"
              :sanitized  "myapp"
              :name       "myapp"
-             :modules    {"git@github.com:luminus-framework/luminus-template.git" "master"}}]
+             :modules    {:id  :luminus
+                          :url "git@github.com:luminus-framework/luminus-template.git"
+                          :tag "master"}}]
     (generate ctx "luminus-template")))
