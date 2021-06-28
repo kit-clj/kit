@@ -20,9 +20,8 @@
                  :conj conj
                  :merge merge)]
     (->> (if (empty? query)
-           (action target query)
-           (update-in target query action value))
-         (format-clj))))
+           (action target value)
+           (update-in target query action value)))))
 
 (defmethod inject :clj [{:keys []}]
   )
@@ -38,20 +37,6 @@
            (data-reader/str->edn)
            (assoc injection :target)
            (inject)
+           (data-reader/edn->str)
+           (format-clj)
            (spit (:path injection))))))
-
-(comment
-  (slurp "generated/resources/system.edn")
-
-  (let [data (data-reader/str->edn (slurp "generated/resources/system.edn"))
-        data-str (data-reader/edn->str (prn data))]
-    data-str)
-
-  (println (format-clj (str (data-reader/str->edn (slurp "generated/resources/system.edn")))))
-
-  (inject {:type   :edn
-           :path   (data-reader/str->edn (slurp "generated/resources/system.edn"))
-           :target []
-           :action :merge
-           :value  {:foo :bar}})
-  )
