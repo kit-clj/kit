@@ -3,9 +3,9 @@
 
 - Documentation
 - Build script for generating modules -- @Dmitri -- part of the REPL! Just have it as a library
-- Template working -- @Nik
+- ~~Template working~~
 - Finish modules / cleanup
-- Migrate to deps.edn?
+- ~~Migrate to deps.edn~~
 - Front end
 
 ## Stack

@@ -4,13 +4,13 @@ Lightweight, modular framework for scalable production systems.
 
 ## Goal
 
-The goal of `wake` is to provide a template for a robust, scalable Clojure web application. It hides common plumbing that is standard across projects via its modules system, while exposing code that tends to be customized in the leiningen template.
+The goal of `wake` is to provide a template for a robust, scalable Clojure web application. It hides common plumbing that is standard across projects via its modules system, while exposing code that tends to be customized in the clj-new template.
 
 Thanks to `integrant`, and `aero`, the modules are simple skeletons with the bulk of the customization being done in the system configuration EDN file.
 
 ## Quick Start
 
-`lein new wake myproject`
+`clojure -X:new :template wake :name yourname/app`
 
 ### Profiles
 
@@ -53,7 +53,6 @@ TODO: link
 
 - [integrant](https://github.com/weavejester/integrant) as the basis of the project
 - [aero](https://github.com/juxt/aero) for powerful configuration used throughout
-- [reitit](https://github.com/metosin/reitit) for inspiration on the `wake` code structure via [lein-parent](https://github.com/achin/lein-parent)
 - [re-frame template](https://github.com/day8/re-frame-template) for code used directly in `wake-template`
 - [Luminus framework](https://luminusweb.com/) from which the initial project that `wake`'s predecessor was built upon
 

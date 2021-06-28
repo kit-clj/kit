@@ -1,0 +1,20 @@
+{:paths   ["src"]
+ :deps    {selmer/selmer                   {:mvn/version "1.12.40"}
+           com.github.seancorfield/clj-new {:mvn/version "1.1.309"}}
+
+ :aliases {
+           :jar     {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
+                     :exec-fn      hf.depstar/jar
+                     :exec-args    {:jar         "target/wake-template.jar"
+                                    :group-id    "com.github.wake"
+                                    :artifact-id "clj-template"}}
+           :install {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
+                     :exec-fn      deps-deploy.deps-deploy/deploy
+                     :exec-args    {:installer :local
+                                    :artifact  "target/wake-template.jar"}}
+           :deploy  {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
+                     :exec-fn      deps-deploy.deps-deploy/deploy
+                     :exec-args    {:installer :remote
+                                    :artifact  "target/wake-template.jar"}}
+           }
+ }

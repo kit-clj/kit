@@ -1,0 +1,20 @@
+{:paths   ["src"]
+ :deps    {org.postgresql/postgresql {:mvn/version "42.2.19"}
+           cheshire/cheshire         {:mvn/version "5.10.0"}}
+
+ :aliases {
+           :jar     {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
+                     :exec-fn      hf.depstar/jar
+                     :exec-args    {:jar         "target/wake-postgres.jar"
+                                    :group-id    "com.github.wake"
+                                    :artifact-id "wake-postgres"}}
+           :install {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
+                     :exec-fn      deps-deploy.deps-deploy/deploy
+                     :exec-args    {:installer :local
+                                    :artifact  "target/wake-postgres.jar"}}
+           :deploy  {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
+                     :exec-fn      deps-deploy.deps-deploy/deploy
+                     :exec-args    {:installer :remote
+                                    :artifact  "target/wake-postgres.jar"}}
+           }
+ }

@@ -4,6 +4,10 @@
 
 set -e
 
+VERSION=$(<version.txt)
+
+echo "Installing with version '${VERSION}'"
+
 for ext in \
   wake-core \
   wake-crux \
@@ -17,5 +21,5 @@ for ext in \
   wake-sql \
   wake-template \
   wake-undertow; do
-  cd modules/$ext; lein install; cd ../..;
+  cd modules/$ext; clojure -X:jar :sync-pom true :version "\"${VERSION}\""; clojure -X:install; cd ../..;
 done
