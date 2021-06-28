@@ -1,0 +1,16 @@
+{:assets     [["assets/home.html" "resources/public/home.html"]
+              ["assets/pages.clj" "src/clj/<<ns-name>>/web/routes/pages.clj"]]
+ :injections [{:type   :edn
+               :path   "resources/system.end"
+               :target []
+               :action :merge
+               :value  {:reitit.routes/pages
+                        {:base-path "/"
+                         :env       #ig/ref :system/env}
+                        :templating/selmer
+                        {}}}
+              {:type   :clj
+               :path   "project.clj"
+               :target [:dependencies]
+               :action :conj
+               :value  ['wake.selmer "1.0.0"]}]}

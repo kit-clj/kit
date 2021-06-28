@@ -1,0 +1,24 @@
+{:system/env
+ #profile {:dev  :dev
+           :test :test
+           :prod :prod}
+
+ :server/undertow
+ {:port    #long #or [#env PORT 3000]
+  :handler #ig/ref :handler/ring}
+
+ :handler/ring
+ {:router   #ig/ref :router/core
+  :api-path "/api"
+  }
+
+ :reitit.routes/api
+ {:base-path "/api"
+  :env       #ig/ref :system/env
+  }
+
+ :router/routes
+ {:routes #ig/refset :reitit/routes}
+
+ :router/core
+ {:routes #ig/ref :router/routes}}
