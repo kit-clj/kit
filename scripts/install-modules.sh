@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Installs all modules in one script
+## Installs all libraries in one script
 
 set -e
 
@@ -21,5 +21,5 @@ for ext in \
   wake-sql \
   wake-template \
   wake-undertow; do
-  cd modules/$ext; clojure -X:jar :sync-pom true :version "\"${VERSION}\""; clojure -X:install; cd ../..;
+  cd libs/$ext; clojure -X:jar :sync-pom true :version "\"${VERSION}\""; clojure -X:install; cd ../..;
 done

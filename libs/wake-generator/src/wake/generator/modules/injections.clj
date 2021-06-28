@@ -30,7 +30,7 @@
     (spit path (format-clj data))))
 
 (comment
-  (inject {:type   :clj
+  (inject {:type   :edn
            :path   "generated/src/myapp/edge/db/crux.clj"
            :target ['config]
            :action :merge
