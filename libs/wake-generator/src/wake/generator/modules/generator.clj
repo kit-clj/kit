@@ -1,8 +1,9 @@
 (ns wake.generator.modules.generator
   (:require
+    [wake.generator.reader :as reader]
+    [wake.generator.modules.injections :as ij]
     [wake.generator.renderer :refer [render-template render-asset]]
-    [clojure.java.io :as io]
-    [clojure.tools.logging :as log])
+    [clojure.java.io :as io])
   (:import java.io.File
            java.nio.file.Files))
 
@@ -57,22 +58,22 @@
       :else
       (println "unrecognized asset type:" asset))))
 
-(defmethod handle-action :injections [_ [_ injections]]
-  (println "todo injections"))
+(defmethod handle-action :injections [ctx [_ injections]]
+  (ij/inject-data ctx injections))
 
 (defmethod handle-action :default [_ [id]]
   (println "undefined action:" id))
 
 (defn read-config [module-path]
-  (let [config-path (str module-path File/separator "config.edn")]
-    ;;todo read from module
-    ))
+  (-> (str module-path File/separator "config.edn")
+      (slurp)
+      (reader/str->edn)))
 
 (defn generate [ctx module-name]
   (let [module-path (str (-> ctx :modules :root) File/separator module-name)
-        {:keys [actions]} (read-config module-path)
+        config      (read-config module-path)
         ctx         (assoc ctx :module-path module-path)]
-    (doseq [action actions]
+    (doseq [action config]
       (handle-action ctx action))))
 
 (comment
