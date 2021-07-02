@@ -1,7 +1,7 @@
 {:assets     [["assets/home.html" "resources/public/home.html"]
               ["assets/pages.clj" "src/clj/<<ns-name>>/web/routes/pages.clj"]]
  :injections [{:type   :edn
-               :path   "resources/system.end"
+               :path   "resources/system.edn"
                :target []
                :action :merge
                :value  {:reitit.routes/pages

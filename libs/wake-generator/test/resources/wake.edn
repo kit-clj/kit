@@ -1,0 +1,5 @@
+{:name "test-app"
+ :ns-name "test-app"
+ :sanitized "test_app"
+ :modules {:html
+           {:installed? false}}}

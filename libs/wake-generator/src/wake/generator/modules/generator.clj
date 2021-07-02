@@ -6,8 +6,6 @@
   (:import java.io.File
            java.nio.file.Files))
 
-(def modules "modules")
-
 (defn concat-path [base-path asset-path]
   (str base-path File/separator (if (.startsWith asset-path "/")
                                   (subs asset-path 1)
@@ -68,17 +66,10 @@
 (defn read-config [module-path]
   (let [config-path (str module-path File/separator "config.edn")]
     ;;todo read from module
-    )
-  {:actions [[:assets [["resources/leiningen/new/luminus/core/project.clj" "generated/project.clj"]
-                       ["resources/leiningen/new/luminus/core/resources/img/luminus.png" "generated/resources/img/luminus.png"]
-                       ["resources/leiningen/new/luminus/core/src/config.clj" "generated/src/<<sanitized>>/edge/db/crux.clj"]]]
-
-             [:injections [
-                           ;;todo update existing files e.g: config, namespaces
-                           ]]]})
+    ))
 
 (defn generate [ctx module-name]
-  (let [module-path (str modules File/separator module-name)
+  (let [module-path (str (-> ctx :modules :root) File/separator module-name)
         {:keys [actions]} (read-config module-path)
         ctx         (assoc ctx :module-path module-path)]
     (doseq [action actions]
@@ -88,7 +79,9 @@
   (let [ctx {:project-ns "myapp"
              :sanitized  "myapp"
              :name       "myapp"
-             :modules    {:id  :luminus
-                          :url "git@github.com:luminus-framework/luminus-template.git"
-                          :tag "master"}}]
+             :modules    {:root "modules"
+                          :modules
+                                {:luminus
+                                 {:url "git@github.com:luminus-framework/luminus-template.git"
+                                  :tag "master"}}}}]
     (generate ctx "luminus-template")))
