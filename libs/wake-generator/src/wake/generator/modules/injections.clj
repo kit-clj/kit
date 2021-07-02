@@ -31,15 +31,17 @@
   (println "unrecognized injection type" type "for injection\n"
            (with-out-str (pprint injection))))
 
-(defn read-files [paths]
+(defn read-files [ctx paths]
   (reduce
     (fn [path->data path]
-      (assoc path->data path (-> path slurp data-reader/str->edn)))
+      (assoc path->data path
+                        (->> (slurp path)
+                             (renderer/render-template ctx)
+                             (data-reader/str->edn))))
     {} paths))
 
-;;TODO figure out if we can add a reader conditional to template the value using ctx
 (defn inject-data [ctx injections]
-  (let [path->data (read-files (map :path injections))
+  (let [path->data (read-files ctx (map :path injections))
         updated    (reduce
                      (fn [path->data {:keys [path] :as injection}]
                        (update path->data path #(inject (assoc injection :target %))))
