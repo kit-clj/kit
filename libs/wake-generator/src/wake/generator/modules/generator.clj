@@ -69,8 +69,11 @@
       (slurp)
       (reader/str->edn)))
 
-(defn generate [ctx module-name]
-  (let [module-path (str (-> ctx :modules :root) File/separator module-name)
+(defn generate [{:keys [modules] :as ctx} module-key]
+  (let [module-path (->> [(:root modules)
+                          (get-in modules [:modules module-key :path] (name module-key))]
+                         (interpose File/separator)
+                         (apply str))
         config      (read-config module-path)
         ctx         (assoc ctx :module-path module-path)]
     (doseq [action config]
@@ -80,9 +83,11 @@
   (let [ctx {:project-ns "myapp"
              :sanitized  "myapp"
              :name       "myapp"
-             :modules    {:root "modules"
-                          :modules
-                                {:luminus
-                                 {:url "git@github.com:luminus-framework/luminus-template.git"
-                                  :tag "master"}}}}]
-    (generate ctx "luminus-template")))
+             :modules    {:root         "test/resources/modules"
+                          :repositories [{:url  "git@github.com:nikolap/wake.git"
+                                          :tag  "master"
+                                          :name "wake"}]
+                          :modules      {:html {:path "html"}}}}]
+    (generate ctx :html)
+
+    ))

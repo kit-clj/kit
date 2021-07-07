@@ -1,5 +1,9 @@
-{:name "test-app"
- :ns-name "test-app"
- :sanitized "test_app"
- :modules {:html
-           {:installed? false}}}
+{:project-ns   "myapp"
+ :sanitized    "myapp"
+ :name         "myapp"
+ :project-root "test/resources/generated"
+ :modules      {:root         "test/resources/modules"
+                :repositories [{:url  "git@github.com:nikolap/wake.git"
+                                :tag  "master"
+                                :name "wake"}]
+                :modules      {:html {:path "html"}}}}

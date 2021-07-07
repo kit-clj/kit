@@ -1,7 +1,8 @@
-{:assets     [["assets/home.html" "resources/public/home.html"]
-              ["assets/pages.clj" "src/clj/<<ns-name>>/web/routes/pages.clj"]]
+{:assets     [["assets/home.html" "test/resources/generated/resources/public/home.html"]
+              ["assets/img/luminus.png" "test/resources/generated/resources/public/img/luminus.png"]
+              ["assets/pages.clj" "test/resources/generated/src/clj/<<ns-name>>/web/routes/pages.clj"]]
  :injections [{:type   :edn
-               :path   "resources/system.edn"
+               :path   "test/resources/generated/resources/system.edn"
                :target []
                :action :merge
                :value  {:reitit.routes/pages
@@ -9,7 +10,7 @@
                          :env       #ig/ref :system/env}
                         :templating/selmer
                         {}}}
-              {:type   :clj
+              #_{:type   :clj
                :path   "project.clj"
                :target [:dependencies]
                :action :conj
