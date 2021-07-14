@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="column column-75">
+  <div class="column-wrapper">
+    {{content|markdown}}
+  </div>
+</div>
+
+<div class="column column-25">
+  <div class="column-wrapper">
+    <h2>Clojurians Slack Channel</h2>
+    <ul>
+      <li>#wake</li>
+    </ul>
+    
+  </div>
+</div>
+{% endblock %}

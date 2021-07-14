@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="keywords" content="wake, clojure, framework">
+    <meta name="canonical" content="http://wake.net">
+    <title>Wake - a Clojure web framework</title>
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/color-brewer.min.css">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    {% style "/css/highlight.css" %}
+    {% style "/css/codestyle.css" %}
+    {% style "/css/screen.css" %}
+  </head>
+  <body>
+    <header>
+      <div class="wrapper">
+        <div class="column-wrapper">
+          <div class="row">
+            <div id="logo">
+              <h1>
+                <a href="/">
+                  <img src="/img/logo.png" alt="Wake">
+                  Wake
+                </a>
+              </h1>
+            </div>
+            <nav>
+              <ul>
+                <li {% ifequal page "home.html" %} class="selected"{%endifequal%}>
+                  <a href="/">Home</a>
+                </li>
+                <li {% ifequal page "docs.html" %} class="selected"{%endifequal%}>
+                  <a href="/docs/guestbook.html">
+                    <span class="show-on-mobile">Docs</span>
+                    <span class="hide-on-mobile">Documentation</span>
+                  </a>
+                </li>
+                <li {% ifequal page "contribute.html" %} class="selected"{%endifequal%}>
+                  <a href="/contribute.html">
+                    <span class="hide-on-mobile">Get Involved</span>
+                    <span class="show-on-mobile">Contrib</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          {% block header %}
+          {% endblock %}
+        </div>
+      </div>
+    </header>
+    <div class="wrapper">
+      {% block content %}
+      {% endblock %}
+    </div>
+    <footer>
+      <article class="wrapper">
+        <div class="column-wrapper">
+          <p>
+            Wake framework is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>
+            -
+            Copyright ©
+            <span id="cpyear"></span>
+          </p>
+        </div>
+      </article>
+    </footer>
+
+    {% script "/js/highlight.pack.js" %}
+    {% script "/js/site.js" %}
+    {% block page-scripts %}
+    {% endblock %}
+  </body>
+</html>

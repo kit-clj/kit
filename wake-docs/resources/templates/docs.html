@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="column column-75">
+    <div class="column-wrapper">
+      <h1>{{title}}</h1>
+      {% if toc %}
+      <h2>Contents</h2>
+      {{toc|safe}}
+      {% endif %}
+      <div id="content">
+        {{content|safe}}
+      </div>
+    </div>
+  </div>
+  <div class="column column-25">
+    <div class="column-wrapper">
+      <div id="build-tool-div">
+        <p>Build Tool:
+          <select name="build-tool" id="build-tool" >
+            <option value="lein" >lein</option>
+            <option value="deps" >deps</option>
+          </select>
+        </p>
+      </div>
+      <h2>Topics</h2>
+      <ul>
+        {% for topic in topics %}
+        <li {%ifequal topic.1 title %}class="selected" {% endifequal %}>
+          <a href="/docs/{{topic.0}}">
+            {{topic.1}}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block page-scripts %}
+{% script "/js/docs.js" %}
+{% endblock %}

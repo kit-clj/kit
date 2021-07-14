@@ -1,0 +1,242 @@
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family: Helvetica Neue, Helvetica, sans-serif;
+    color: #111;
+}
+a, a:hover {
+    color: black;
+    text-decoration: underline;
+}
+ul a, ol a, ul a:hover, ol a:hover {
+    color: #111;
+    text-decoration: none;
+}
+ul a:hover, ol a:hover {
+    border-bottom: 1px dotted #111;
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+    line-height: 1.5em;
+    list-style-position:inside;
+}
+ul {
+    list-style: none;
+}
+
+ul.slogan {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+ul.slogan > li {
+  padding-left: 1em;
+  text-indent: -1em;
+}
+
+ul.slogan > li:before {
+  content: "➤";
+  padding-right: 5px;
+}
+
+h1 {
+    font-size: 2em;
+}
+h2 {
+    font-size: 1.25em;
+}
+h3 {
+    font-size: 1em;
+    margin-top: 3em;
+}
+h4 {
+    text-transform: uppercase;
+    font-size: 0.75em;
+}
+h4 code {
+    font-size: 1.25em;
+    text-transform: none;
+}
+img {
+    max-width: 100%;
+}
+hr {
+    border-top: 1px solid #DDD;
+    border-bottom: none;
+}
+
+.wrapper {
+    margin: 0 auto;
+    max-width: 900px;
+}
+.row {
+    overflow: hidden;
+}
+.column {
+    float: left;
+}
+.column-wrapper {
+    padding: 2em 1em;
+}
+.column-75 {
+    width: 75%;
+}
+.column-75 .column-wrapper {
+    padding-right: 2em;
+}
+.column-25 {
+    width: 25%;
+}
+.column-33 {
+    width: 33%;
+}
+
+header, footer {
+    width: 100%;
+    overflow: hidden;
+}
+header {
+    background-color: #3e51ff;
+}
+header, header a, header a:hover {
+    color: white;
+    border-color: white;
+}
+header h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+nav > ul > .selected a {
+    border-bottom: solid;
+}
+
+.column-25 .selected {
+    color: black;
+    font-weight: bold;
+}
+.column-25 > div > ul {
+    font-size: 0.95em;
+    white-space: nowrap;
+}
+.column-25 .selected {
+    list-style-type: disc;
+}
+.selected, .selected a {
+    cursor: default;
+}
+.selected:hover, .selected a:hover {
+    cursor: default;
+}
+.column-25 .selected a:hover {
+    border: none;
+}
+
+#logo {
+    float: left;
+}
+#logo img {
+    max-width: 42px;
+    vertical-align: middle;
+}
+#logo a {
+    text-decoration: none;
+}
+header nav {
+    float: right;
+}
+header nav li {
+    display: inline;
+}
+header nav li a {
+    display: inline-block;
+    padding: 0.5em 0 0;
+    margin: 0 0.5em;
+}
+
+.contents > li > a {
+  color: #3e51ff;
+}
+
+#content > ul > li > a {
+  color: #3e51ff;
+}
+
+.column-75 > a {
+  color: #3e51ff;
+}
+
+footer {
+    margin-top: 2em;
+}
+footer .wrapper {
+    border-top: 1px solid #DDD;
+    text-align: center;
+}
+
+.contents {
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+    border-bottom: 1px solid #DDD;
+}
+
+#hero {
+    text-align: center;
+    max-width: 600px;
+    margin: 3em auto;
+}
+#hero p {
+    color: white;
+}
+#hero h2 {
+    font-size: 3em;
+}
+
+.show-on-mobile {
+    display: none;
+}
+
+.column-33 li:before {
+    content: "— ";
+}
+
+#easy-start .bash {
+    background: black;
+    color: white;
+    border-radius: 5px;
+    padding: 1.5em 2em;
+    line-height: 1.5em;
+}
+#easy-start > .bash .cmd, #easy-start .bash .hljs-string {
+    color: yellow;
+}
+#easy-start > .bash .hljs-number, #easy-start .bash .hljs-keyword {
+    color: white;
+}
+.markdown .hljs-link_label {
+    color: #3e51ff;
+}
+
+#easy-start {
+    padding-top: 0;
+}
+
+@media screen and (max-width: 640px) {
+    .column {
+        float: none;
+        width: auto;
+    }
+    .column-wrapper {
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+    .show-on-mobile {
+        display: initial;
+    }
+    .hide-on-mobile {
+        display: none;
+    }
+}
