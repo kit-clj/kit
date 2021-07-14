@@ -1,6 +1,6 @@
-(ns clj.new.wake.options.base
+(ns leiningen.new.wake.options.base
   (:require
-    [clj.new.wake.options.helpers :as helpers]))
+    [leiningen.new.wake.options.helpers :as helpers]))
 
 (defn files
   [data]
@@ -8,6 +8,7 @@
    ["README.md" (helpers/render "README.md" data)]
    ["Dockerfile" (helpers/render "Dockerfile" data)]
    ["project.clj" (helpers/render "project.clj" data)]
+   ["deps.edn" (helpers/render "deps.edn" data)]
 
    ["env/dev/clj/{{sanitized}}/dev_middleware.clj" (helpers/render "env/dev/clj/dev_middleware.clj" data)]
    ["env/dev/clj/{{sanitized}}/env.clj" (helpers/render "env/dev/clj/env.clj" data)]

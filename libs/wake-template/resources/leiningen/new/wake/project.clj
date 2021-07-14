@@ -18,17 +18,17 @@
                            [metosin/muuntaja "0.6.8"]
 
                            ;; Wake Libs
-                           [wake-core "0.1.0-SNAPSHOT"]
-                           [wake-undertow "0.1.0-SNAPSHOT"]
-                           <% if crux? %>[wake-crux "0.1.0-SNAPSHOT"]<% endif %>
-                           <% if sql? %>[wake-sql "0.1.0-SNAPSHOT"]
-                           [wake-postgres "0.1.0-SNAPSHOT"]<% endif %>
-                           <% if hato? %>[wake-hato "0.1.0-SNAPSHOT"]<% endif %>
-                           <% if quartz? %>[wake-quartz "0.1.0-SNAPSHOT"]<% endif %>
-                           <% if redis? %>[wake-redis "0.1.0-SNAPSHOT"]<% endif %>
-                           <% if selmer? %>[wake-selmer "0.1.0-SNAPSHOT"]<% endif %>
-                           <% if metrics? %>[wake-metrics "0.1.0-SNAPSHOT"]<% endif %>
-                           <% if repl? %>[wake-repl "0.1.0-SNAPSHOT"]<% endif %>]
+                           [wake-clj/wake-core "<<versions.wake-core>>"]
+                           [wake-clj/wake-undertow "<<versions.wake-undertow>>"]
+                           <% if crux? %>[wake-clj/wake-crux "<<versions.wake-crux>>"]<% endif %>
+                           <% if sql? %>[wake-clj/wake-sql "<<versions.wake-sql>>"]
+                           [wake-clj/wake-postgres "<<versions.wake-postgres>>"]<% endif %>
+                           <% if hato? %>[wake-clj/wake-hato "<<versions.wake-hato>>"]<% endif %>
+                           <% if quartz? %>[wake-clj/wake-quartz "<<versions.wake-quartz>>"]<% endif %>
+                           <% if redis? %>[wake-clj/wake-redis "<<versions.wake-redis>>"]<% endif %>
+                           <% if selmer? %>[wake-clj/wake-selmer "<<versions.wake-selmer>>"]<% endif %>
+                           <% if metrics? %>[wake-clj/wake-metrics "<<versions.wake-metrics>>"]<% endif %>
+                           <% if repl? %>[wake-clj/wake-repl "<<versions.wake-repl>>"]<% endif %>]
 
             :min-lein-version "2.0.0"
 

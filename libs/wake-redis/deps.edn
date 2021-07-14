@@ -1,14 +1,14 @@
 {:paths   ["src"]
- :deps    {integrant/integrant       {:mvn/version "0.8.0"}
-           org.clojure/core.cache    {:mvn/version "1.0.207"}
-           com.taoensso/carmine      {:mvn/version "3.1.0"}
-           com.github.wake/wake-core {:mvn/version "0.1.0-SNAPSHOT"}}
+ :deps    {integrant/integrant    {:mvn/version "0.8.0"}
+           org.clojure/core.cache {:mvn/version "1.0.207"}
+           com.taoensso/carmine   {:mvn/version "3.1.0"}
+           wake-clj/wake-core     {:mvn/version "0.1.0"}}
 
  :aliases {
            :jar     {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
                      :exec-fn      hf.depstar/jar
                      :exec-args    {:jar         "target/wake-redis.jar"
-                                    :group-id    "com.github.wake"
+                                    :group-id    "wake-clj"
                                     :artifact-id "wake-redis"}}
            :install {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
                      :exec-fn      deps-deploy.deps-deploy/deploy

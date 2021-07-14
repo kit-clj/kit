@@ -6,7 +6,7 @@
            :jar     {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
                      :exec-fn      hf.depstar/jar
                      :exec-args    {:jar         "target/wake-hato.jar"
-                                    :group-id    "com.github.wake"
+                                    :group-id    "wake-clj"
                                     :artifact-id "wake-hato"}}
            :install {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
                      :exec-fn      deps-deploy.deps-deploy/deploy

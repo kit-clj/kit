@@ -1,6 +1,6 @@
-(ns clj.new.wake.options.sql
+(ns leiningen.new.wake.options.sql
   (:require
-    [clj.new.wake.options.helpers :as helpers]))
+    [leiningen.new.wake.options.helpers :as helpers]))
 
 (defn files
   [data]

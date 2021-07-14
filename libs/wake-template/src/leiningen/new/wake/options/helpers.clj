@@ -1,6 +1,6 @@
-(ns clj.new.wake.options.helpers
+(ns leiningen.new.wake.options.helpers
   (:require
-    [clj.new.templates :refer [renderer sanitize]]
+    [leiningen.new.templates :refer [renderer sanitize]]
     [clojure.java.io :as io]
     [selmer.parser :as selmer]))
 

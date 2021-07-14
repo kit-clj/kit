@@ -1,10 +1,10 @@
-(ns clj.new.wake
+(ns leiningen.new.wake
   (:require
-    [clj.new.templates
+    [leiningen.new.templates
      :refer [name-to-path sanitize-ns project-name ->files]]
-    [clj.new.wake.options.base :as base]
-    [clj.new.wake.options.helpers :as helpers]
-    [clj.new.wake.options.sql :as sql]
+    [leiningen.new.wake.options.base :as base]
+    [leiningen.new.wake.options.helpers :as helpers]
+    [leiningen.new.wake.options.sql :as sql]
     [clojure.set :as set]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31,7 +31,19 @@
      :redis?    (or full? (helpers/option? "+redis" options))
      :selmer?   (or full? (helpers/option? "+selmer" options))
 
-     :repl?     (not (helpers/option? "+bare" options))}))
+     :repl?     (not (helpers/option? "+bare" options))
+
+     :versions {:wake-core     "0.1.0"
+                :wake-undertow "0.1.0"
+                :wake-crux     "0.1.0"
+                :wake-sql      "0.1.0"
+                :wake-postgres "0.1.0"
+                :wake-hato     "0.1.0"
+                :wake-quartz   "0.1.0"
+                :wake-redis    "0.1.0"
+                :wake-selmer   "0.1.0"
+                :wake-metrics  "0.1.0"
+                :wake-repl     "0.1.0"}}))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

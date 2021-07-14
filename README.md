@@ -10,7 +10,11 @@ Thanks to `integrant`, and `aero`, the modules are simple skeletons with the bul
 
 ## Quick Start
 
-`clojure -X:new :template wake :name yourname/app`
+`clojure -X:new :template wake :name yourname/app :args '[+selmer]'`
+
+or
+
+`lein new wake app +selmer`
 
 ### Profiles
 
@@ -56,10 +60,8 @@ TODO: link
 - [re-frame template](https://github.com/day8/re-frame-template) for code used directly in `wake-template`
 - [Luminus framework](https://luminusweb.com/) from which the initial project that `wake`'s predecessor was built upon
 
-Other libraries used are credited in their individual modules. 
-
 ## License
 
-Copyright © 2021 Nikola Peric
+Copyright © 2021
 
 Released under the MIT license.

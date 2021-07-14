@@ -2,13 +2,13 @@
  :deps    {integrant/integrant       {:mvn/version "0.8.0"}
            conman/conman             {:mvn/version "0.9.1"}
            migratus/migratus         {:mvn/version "1.3.5"}
-           com.github.wake/wake-core {:mvn/version "0.1.0-SNAPSHOT"}}
+           wake-clj/wake-core        {:mvn/version "0.1.0"}}
 
  :aliases {
            :jar     {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
                      :exec-fn      hf.depstar/jar
                      :exec-args    {:jar         "target/wake-sql.jar"
-                                    :group-id    "com.github.wake"
+                                    :group-id    "wake-clj"
                                     :artifact-id "wake-sql"}}
            :install {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
                      :exec-fn      deps-deploy.deps-deploy/deploy
