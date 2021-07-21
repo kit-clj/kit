@@ -40,6 +40,10 @@
        (apply merge)
        (assoc-in ctx [:modules :modules])))
 
+(defn available-modules [ctx]
+  (doseq [[id {:keys [doc]}] (-> ctx :modules :modules)]
+    (println id "-" doc)))
+
 (comment
   (let [ctx {:project-ns "myapp"
              :sanitized  "myapp"
@@ -50,6 +54,6 @@
                                   :url  "git@github.com:nikolap/wake.git"
                                   :tag  "master"}]}
              #_{"git@github.com:luminus-framework/luminus-template.git" "master"}}]
-    (load-modules ctx))
+    (available-modules (load-modules ctx)))
 
   )
