@@ -1,5 +1,6 @@
 (ns wake.generator.modules
   (:require
+    [clojure.java.io :as io]
     [clojure.string :as string]
     [clj-jgit.porcelain :as git]
     [clojure.tools.logging :as log])
@@ -26,15 +27,24 @@
     (catch Exception e
       (println "failed to read module:" url "\ncause:" (.getMessage e)))))
 
-(defn load-modules [{:keys [modules] :as ctx}]
+(defn clone-modules [{:keys [modules] :as ctx}]
   (doseq [repository (-> modules :repositories)]
     (clone-repo (:root modules) repository)))
+
+(defn load-modules [{:keys [modules] :as ctx}]
+  (->> (:root modules)
+       (io/file)
+       (file-seq)
+       (keep #(when (= "modules.edn" (.getName %))
+                (read-string (slurp %))))
+       (apply merge)
+       (assoc-in ctx [:modules :modules])))
 
 (comment
   (let [ctx {:project-ns "myapp"
              :sanitized  "myapp"
              :name       "myapp"
-             :modules    {:root "modules"
+             :modules    {:root "test/resources/modules"
                           :repositories
                                 [{:name "wake"
                                   :url  "git@github.com:nikolap/wake.git"

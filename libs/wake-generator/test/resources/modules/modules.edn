@@ -1,0 +1,3 @@
+{:html
+ {:path "html"
+  :doc "adds support for HTML templating using Selmer"}}

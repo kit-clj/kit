@@ -2,18 +2,13 @@
   (:require
     [clojure.java.io :as io]
     [clojure.test :refer :all]
+    [wake-generator.io :refer [delete-folder]]
     [wake.generator.modules.generator :as g]
     [wake.generator.reader :as r]
+    [wake.generator.modules :as m]
     [wake.generator.modules.injections :as ij]))
 
-(defn delete-folder [file-name]
-  (letfn [(func [f]
-            (when (.exists f)
-              (when (.isDirectory f)
-                (doseq [f2 (.listFiles f)]
-                  (func f2)))
-              (io/delete-file f)))]
-    (func (io/file file-name))))
+
 
 (def source-folder "test/resources")
 (def target-folder "test/resources/generated")
@@ -31,7 +26,8 @@
 
 (deftest test-edn-injection
   (testing "testing EDN injection"
-    (g/generate ctx :html)
+    (let [ctx (m/load-modules ctx)]
+      (g/generate ctx :html))
     ;;todo add some validation
     #_(is (= 0 1))))
 
