@@ -77,7 +77,9 @@
         config      (read-config module-path)
         ctx         (assoc ctx :module-path module-path)]
     (doseq [action config]
-      (handle-action ctx action))))
+      (handle-action ctx action))
+    (when (:require-restart? config)
+      (println "restart required!"))))
 
 (comment
   (let [ctx {:project-ns "myapp"
