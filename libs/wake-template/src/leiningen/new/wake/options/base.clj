@@ -9,6 +9,7 @@
    ["Dockerfile" (helpers/render "Dockerfile" data)]
    ["project.clj" (helpers/render "project.clj" data)]
    ["deps.edn" (helpers/render "deps.edn" data)]
+   ["wake.edn" (helpers/render "wake.edn" data)]
 
    ["env/dev/clj/{{sanitized}}/dev_middleware.clj" (helpers/render "env/dev/clj/dev_middleware.clj" data)]
    ["env/dev/clj/{{sanitized}}/env.clj" (helpers/render "env/dev/clj/env.clj" data)]
