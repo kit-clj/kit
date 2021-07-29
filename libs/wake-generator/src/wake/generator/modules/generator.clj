@@ -69,17 +69,42 @@
       (slurp)
       (reader/str->edn)))
 
+(defn modules-log-path [modules-root]
+  (str modules-root File/separator "install-log.edn"))
+
+(defn read-modules-log [modules-root]
+  (let [log-path (modules-log-path modules-root)]
+    (or (some->
+          (slurp log-path)
+          (reader/str->edn))
+        {})))
+
+(defn write-modules-log [modules-root log]
+  (spit (modules-log-path modules-root) log))
+
 (defn generate [{:keys [modules] :as ctx} module-key]
-  (let [module-path (->> [(:root modules)
-                          (get-in modules [:modules module-key :path] (name module-key))]
-                         (interpose File/separator)
-                         (apply str))
-        config      (read-config module-path)
-        ctx         (assoc ctx :module-path module-path)]
-    (doseq [action config]
-      (handle-action ctx action))
-    (when (:require-restart? config)
-      (println "restart required!"))))
+  (let [modules-root (:root modules)
+        module-log   (read-modules-log modules)]
+    (if (= :success (module-log module-key))
+      (println "Aborting: module" (name module-key) "is already installed!")
+      (try
+        (let [module-path (->> [modules-root
+                                (get-in modules [:modules module-key :path] (name module-key))]
+                               (interpose File/separator)
+                               (apply str))
+              config      (read-config module-path)
+              ctx         (assoc ctx :module-path module-path)]
+          (doseq [action config]
+            (handle-action ctx action))
+          (write-modules-log modules-root (assoc module-log module-key :success))
+          (println (or (:success-message config)
+                       (str (name module-key) " installed successfully!")))
+          (when (:require-restart? config)
+            (println "restart required!")))
+        (catch Exception e
+          (println "failed to install module" module-key)
+          (write-modules-log modules-root (assoc module-log module-key :error))
+          (.printStackTrace e))))))
 
 (comment
   (let [ctx {:project-ns "myapp"

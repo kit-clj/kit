@@ -3,6 +3,6 @@
  :name         "myapp"
  :project-root "test/resources/generated"
  :modules      {:root         "test/resources/modules"
-                :repositories [{:url  "git@github.com:nikolap/wake.git"
+                :repositories [{:url  "git@github.com:wake-clj/modules.git"
                                 :tag  "master"
                                 :name "wake"}]}}
