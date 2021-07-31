@@ -84,7 +84,7 @@
 
 (defn generate [{:keys [modules] :as ctx} module-key]
   (let [modules-root (:root modules)
-        module-log   (read-modules-log modules)]
+        module-log   (read-modules-log modules-root)]
     (if (= :success (module-log module-key))
       (println "Aborting: module" (name module-key) "is already installed!")
       (try

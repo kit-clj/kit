@@ -16,7 +16,7 @@
 
 (defn list-modules []
   (let [ctx (modules/load-modules (read-ctx))]
-    (modules/list-modules (read-ctx))))
+    (modules/list-modules ctx)))
 
 (defn install-module [module-key]
   (let [ctx (modules/load-modules (read-ctx))]
