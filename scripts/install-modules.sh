@@ -20,6 +20,7 @@ for ext in \
   wake-selmer \
   wake-sql \
   wake-template \
+  wake-generator \
   wake-undertow; do
   cd libs/$ext; clojure -X:jar :sync-pom true :version "\"${VERSION}\""; clojure -X:install; cd ../..;
 done

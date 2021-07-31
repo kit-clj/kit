@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>wake-clj</groupId>
   <artifactId>wake-repl</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>wake-repl</name>
   <dependencies>
     <dependency>

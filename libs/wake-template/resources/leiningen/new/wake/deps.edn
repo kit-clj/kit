@@ -42,7 +42,7 @@
                                 pjstadig/humane-test-output {:mvn/version "0.11.0"}
                                 ring/ring-devel             {:mvn/version "1.9.3"}
                                 ring/ring-mock              {:mvn/version "0.4.0"}
-                                wake/generator              {:mvn/version "0.1.0"}}
+                                wake-clj/wake-generator     {:mvn/version "0.1.0"}}
                   :extra-paths ["env/dev/clj" "env/dev/resources" "test/clj"]
                   :main-opts   ["-e" "(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)" "-r"]}
 
