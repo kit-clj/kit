@@ -74,10 +74,9 @@
 
 (defn read-modules-log [modules-root]
   (let [log-path (modules-log-path modules-root)]
-    (or (some->
-          (slurp log-path)
-          (reader/str->edn))
-        {})))
+    (if (.exists (io/file log-path))
+      (reader/str->edn (slurp log-path))
+      {})))
 
 (defn write-modules-log [modules-root log]
   (spit (modules-log-path modules-root) log))
