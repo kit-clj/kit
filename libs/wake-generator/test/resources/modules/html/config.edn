@@ -1,19 +1,20 @@
-{:require-restart? true
- :success-message  "HTML module installed successfully!"
- :assets           [["assets/home.html" "test/resources/generated/resources/public/home.html"]
-                    ["assets/img/luminus.png" "test/resources/generated/resources/public/img/luminus.png"]
-                    ["assets/pages.clj" "test/resources/generated/src/clj/<<ns-name>>/web/routes/pages.clj"]]
- :injections       [{:type   :edn
-                     :path   "test/resources/generated/resources/system.edn"
-                     :target []
-                     :action :merge
-                     :value  {:reitit.routes/pages
-                              {:base-path "/"
-                               :env       #ig/ref :system/env}
-                              :templating/selmer
-                              {}}}
-                    #_{:type   :clj
-                       :path   "project.clj"
-                       :target [:dependencies]
-                       :action :conj
-                       :value  ['wake.selmer "1.0.0"]}]}
+{:default
+ {:require-restart? true
+  :success-message  "HTML module installed successfully!"
+  :assets           [["assets/home.html" "test/resources/generated/resources/public/home.html"]
+                     ["assets/img/luminus.png" "test/resources/generated/resources/public/img/luminus.png"]
+                     ["assets/pages.clj" "test/resources/generated/src/clj/<<ns-name>>/web/routes/pages.clj"]]
+  :injections       [{:type   :edn
+                      :path   "test/resources/generated/resources/system.edn"
+                      :target []
+                      :action :merge
+                      :value  {:reitit.routes/pages
+                               {:base-path "/"
+                                :env       #ig/ref :system/env}
+                               :templating/selmer
+                               {}}}
+                     #_{:type   :clj
+                        :path   "project.clj"
+                        :target [:dependencies]
+                        :action :conj
+                        :value  ['wake.selmer "1.0.0"]}]}}

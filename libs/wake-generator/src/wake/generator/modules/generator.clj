@@ -1,9 +1,11 @@
 (ns wake.generator.modules.generator
   (:require
     [wake.generator.reader :as reader]
+    [wake.generator.modules :as modules]
     [wake.generator.modules.injections :as ij]
     [wake.generator.renderer :refer [render-template render-asset]]
-    [clojure.java.io :as io])
+    [clojure.java.io :as io]
+    [clojure.pprint :refer [pprint]])
   (:import java.io.File
            java.nio.file.Files))
 
@@ -81,25 +83,37 @@
 (defn write-modules-log [modules-root log]
   (spit (modules-log-path modules-root) log))
 
-(defn generate [{:keys [modules] :as ctx} module-key]
+(defn generate [{:keys [modules] :as ctx} module-key feature-flag]
   (let [modules-root (:root modules)
         module-log   (read-modules-log modules-root)]
     (if (= :success (module-log module-key))
       (println "Aborting: module" (name module-key) "is already installed!")
       (try
-        (let [module-path (->> [modules-root
-                                (get-in modules [:modules module-key :path] (name module-key))]
-                               (interpose File/separator)
-                               (apply str))
-              config      (read-config module-path)
-              ctx         (assoc ctx :module-path module-path)]
-          (doseq [action config]
-            (handle-action ctx action))
-          (write-modules-log modules-root (assoc module-log module-key :success))
-          (println (or (:success-message config)
-                       (str (name module-key) " installed successfully!")))
-          (when (:require-restart? config)
-            (println "restart required!")))
+        (let [module-path   (->> [modules-root
+                                  (get-in modules [:modules module-key :path] (name module-key))]
+                                 (interpose File/separator)
+                                 (apply str))
+              module-config (read-config module-path)
+              config        (get module-config feature-flag)
+              ctx           (assoc ctx :module-path module-path)]
+          (cond
+            (nil? module-config)
+            (do
+              (println "module" (name module-key) "not found, available modules:")
+              (pprint (modules/list-modules ctx)))
+            (nil? config)
+            (do
+              (println "feature" feature-flag "not found for module" module-key ", available features:")
+              (pprint (keys module-config)))
+            :else
+            (do
+              (doseq [action config]
+                (handle-action ctx action))
+              (write-modules-log modules-root (assoc module-log module-key :success))
+              (println (or (:success-message config)
+                           (str (name module-key) " installed successfully!")))
+              (when (:require-restart? config)
+                (println "restart required!")))))
         (catch Exception e
           (println "failed to install module" module-key)
           (write-modules-log modules-root (assoc module-log module-key :error))
@@ -114,6 +128,6 @@
                                           :tag  "master"
                                           :name "wake"}]
                           :modules      {:html {:path "html"}}}}]
-    (generate ctx :html)
+    (generate ctx :html :default)
 
     ))

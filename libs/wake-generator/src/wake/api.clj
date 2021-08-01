@@ -18,11 +18,10 @@
   (let [ctx (modules/load-modules (read-ctx))]
     (modules/list-modules ctx)))
 
-(defn install-module [module-key]
+(defn install-module [module-key & [feature-flag]]
   (let [ctx (modules/load-modules (read-ctx))]
-    (generator/generate ctx module-key)))
+    (generator/generate ctx module-key (or feature-flag :default))))
 
 (comment
   (ctx "test/resources/wake.edn")
-
   )
