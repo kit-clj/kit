@@ -16,19 +16,25 @@
 (comment
   (ns-unmap 'wake.generator.modules.injections 'inject))
 
-(defn update-value [original-value action new-value]
-  (when-not (nil? original-value)
-    (println "warning: overwriting existing configuration")
-    (pprint original-value))
-  (action new-value))
+(defn update-value [path original-value action new-value]
+  (println "updating configuration in" path)
+  (if-not (nil? original-value)
+    (do
+      (println "warning: found existing configuration")
+      (pprint original-value)
+      (println "\nfollowing configuration must be added")
+      (pprint new-value))
+    (do
+      (println "adding configuration")
+      (action new-value))))
 
-(defmethod inject :edn [{:keys [target query action value]}]
+(defmethod inject :edn [{:keys [path target query action value]}]
   (let [action (case action
                  :conj conj
                  :merge merge)]
     (->> (if (empty? query)
            (action target value)
-           (update-in target query update-value action value)))))
+           (update-in target query update-value path action value)))))
 
 (defmethod inject :clj [{:keys []}]
   (throw (Exception. "TODO")))
