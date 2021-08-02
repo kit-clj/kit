@@ -42,27 +42,54 @@
               :jar-file jar-file
               :class-dir class-dir}))
 
-(defn topo-sort [{:keys [libs]}]
+(defn- dep-hm [{:keys [libs]}]
   (let [deps (map #(filter (fn [d] (= group-id (namespace d))) %) (map #(keys (:deps (edn/read-string (slurp (str % "/deps.edn"))))) libs))
-        proj (into #{} (map #(symbol group-id (.getName %))) libs)
-        sorted (dep/topo-sort (loop [g (dep/graph) [[k vs :as entry] & m] (zipmap proj deps)]
-                                (if entry
-                                  (recur (reduce #(dep/depend %1 k %2) g vs) m)
-                                  g)))]
+        proj (into #{} (map #(symbol group-id (.getName %))) libs)]
+    (zipmap proj deps)))
 
-    (concat sorted (reduce disj proj sorted))))
+(defn- build-graph [{:keys [libs] :as m}]
+  (let [dep-mappings (dep-hm m)]
+    (loop [g (dep/graph) [[k vs :as entry] & m] dep-mappings]
+      (if entry
+        (recur (reduce #(dep/depend %1 k %2) g vs) m)
+        {:graph g :dep-mappings dep-mappings}))))
+
+(defn- topo-sort [{:keys [graph dep-mappings]}]
+  (let [sorted (dep/topo-sort graph)]
+    (concat sorted (reduce disj (set (keys dep-mappings)) sorted))))
+
+(defn- build-data [lib]
+  (let [l (str libs-dir "/" (name lib))
+        src-dir [(str l "/src")]
+        src-pom (str l "/pom.xml")
+        target-dir (str l "/target")
+        class-dir (str target-dir "/classes")
+        basis (b/create-basis {:project (str l "/deps.edn")})
+        jar-file (format "%s/%s-%s.jar" target-dir (name lib) version)]
+    {:target-dir target-dir :class-dir class-dir :lib lib :version version :basis basis :src src-dir
+     :src-pom src-pom :jar-file jar-file}))
+
+(defn install-lib [{:keys [artifact-id]}]
+  (let [libs (filter #(.isDirectory %) (.listFiles (jio/file libs-dir)))
+        {:keys [graph dep-mappings]} (build-graph {:libs libs})]
+    (let [lib (symbol group-id (name artifact-id))]
+      (if (contains? dep-mappings lib)
+        (if (not-empty (dep/transitive-dependencies graph lib))
+          (doseq [lib (concat (dep/transitive-dependencies graph lib) [lib])]
+            (let [bd (build-data lib)]
+              (clean bd)
+              (make-jar bd)
+              (install bd)))
+          (let [bd (build-data lib)]
+            (clean bd)
+            (make-jar bd)
+            (install bd)))
+        (println "Can't find: " artifact-id)))))
 
 (defn install-libs [_]
   (let [libs (filter #(.isDirectory %) (.listFiles (jio/file libs-dir)))]
-    (doseq [lib (topo-sort {:libs libs})]
-      (let [l (str libs-dir "/" (name lib))
-            src-dir [(str l "/src")]
-            src-pom (str l "/pom.xml")
-            target-dir (str l "/target")
-            class-dir (str target-dir "/classes")
-            basis (b/create-basis {:project (str l "/deps.edn")})
-            jar-file (format "%s/%s-%s.jar" target-dir (name lib) version)]
-        (clean {:target-dir target-dir})
-        (make-jar {:target-dir target-dir :class-dir class-dir :lib lib :version version :basis basis :src src-dir
-                   :src-pom src-pom :jar-file jar-file})
-        (install {:basis basis :lib lib :version version :jar-file jar-file :class-dir class-dir})))))
+    (doseq [lib (topo-sort (build-graph {:libs libs}))]
+      (let [bd (build-data lib)]
+        (clean bd)
+        (make-jar bd)
+        (install bd)))))
