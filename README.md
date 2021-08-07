@@ -10,7 +10,7 @@ Thanks to `integrant`, and `aero`, the modules are simple skeletons with the bul
 
 ## Quick Start
 
-`clojure -T:build install-lib`
+`clojure -T:build install-libs`
 
 `clojure -X:new :template wake :name yourname/app :args '[+selmer]'`
 
