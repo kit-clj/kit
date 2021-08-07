@@ -3,7 +3,8 @@
     [wake.generator.renderer :as renderer]
     [wake.generator.reader :as data-reader]
     [cljfmt.core :as cljfmt]
-    [clojure.pprint :refer [pprint]]))
+    [clojure.pprint :refer [pprint]]
+    [borkdude.rewrite-edn :as rewrite-edn]))
 
 (defn format-clj [code]
   (cljfmt/reformat-string
@@ -28,14 +29,19 @@
       (println "adding configuration")
       (action new-value))))
 
+(defn rewrite-assoc-list
+  [target value]
+  (map (fn [[k v]]
+         (rewrite-edn/assoc target k v))
+       value))
+
 (defmethod inject :edn [{:keys [path target query action value]}]
   (let [action (case action
                  :conj conj
-                 :into into
-                 :merge merge)]
+                 :merge rewrite-assoc-list)]
     (->> (if (empty? query)
            (action target value)
-           (update-in target query update-value path action value)))))
+           (rewrite-edn/update-in target query update-value path action value)))))
 
 (defmethod inject :clj [{:keys []}]
   (throw (Exception. "TODO")))
@@ -61,5 +67,5 @@
                      path->data injections)]
     (doseq [[path data] updated]
       (->> (data-reader/edn->str data)
-           (format-clj)
+           (format-clj)                                     ;; TODO: this seems dangerous to do to whole file if we're injecting into user source files. Can we target just the generated code?
            (spit path)))))
