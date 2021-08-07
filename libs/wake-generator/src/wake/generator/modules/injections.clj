@@ -38,7 +38,6 @@
 (defmethod inject :edn [{:keys [path target query action value]}]
   (let [action (case action
                  :conj conj
-                 :into rewrite-assoc-list
                  :merge rewrite-assoc-list)]
     (->> (if (empty? query)
            (action target value)
