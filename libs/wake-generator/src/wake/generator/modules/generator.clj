@@ -89,7 +89,7 @@
     (if (= :success (module-log module-key))
       (println "Aborting: module" (name module-key) "is already installed!")
       (try
-        (let [module-path   (get-in modules [:modules :modules module-key :path])
+        (let [module-path   (get-in modules [:modules module-key :path])
               module-config (read-config module-path)
               config        (get module-config feature-flag)
               ctx           (assoc ctx :module-path module-path)]
