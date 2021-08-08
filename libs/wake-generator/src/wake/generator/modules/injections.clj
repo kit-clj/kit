@@ -1,7 +1,7 @@
 (ns wake.generator.modules.injections
   (:require
     [wake.generator.renderer :as renderer]
-    [wake.generator.reader :as data-reader]
+    [wake.generator.io :as io]
     [cljfmt.core :as cljfmt]
     [clojure.pprint :refer [pprint]]
     [borkdude.rewrite-edn :as rewrite-edn]))
@@ -31,17 +31,24 @@
 
 (defn rewrite-assoc-list
   [target value]
-  (map (fn [[k v]]
+  #_(map (fn [[k v]]
          (rewrite-edn/assoc target k v))
-       value))
+       value)
+  (reduce
+    (fn [target [k v]]
+      (println k v)
+      (assoc target k v)
+      #_(rewrite-edn/assoc target k v))
+    target
+    value))
 
-(defmethod inject :edn [{:keys [path target query action value]}]
+(defmethod inject :edn [{:keys [path target query action value] :as m}]
   (let [action (case action
                  :conj conj
                  :merge rewrite-assoc-list)]
     (->> (if (empty? query)
            (action target value)
-           (rewrite-edn/update-in target query update-value path action value)))))
+           (rewrite-edn/update-in target query #(update-value path % action value))))))
 
 (defmethod inject :clj [{:keys []}]
   (throw (Exception. "TODO")))
@@ -56,7 +63,7 @@
       (assoc path->data path
                         (->> (slurp path)
                              (renderer/render-template ctx)
-                             (data-reader/str->edn))))
+                             (io/str->edn))))
     {} paths))
 
 (defn inject-data [ctx injections]
@@ -66,6 +73,6 @@
                        (update path->data path #(inject (assoc injection :target %))))
                      path->data injections)]
     (doseq [[path data] updated]
-      (->> (data-reader/edn->str data)
+      (->> (io/edn->str data)
            (format-clj)                                     ;; TODO: this seems dangerous to do to whole file if we're injecting into user source files. Can we target just the generated code?
            (spit path)))))

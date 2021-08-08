@@ -4,7 +4,6 @@
     [clojure.test :refer :all]
     [wake-generator.io :refer [delete-folder]]
     [wake.generator.modules.generator :as g]
-    [wake.generator.reader :as r]
     [wake.generator.modules :as m]
     [wake.generator.modules.injections :as ij]))
 

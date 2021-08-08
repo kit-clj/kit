@@ -3,7 +3,7 @@
     [clojure.java.io :as io]
     [clojure.test :refer :all]
     [wake-generator.io :refer [delete-folder]]
-    [wake.generator.reader :as data-reader]
+    [wake.generator.io :as io]
     [wake.generator.modules.injections :refer :all]))
 
 (def config-template "test/resources/sample-system.edn")
@@ -17,9 +17,9 @@
     (=
       "{:system/env #profile {:dev :dev, :test :test, :prod :prod}, :server/undertow {:port #long #or [#env PORT 3000], :handler #ig/ref :handler/ring}, :handler/ring {:router #ig/ref :router/core, :api-path \"/api\"}, :reitit.routes/api {:base-path \"/api\", :env #ig/ref :system/env}, :router/routes {:routes #ig/refset :reitit/routes}, :router/core {:routes #ig/ref :router/routes}, :foo :bar}
 "
-      (data-reader/edn->str
+      (io/edn->str
         (inject {:type   :edn
-                 :target (data-reader/str->edn (slurp "test/resources/generated/system.edn"))
+                 :target (io/str->edn (slurp "test/resources/generated/system.edn"))
                  :query  []
                  :action :merge
                  :value  {:foo :bar}})))))

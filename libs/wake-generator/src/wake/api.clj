@@ -2,14 +2,14 @@
   (:require
     [wake.generator.modules.generator :as generator]
     [wake.generator.modules :as modules]
-    [wake.generator.reader :as rdr]))
+    [wake.generator.io :as io]))
 
 (defn read-ctx
   ([] (read-ctx nil))
   ([path]
    (-> (or path "wake.edn")
        (slurp)
-       (rdr/str->edn))))
+       (io/str->edn))))
 
 (defn clone-modules []
   (modules/clone-modules (read-ctx)))
@@ -23,5 +23,7 @@
     (generator/generate ctx module-key (or feature-flag :default))))
 
 (comment
-  (ctx "test/resources/wake.edn")
+  (read-ctx "test/resources/wake.edn")
+
+
   )

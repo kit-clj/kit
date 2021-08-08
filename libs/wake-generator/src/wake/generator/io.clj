@@ -1,8 +1,8 @@
-(ns wake.generator.reader)
+(ns wake.generator.io)
 
 (defrecord Tag [label value])
 
-(defmethod print-method wake.generator.reader.Tag
+(defmethod print-method wake.generator.io.Tag
   [{:keys [label value]} writer]
   (.write writer (str "#" (name label) " " value)))
 
@@ -13,6 +13,14 @@
 
 (defn edn->str [edn]
   (with-out-str (prn edn)))
+
+(defn update-edn-file [path f]
+  (spit
+    path
+    (-> (slurp path)
+        (str->edn)
+        (f)
+        (edn->str))))
 
 (comment
   (edn->str (str->edn "{:base-path \"/\" :env #ig/ref :system/env}"))
