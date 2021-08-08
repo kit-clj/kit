@@ -52,10 +52,10 @@
          (keep #(when (= "modules.edn" (.getName %))
                   (set-module-paths root (read-string (slurp %)))))
          (apply merge)
-         (assoc-in ctx [:modules :modules :modules]))))
+         (assoc-in ctx [:modules :modules]))))
 
 (defn list-modules [ctx]
-  (doseq [[id {:keys [doc]}] (-> ctx :modules :modules :modules)]
+  (doseq [[id {:keys [doc]}] (-> ctx :modules :modules)]
     (println id "-" doc)))
 
 (comment
@@ -77,7 +77,7 @@
                          :repositories [{:url  "git@github.com:wake-clj/modules.git"
                                          :tag  "master"
                                          :name "wake_modules"}]}}]
-    (load-modules ctx)
-    #_(list-modules (load-modules ctx)))
+    #_(load-modules ctx)
+    (list-modules (load-modules ctx)))
 
   )
