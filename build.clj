@@ -43,8 +43,16 @@
               :class-dir class-dir}))
 
 (defn- dep-hm [{:keys [libs]}]
-  (let [deps (map #(filter (fn [d] (= group-id (namespace d))) %) (map #(keys (:deps (edn/read-string (slurp (str % "/deps.edn"))))) libs))
-        proj (into #{} (map #(symbol group-id (.getName %))) libs)]
+  (let [proj (into #{} (map #(symbol group-id (.getName %))) libs)
+        only-matching-group-ids (fn [ks] (into #{} (filter (fn [d] (= group-id (namespace d))) ks)))
+        deps (into [] (comp
+                        (map #(str % "/deps.edn"))
+                        (map slurp)
+                        (map edn/read-string)
+                        (map :deps)
+                        (map keys)
+                        (map only-matching-group-ids))
+                   libs)]
     (zipmap proj deps)))
 
 (defn- build-graph [{:keys [libs] :as m}]
@@ -60,7 +68,7 @@
 
 (defn- build-data [lib]
   (let [l (str libs-dir "/" (name lib))
-        src-dir [(str l "/src")]
+        src-dir [(str l "/src") (str l "/resources")]
         src-pom (str l "/pom.xml")
         target-dir (str l "/target")
         class-dir (str target-dir "/classes")
