@@ -36,6 +36,13 @@
                                     :target-dir "target/uberjar"}
                      :extra-paths ["env/prod/clj" "env/prod/resources"]}
 
+           :build {:deps {io.github.clojure/tools.build {:git/sha "1e7c019"
+                                                         :git/tag "v0.1.6" :git/url "https://github.com/clojure/tools.build.git"}
+                          slipset/deps-deploy {:mvn/version "0.1.5"}
+                          weavejester/dependency {:mvn/version "0.2.1"}}
+                   :ns-default build}
+
+
            :dev  {:extra-deps  {criterium/criterium         {:mvn/version "0.4.6"}
                                 expound/expound             {:mvn/version "0.8.9"}
                                 integrant/repl              {:mvn/version "0.3.2"}
