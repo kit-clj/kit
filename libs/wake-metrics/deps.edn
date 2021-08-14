@@ -5,21 +5,4 @@
            io.prometheus/simpleclient_common      {:mvn/version "0.11.0"}
            io.prometheus/simpleclient_hotspot     {:mvn/version "0.11.0"}
            io.prometheus/simpleclient_httpserver  {:mvn/version "0.11.0"}
-           io.prometheus/simpleclient_pushgateway {:mvn/version "0.11.0"}}
-
- :aliases {
-           :jar     {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
-                     :exec-fn      hf.depstar/jar
-                     :exec-args    {:jar         "target/wake-metrics.jar"
-                                    :group-id    "wake-clj"
-                                    :artifact-id "wake-metrics"}}
-           :install {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
-                     :exec-fn      deps-deploy.deps-deploy/deploy
-                     :exec-args    {:installer :local
-                                    :artifact  "target/wake-metrics.jar"}}
-           :deploy  {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
-                     :exec-fn      deps-deploy.deps-deploy/deploy
-                     :exec-args    {:installer :remote
-                                    :artifact  "target/wake-metrics.jar"}}
-           }
- }
+           io.prometheus/simpleclient_pushgateway {:mvn/version "0.11.0"}}}

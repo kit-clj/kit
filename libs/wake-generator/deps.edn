@@ -5,20 +5,4 @@
            clj-jgit                  {:mvn/version "1.0.1"}
            cljfmt                    {:mvn/version "0.7.0"}
            org.clojure/tools.logging {:mvn/version "1.1.0"}
-           borkdude/rewrite-edn      {:mvn/version "0.0.2"}}
-
- :aliases {
-           :jar     {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
-                     :exec-fn      hf.depstar/jar
-                     :exec-args    {:jar         "target/wake-generator.jar"
-                                    :group-id    "wake-clj"
-                                    :artifact-id "wake-generator"}}
-           :install {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
-                     :exec-fn      deps-deploy.deps-deploy/deploy
-                     :exec-args    {:installer :local
-                                    :artifact  "target/wake-generator.jar"}}
-           :deploy  {:replace-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
-                     :exec-fn      deps-deploy.deps-deploy/deploy
-                     :exec-args    {:installer :remote
-                                    :artifact  "target/wake-generator.jar"}}
-           }}
+           borkdude/rewrite-edn      {:mvn/version "0.0.2"}}}

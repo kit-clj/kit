@@ -77,27 +77,35 @@
     {:target-dir target-dir :class-dir class-dir :lib lib :version version :basis basis :src src-dir
      :src-pom src-pom :jar-file jar-file}))
 
-(defn install-lib [{:keys [artifact-id]}]
+(defn deploy
+  "Deploy jar locally or to remote artifactory"
+  [{:keys [src-pom installer sign-releases? jar-file] :or {installer :local sign-releases? false}}]
+  (println "Deploying: " jar-file)
+  (deploy/deploy {:installer installer
+                  :sign-releases? sign-releases?
+                  :pom-file src-pom
+                  :artifact jar-file}))
+
+(defn- all [publish? lib]
+  (let [bd (build-data lib)]
+    (clean bd)
+    (make-jar bd)
+    (install bd)
+    (when publish?
+      (deploy (merge {:installer :remote} bd)))))
+
+(defn install-lib [{:keys [artifact-id] publish? :publish :or {publish? false} :as params}]
   (let [libs (filter #(.isDirectory %) (.listFiles (jio/file libs-dir)))
         {:keys [graph dep-mappings]} (build-graph {:libs libs})]
     (let [lib (symbol group-id (name artifact-id))]
       (if (contains? dep-mappings lib)
         (if (not-empty (dep/transitive-dependencies graph lib))
           (doseq [lib (concat (dep/transitive-dependencies graph lib) [lib])]
-            (let [bd (build-data lib)]
-              (clean bd)
-              (make-jar bd)
-              (install bd)))
-          (let [bd (build-data lib)]
-            (clean bd)
-            (make-jar bd)
-            (install bd)))
+            (all publish? lib))
+          (all publish? lib))
         (println "Can't find: " artifact-id)))))
 
-(defn install-libs [_]
+(defn install-libs [{publish? :publish :or {publish? false} :as m}]
   (let [libs (filter #(.isDirectory %) (.listFiles (jio/file libs-dir)))]
     (doseq [lib (topo-sort (build-graph {:libs libs}))]
-      (let [bd (build-data lib)]
-        (clean bd)
-        (make-jar bd)
-        (install bd)))))
+      (all publish? lib))))
