@@ -1,10 +1,10 @@
-(ns leiningen.new.wake
+(ns leiningen.new.wake-clj
   (:require
     [leiningen.new.templates
      :refer [name-to-path sanitize-ns project-name ->files]]
-    [leiningen.new.wake.options.base :as base]
-    [leiningen.new.wake.options.helpers :as helpers]
-    [leiningen.new.wake.options.sql :as sql]
+    [leiningen.new.wake-clj.options.base :as base]
+    [leiningen.new.wake-clj.options.helpers :as helpers]
+    [leiningen.new.wake-clj.options.sql :as sql]
     [clojure.set :as set]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -85,7 +85,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Main
 
-(defn wake [name & options]
+(defn wake-clj [name & options]
   (check-options options)
   (let [data (template-data name options)]
     (println "Generating wake project.")

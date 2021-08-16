@@ -1,4 +1,4 @@
-(ns leiningen.new.wake.options.helpers
+(ns leiningen.new.wake-clj.options.helpers
   (:require
     [leiningen.new.templates :refer [renderer sanitize]]
     [clojure.java.io :as io]

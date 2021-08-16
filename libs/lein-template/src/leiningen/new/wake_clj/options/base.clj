@@ -1,6 +1,6 @@
-(ns leiningen.new.wake.options.base
+(ns leiningen.new.wake-clj.options.base
   (:require
-    [leiningen.new.wake.options.helpers :as helpers]))
+    [leiningen.new.wake-clj.options.helpers :as helpers]))
 
 (defn files
   [data]
