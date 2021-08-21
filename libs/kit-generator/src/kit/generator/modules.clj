@@ -21,12 +21,17 @@
 (defn clone-repo [root {:keys [name url tag]}]
   (try
     ;;docs https://github.com/clj-jgit/clj-jgit
-    (let [module-root   (module-path root name url)
-          module-config (str module-root File/separator "modules.edn")
-          repo          (git/git-clone url :dir module-root)]
-      ;;todo
-      #_(git/git-checkout repo tag)
-      (io/update-edn-file module-config #(assoc % :module-root (module-name name url))))
+    (let [git-config (if (.exists (clojure.java.io/file "kit.git-config.edn"))
+                       (read-string (slurp "kit.git-config.edn"))
+                       {})]
+      (git/with-identity
+        git-config
+        (let [module-root   (module-path root name url)
+              module-config (str module-root File/separator "modules.edn")
+              repo          (git/git-clone url :dir module-root)]
+          ;;todo
+          #_(git/git-checkout repo tag)
+          (io/update-edn-file module-config #(assoc % :module-root (module-name name url))))))
     (catch Exception e
       (println "failed to read module:" url "\ncause:" (.getMessage e)))))
 

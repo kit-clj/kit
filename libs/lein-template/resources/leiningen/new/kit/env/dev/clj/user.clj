@@ -9,6 +9,7 @@
     [integrant.core :as ig]
     [integrant.repl :refer [clear go halt prep init reset reset-all]]
     [integrant.repl.state :as state]
+    [kit.api :as kit]
     [<<ns-name>>.core :refer [start-app]]))
 
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
