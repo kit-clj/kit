@@ -1,6 +1,6 @@
-(ns wake.core-test
+(ns kit.core-test
   (:require [clojure.test :refer :all]
-            [wake.core :refer :all]))
+            [kit.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

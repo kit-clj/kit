@@ -1,5 +1,5 @@
 
-1. clojure -X:new :template wake :name wake/guestbook
+1. clojure -X:new :template kit :name kit/guestbook
 2. add db sqlite module. Repl command to add SQL w/ SQLite. `(install-module :sql :sqlite)`
 3. Writing migration etc. from Luminus guestbook tutorial
 4. Run application

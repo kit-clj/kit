@@ -7,7 +7,7 @@
 
 (def libs-dir "libs")
 (def version (format "0.1.0"))
-(def group-id "wake-clj")
+(def group-id "kit-clj")
 (def src ["src"])
 (def basis (b/create-basis {:project "deps.edn"}))
 
@@ -43,7 +43,7 @@
               :class-dir class-dir}))
 
 (defn- dep-hm [{:keys [libs]}]
-  (let [proj (into #{} (map #(symbol group-id (.getName %))) libs)
+  (let [proj (map #(symbol group-id (.getName %)) libs)
         only-matching-group-ids (fn [ks] (into #{} (filter (fn [d] (= group-id (namespace d))) ks)))
         deps (into [] (comp
                         (map #(str % "/deps.edn"))
@@ -95,7 +95,7 @@
       (deploy (merge {:installer :remote} bd)))))
 
 (defn install-lib [{:keys [artifact-id] publish? :publish :or {publish? false} :as params}]
-  (let [libs (filter #(.isDirectory %) (.listFiles (jio/file libs-dir)))
+  (let [libs (distinct (filter #(.isDirectory %) (.listFiles (jio/file libs-dir))))
         {:keys [graph dep-mappings]} (build-graph {:libs libs})]
     (let [lib (symbol group-id (name artifact-id))]
       (if (contains? dep-mappings lib)

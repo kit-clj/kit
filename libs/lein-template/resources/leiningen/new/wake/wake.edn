@@ -1,8 +1,0 @@
-{:full-name "<<full-name>>"
- :ns-name   "<<ns-name>>"
- :sanitized "<<sanitized>>"
- :name      "<<name>>"
- :modules   {:root         "modules"
-             :repositories [{:url  "git@github.com:wake-clj/modules.git"
-                             :tag  "master"
-                             :name "Wake modules"}]}}
