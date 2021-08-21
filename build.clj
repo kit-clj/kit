@@ -7,7 +7,7 @@
 
 (def libs-dir "libs")
 (def version (format "0.1.0"))
-(def group-id "wake-clj")
+(def group-id "kit-clj")
 (def src ["src"])
 (def basis (b/create-basis {:project "deps.edn"}))
 

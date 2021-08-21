@@ -1,5 +1,0 @@
-{:paths   ["src"]
- :deps    {integrant/integrant    {:mvn/version "0.8.0"}
-           org.clojure/core.cache {:mvn/version "1.0.207"}
-           com.taoensso/carmine   {:mvn/version "3.1.0"}
-           wake-clj/wake-core     {:mvn/version "0.1.0"}}}
