@@ -12,6 +12,7 @@
                            ;; Ring
                            [metosin/ring-http-response "0.9.2"]
                            [ring/ring-core "1.9.3"]
+                           [ring/ring-defaults "0.3.3"]
 
                            ;; Data coercion
                            [luminus-transit "0.1.2" :exclusions [com.cognitect/transit-clj]]
