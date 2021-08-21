@@ -5,4 +5,4 @@
  :modules   {:root         "modules"
              :repositories [{:url  "git@github.com:kit-clj/modules.git"
                              :tag  "master"
-                             :name "Kit modules"}]}}
+                             :name "kit-modules"}]}}
