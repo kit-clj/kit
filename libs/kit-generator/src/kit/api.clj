@@ -22,6 +22,16 @@
   (let [ctx (modules/load-modules (read-ctx))]
     (generator/generate ctx module-key (or feature-flag :default))))
 
+(defn list-installed-modules []
+  (defn list-installed-modules []
+    (doseq [[id status] (-> (read-ctx)
+                            :modules
+                            :root
+                            (generator/read-modules-log))]
+      (println id (if (= status :success)
+                    "installed successfully"
+                    "failed to install")))))
+
 (comment
   (read-ctx "test/resources/kit.edn")
 
