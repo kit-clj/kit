@@ -14,8 +14,7 @@
                                          :env       #ig/ref :system/env}
                                         :templating/selmer
                                         {}}}
-                              #_{:type   :clj
-                                 :path   "project.clj"
-                                 :target [:dependencies]
-                                 :action :conj
-                                 :value  ['kit.selmer "1.0.0"]}]}}}
+                              {:type   :clj
+                               :target :core-ns
+                               :action :append-requires
+                               :value  ['kit.selmer "1.0.0"]}]}}}

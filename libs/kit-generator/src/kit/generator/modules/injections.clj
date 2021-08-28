@@ -4,7 +4,9 @@
     [kit.generator.io :as io]
     [cljfmt.core :as cljfmt]
     [clojure.pprint :refer [pprint]]
-    [borkdude.rewrite-edn :as rewrite-edn]))
+    [borkdude.rewrite-edn :as rewrit0e-edn]
+    [rewrite-clj.zip :as z]
+    [rewrite-clj.node :as n]))
 
 (defn format-clj [code]
   (cljfmt/reformat-string
@@ -32,8 +34,8 @@
 (defn rewrite-assoc-list
   [target value]
   #_(map (fn [[k v]]
-         (rewrite-edn/assoc target k v))
-       value)
+           (rewrite-edn/assoc target k v))
+         value)
   (reduce
     (fn [target [k v]]
       (println k v)
@@ -50,8 +52,25 @@
            (action target value)
            (rewrite-edn/update-in target query #(update-value path % action value))))))
 
-(defmethod inject :clj [{:keys []}]
-  (throw (Exception. "TODO")))
+(defn append-requires [ns-str requires]
+  (let [zloc            (z/of-string ns-str)
+        zloc-ns         (z/find-value zloc z/next 'ns)
+        zloc-require    (z/up (z/find-value zloc-ns z/next :require))
+        updated-require (reduce
+                          (fn [zloc child]
+                            ;;TODO formatting
+                            (z/append-child zloc child))
+                          zloc-require
+                          requires)]
+    (loop [z-loc updated-require]
+      (if-let [parent (z/up z-loc)]
+        (recur parent)
+        (z/root-string z-loc)))))
+
+(defmethod inject :clj [{:keys [path action value] :as m}]
+  (let [action (case action
+                 :append-requires append-requires)]
+    (->> (action (slurp path) value) (spit path))))
 
 (defmethod inject :default [{:keys [type] :as injection}]
   (println "unrecognized injection type" type "for injection\n"
@@ -73,6 +92,15 @@
                        (update path->data path #(inject (assoc injection :target %))))
                      path->data injections)]
     (doseq [[path data] updated]
+      ;;TODO support clj (add a multimethod)
       (->> (io/edn->str data)
            (format-clj)                                     ;; TODO: this seems dangerous to do to whole file if we're injecting into user source files. Can we target just the generated code?
            (spit path)))))
+
+(comment
+
+  (append-requires
+    "(ns wake.guestbook.core\n  (:require\n    [clojure.tools.logging :as log]\n    [integrant.core :as ig]\n    [wake.guestbook.config :as config]\n    [wake.guestbook.env :refer [defaults]]\n\n    ;; Edges\n\n\n\n\n\n\n\n    [kit.edge.utils.repl]\n    [kit.edge.server.undertow]\n    [wake.guestbook.web.handler]\n\n    ;; Routes\n    [wake.guestbook.web.routes.api]\n    [wake.guestbook.web.routes.pages]    )\n  (:gen-class))"
+    ['[myapp.core :as foo]
+     '[myapp.core.roures :as routes]])
+  )
