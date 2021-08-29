@@ -117,14 +117,14 @@
           (.printStackTrace e))))))
 
 (comment
-  (let [ctx {:project-ns "myapp"
-             :sanitized  "myapp"
-             :name       "myapp"
-             :modules    {:root         "test/resources/modules"
-                          :repositories [{:url  "git@github.com:nikolap/kit.git"
-                                          :tag  "master"
-                                          :name "kit"}]
-                          :modules      {:html {:path "html"}}}}]
+  (let [ctx {:ns-name   "myapp"
+             :sanitized "myapp"
+             :name      "myapp"
+             :modules   {:root         "test/resources/modules"
+                         :repositories [{:url  "git@github.com:nikolap/kit.git"
+                                         :tag  "master"
+                                         :name "kit"}]
+                         :modules      {:html {:path "html"}}}}]
     (generate ctx :html :default)
 
     ))

@@ -1,4 +1,4 @@
-{:project-ns   "myapp"
+{:ns-name   "myapp"
  :sanitized    "myapp"
  :name         "myapp"
  :project-root "test/resources/generated"

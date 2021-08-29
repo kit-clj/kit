@@ -17,4 +17,4 @@
                               {:type   :clj
                                :path   "test/resources/generated/src/<<sanitized>>/core.clj"
                                :action :append-requires
-                               :value  ["[<<project-ns>>.web.routes.pages]"]}]}}}
+                               :value  ["[<<ns-name>>.web.routes.pages]"]}]}}}
