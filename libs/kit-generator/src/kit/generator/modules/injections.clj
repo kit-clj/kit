@@ -4,9 +4,8 @@
     [kit.generator.io :as io]
     [cljfmt.core :as cljfmt]
     [clojure.pprint :refer [pprint]]
-    [borkdude.rewrite-edn :as rewrit0e-edn]
-    [rewrite-clj.zip :as z]
-    [rewrite-clj.node :as n]))
+    [borkdude.rewrite-edn :as rewrite-edn]
+    [rewrite-clj.zip :as z]))
 
 (defn format-clj [code]
   (cljfmt/reformat-string
@@ -52,29 +51,44 @@
            (action target value)
            (rewrite-edn/update-in target query #(update-value path % action value))))))
 
-(defn append-requires [ns-str requires]
+(defn append-requires [ns-str requires ctx]
   (let [zloc            (z/of-string ns-str)
         zloc-ns         (z/find-value zloc z/next 'ns)
         zloc-require    (z/up (z/find-value zloc-ns z/next :require))
         updated-require (reduce
                           (fn [zloc child]
                             ;;TODO formatting
-                            (z/append-child zloc child))
+                            (->> (renderer/render-template ctx child)
+                                 (io/str->edn)
+                                 (z/append-child zloc)))
                           zloc-require
                           requires)]
     (loop [z-loc updated-require]
       (if-let [parent (z/up z-loc)]
         (recur parent)
-        (z/root-string z-loc)))))
+        z-loc))))
 
-(defmethod inject :clj [{:keys [path action value] :as m}]
+(defmethod inject :clj [{:keys [path action value ctx]}]
   (let [action (case action
                  :append-requires append-requires)]
-    (->> (action (slurp path) value) (spit path))))
+    (action (slurp path) value ctx)))
 
 (defmethod inject :default [{:keys [type] :as injection}]
   (println "unrecognized injection type" type "for injection\n"
            (with-out-str (pprint injection))))
+
+(defmulti serialize :type)
+
+(defmethod serialize :edn [{:keys [path data]}]
+  (->> (io/edn->str data)
+       (format-clj)                                         ;; TODO: this seems dangerous to do to whole file if we're injecting into user source files. Can we target just the generated code?
+       (spit path)))
+
+(defmethod serialize :clj [{:keys [path data]}]
+  (println "writing:" path
+           "\ndata:" (z/root-string data))
+  (->> (z/root-string data)
+       (spit path)))
 
 (defn read-files [ctx paths]
   (reduce
@@ -86,16 +100,22 @@
     {} paths))
 
 (defn inject-data [ctx injections]
-  (let [path->data (read-files ctx (map :path injections))
+  (let [injections (map (fn [injection]
+                          (update injection :path #(renderer/render-template ctx %)))
+                        injections)
+        path->data (read-files ctx (map :path injections))
         updated    (reduce
-                     (fn [path->data {:keys [path] :as injection}]
-                       (update path->data path #(inject (assoc injection :target %))))
-                     path->data injections)]
-    (doseq [[path data] updated]
-      ;;TODO support clj (add a multimethod)
-      (->> (io/edn->str data)
-           (format-clj)                                     ;; TODO: this seems dangerous to do to whole file if we're injecting into user source files. Can we target just the generated code?
-           (spit path)))))
+                     (fn [updated {:keys [type path] :as injection}]
+                       (conj updated
+                             {:type type
+                              :path path
+                              :data (inject (assoc injection
+                                              :ctx ctx
+                                              :target (path->data path)))}))
+                     []
+                     injections)]
+    (doseq [item updated]
+      (serialize item))))
 
 (comment
 

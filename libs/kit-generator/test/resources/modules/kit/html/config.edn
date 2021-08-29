@@ -15,6 +15,6 @@
                                         :templating/selmer
                                         {}}}
                               {:type   :clj
-                               :target :core-ns
+                               :path   "test/resources/generated/src/<<sanitized>>/core.clj"
                                :action :append-requires
-                               :value  ['kit.selmer "1.0.0"]}]}}}
+                               :value  ["[<<project-ns>>.web.routes.pages]"]}]}}}

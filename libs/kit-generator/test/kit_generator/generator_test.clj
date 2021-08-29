@@ -13,17 +13,21 @@
 (def target-folder "test/resources/generated")
 (def ctx (read-string (slurp "test/resources/kit.edn")))
 
+(defn write-file [source target]
+  (io/make-parents target)
+  (->> (slurp source)
+       (spit target)))
+
 (use-fixtures :once
               (fn [f]
-                (let [source-file (str source-folder "/sample-system.edn")
-                      target-file (str target-folder "/resources/system.edn")
+                (let [files       ["/sample-system.edn" "/resources/system.edn"
+                                   "/core.clj" "/src/myapp/core.clj"]
                       install-log (io/file "test/resources/modules/install-log.edn")]
                   (when (.exists install-log)
                     (.delete install-log))
                   (delete-folder target-folder)
-                  (io/make-parents target-file)
-                  (->> (slurp source-file)
-                       (spit target-file))
+                  (doseq [[source target] (partition 2 files)]
+                    (write-file (str source-folder source) (str target-folder target)))
                   (f))))
 
 (deftest test-edn-injection
@@ -35,11 +39,13 @@
 
 (comment
 
-  (let [source-file (str source-folder "/sample-system.edn")
-        target-file (str target-folder "/resources/system.edn")]
+  (let [files       ["/sample-system.edn" "/resources/system.edn"
+                     "/core.clj" "/src/myapp/core.clj"]
+        install-log (io/file "test/resources/modules/install-log.edn")]
+    (when (.exists install-log)
+      (.delete install-log))
     (delete-folder target-folder)
-    (io/make-parents target-file)
-    (->> (slurp source-file)
-         (spit target-file)))
+    (doseq [[source target] (partition 2 files)]
+      (write-file (str source-folder source) (str target-folder target))))
   )
 
