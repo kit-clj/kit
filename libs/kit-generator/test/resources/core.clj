@@ -6,7 +6,6 @@
     [wake.guestbook.env :refer [defaults]]
 
     ;; Edges
-
     [kit.edge.utils.repl]
     [kit.edge.server.undertow]
     [wake.guestbook.web.handler]
