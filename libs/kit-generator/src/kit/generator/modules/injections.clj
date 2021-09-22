@@ -8,12 +8,6 @@
     [borkdude.rewrite-edn :as rewrite-edn]
     [rewrite-clj.zip :as z]))
 
-(defn format-clj [code]
-  (cljfmt/reformat-string
-    code
-    {:indentation?                true
-     :remove-trailing-whitespace? true}))
-
 (defmulti inject :type)
 
 (comment
@@ -31,30 +25,6 @@
       (println "adding configuration")
       (action new-value))))
 
-(defn assoc-value [data target value]
-  (let [nodes data]
-    #_(str (rewrite-edn/assoc-in nodes target value))
-    (str (rewrite-edn/update-in nodes target
-                                #(rewrite-edn/map-keys (partial update-value target (rewrite-edn/sexpr %) identity) value)))))
-
-#_(println (assoc-value (rewrite-edn/parse-string "{:foo  :bar\n :baz #inst\"2021-09-21T23:16:18.069-00:00\"
-               :deps {}}")
-                        [:deps]
-                        {:mvn/version "0.1.2"}))
-
-(defn rewrite-assoc-list
-  [target value]
-  #_(map (fn [[k v]]
-           (rewrite-edn/assoc target k v))
-         value)
-  (reduce
-    (fn [target [k v]]
-      (println k v)
-      (assoc target k v)
-      #_(rewrite-edn/assoc target k v))
-    target
-    value))
-
 ;;TODO use update-value to log whether there was existing value and insert otherwise
 (defmethod inject :edn [{:keys [data target action value] :as ctx}]
   (let [value (prewalk
@@ -70,8 +40,7 @@
           (fn [data [target value]]
             (println "injecting edn:" target value)
             (rewrite-edn/assoc-in data [target] value))
-          data
-          value)
+          data value)
         (do
           (println "injecting edn:" target value)
           (rewrite-edn/assoc-in data target value))))))
@@ -135,11 +104,8 @@
    :path path
    :data (reduce
            (fn [data injection]
-             (inject (assoc injection
-                       :ctx ctx
-                       :data data)))
-           data
-           injections)})
+             (inject (assoc injection :ctx ctx :data data)))
+           data injections)})
 
 (defn inject-data [ctx injections]
   (let [injections (->> injections
