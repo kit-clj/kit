@@ -4,6 +4,7 @@
     [kit.generator.io :as io]
     [cljfmt.core :as cljfmt]
     [clojure.pprint :refer [pprint]]
+    [clojure.walk :refer [prewalk]]
     [borkdude.rewrite-edn :as rewrite-edn]
     [rewrite-clj.zip :as z]))
 
@@ -30,6 +31,17 @@
       (println "adding configuration")
       (action new-value))))
 
+(defn assoc-value [data target value]
+  (let [nodes data]
+    #_(str (rewrite-edn/assoc-in nodes target value))
+    (str (rewrite-edn/update-in nodes target
+                                #(rewrite-edn/map-keys (partial update-value target (rewrite-edn/sexpr %) identity) value)))))
+
+#_(println (assoc-value (rewrite-edn/parse-string "{:foo  :bar\n :baz #inst\"2021-09-21T23:16:18.069-00:00\"
+               :deps {}}")
+                        [:deps]
+                        {:mvn/version "0.1.2"}))
+
 (defn rewrite-assoc-list
   [target value]
   #_(map (fn [[k v]]
@@ -43,17 +55,29 @@
     target
     value))
 
-(defmethod inject :edn [{:keys [path target query action value] :as m}]
-  (let [action (case action
-                 :conj conj
-                 :merge rewrite-assoc-list)]
-    (->> (if (empty? query)
-           (action target value)
-           (rewrite-edn/update-in target query #(update-value path % action value))))))
+;;TODO use update-value to log whether there was existing value and insert otherwise
+(defmethod inject :edn [{:keys [data target action value] :as ctx}]
+  (let [value (prewalk
+                (fn [node]
+                  (if (string? node)
+                    (renderer/render-template ctx node)
+                    node))
+                value)]
+    (case action
+      :merge
+      (if (empty? target)
+        (reduce
+          (fn [data [target value]]
+            (println "injecting edn:" target value)
+            (rewrite-edn/assoc-in data [target] value))
+          data
+          value)
+        (do
+          (println "injecting edn:" target value)
+          (rewrite-edn/assoc-in data target value))))))
 
-(defn append-requires [ns-str requires ctx]
-  (let [zloc            (z/of-string ns-str)
-        zloc-ns         (z/find-value zloc z/next 'ns)
+(defn append-requires [zloc requires ctx]
+  (let [zloc-ns         (z/find-value zloc z/next 'ns)
         zloc-require    (z/up (z/find-value zloc-ns z/next :require))
         updated-require (reduce
                           (fn [zloc child]
@@ -68,10 +92,11 @@
         (recur parent)
         z-loc))))
 
-(defmethod inject :clj [{:keys [path action value ctx]}]
+(defmethod inject :clj [{:keys [data action value ctx]}]
+  (println "injecting clj" action value)
   (let [action (case action
                  :append-requires append-requires)]
-    (action (slurp path) value ctx)))
+    (action data value ctx)))
 
 (defmethod inject :default [{:keys [type] :as injection}]
   (println "unrecognized injection type" type "for injection\n"
@@ -80,8 +105,7 @@
 (defmulti serialize :type)
 
 (defmethod serialize :edn [{:keys [path data]}]
-  (->> (io/edn->str data)
-       (format-clj)                                         ;; TODO: this seems dangerous to do to whole file if we're injecting into user source files. Can we target just the generated code?
+  (->> (str data)
        (spit path)))
 
 (defmethod serialize :clj [{:keys [path data]}]
@@ -93,29 +117,53 @@
 (defn read-files [ctx paths]
   (reduce
     (fn [path->data path]
-      (assoc path->data path
-                        (->> (slurp path)
-                             (renderer/render-template ctx)
-                             (io/str->edn))))
+      (try
+        (let [data-str (renderer/render-template ctx (slurp path))]
+          (->> (cond
+                 (.endsWith path ".clj")
+                 (z/of-string data-str)
+                 (.endsWith path ".edn")
+                 (rewrite-edn/parse-string data-str)
+                 :else
+                 data-str)
+               (assoc path->data path)))
+        (catch Exception e
+          (println "failed to read asset in project:" path
+                   "\nerror:" (.getMessage e)))))
     {} paths))
 
+(defn inject-at-path [ctx data path injections]
+  {:type type
+   :path path
+   :data (reduce
+           (fn [data injection]
+             (inject (assoc injection
+                       :ctx ctx
+                       :data data)))
+           data
+           injections)})
+
 (defn inject-data [ctx injections]
-  (let [injections (map (fn [injection]
-                          (update injection :path #(renderer/render-template ctx %)))
-                        injections)
-        path->data (read-files ctx (map :path injections))
-        updated    (reduce
-                     (fn [updated {:keys [type path] :as injection}]
-                       (conj updated
-                             {:type type
-                              :path path
-                              :data (inject (assoc injection
-                                              :ctx ctx
-                                              :target (path->data path)))}))
-                     []
-                     injections)]
-    (doseq [item updated]
-      (serialize item))))
+  (let [injections (->> injections
+                        (map (fn [injection] (update injection :path #(renderer/render-template ctx %))))
+                        (group-by :path))
+        path->data (read-files ctx (keys injections))
+        updated    (map
+                     (fn [[path injections]]
+                       (inject-at-path ctx (path->data path) path injections))
+                     injections)
+        #_(reduce
+            (fn [updated {:keys [type path] :as injection}]
+              (conj updated
+                    {:type type
+                     :path path
+                     :data (inject (assoc injection
+                                     :ctx ctx
+                                     :data (path->data path)))}))
+            []
+            injections)]
+    #_(doseq [item updated]
+        (serialize item))))
 
 (comment
 
