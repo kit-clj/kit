@@ -109,8 +109,6 @@
        (spit path)))
 
 (defmethod serialize :clj [{:keys [path data]}]
-  (println "writing:" path
-           "\ndata:" (z/root-string data))
   (->> (z/root-string data)
        (spit path)))
 
@@ -133,7 +131,7 @@
     {} paths))
 
 (defn inject-at-path [ctx data path injections]
-  {:type type
+  {:type (-> injections first :type)
    :path path
    :data (reduce
            (fn [data injection]
@@ -151,19 +149,9 @@
         updated    (map
                      (fn [[path injections]]
                        (inject-at-path ctx (path->data path) path injections))
-                     injections)
-        #_(reduce
-            (fn [updated {:keys [type path] :as injection}]
-              (conj updated
-                    {:type type
-                     :path path
-                     :data (inject (assoc injection
-                                     :ctx ctx
-                                     :data (path->data path)))}))
-            []
-            injections)]
-    #_(doseq [item updated]
-        (serialize item))))
+                     injections)]
+    (doseq [item updated]
+      (serialize item))))
 
 (comment
 
