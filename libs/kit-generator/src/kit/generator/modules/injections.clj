@@ -38,7 +38,7 @@
       :merge
       (reduce
         (fn [data [key value]]
-          (println "injecting edn:" key value)
+          (println "injecting edn, key:" key "value:" value)
           (rewrite-edn/assoc-in data (conj (vec target) key) (-> value io/edn->str rewrite-edn/parse-string)))
         data value))))
 
@@ -60,7 +60,7 @@
 
 (defmethod inject :clj [{:keys [data action value ctx]}]
   (let [value (template-value ctx value)]
-    (println "injecting clj" action value)
+    (println "injecting clj, action:" action "value:" value)
     ((case action
        :append-requires append-requires)
      data value ctx)))
@@ -119,9 +119,18 @@
 
 (comment
 
+  (println
+   (str
+    (inject
+      {:type   :edn
+       :data   (rewrite-edn/parse-string "{:z :r :deps {:wooo :waaa}}")
+       :target []
+       :action :merge
+       :value  (io/str->edn "{:foo #ig/ref :bar}")})))
+
   (let [zloc  (-> #_(slurp "test/resources/sample-system.edn")
                 "{:z :r :deps {:wooo :waaa}}"
-                  (rewrite-edn/parse-string))
+                (rewrite-edn/parse-string))
         child (->> (io/str->edn "{:x {:foo #ig/ref :bar}}")
                    (prewalk
                      (fn [node]
