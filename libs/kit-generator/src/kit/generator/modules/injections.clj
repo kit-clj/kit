@@ -2,7 +2,6 @@
   (:require
     [kit.generator.renderer :as renderer]
     [kit.generator.io :as io]
-    [cljfmt.core :as cljfmt]
     [clojure.pprint :refer [pprint]]
     [clojure.walk :refer [prewalk]]
     [borkdude.rewrite-edn :as rewrite-edn]
@@ -10,8 +9,7 @@
 
 (defmulti inject :type)
 
-(comment
-  (ns-unmap 'kit.generator.modules.injections 'inject))
+(comment (ns-unmap 'kit.generator.modules.injections 'inject))
 
 (defn update-value [path original-value action new-value]
   (println "updating configuration in" path)
@@ -27,23 +25,23 @@
 
 ;;TODO use update-value to log whether there was existing value and insert otherwise
 (defmethod inject :edn [{:keys [data target action value] :as ctx}]
-  (let [value (prewalk
-                (fn [node]
-                  (if (string? node)
-                    (renderer/render-template ctx node)
-                    node))
-                value)]
+  (let [value (-> (prewalk
+                    (fn [node]
+                      (if (string? node)
+                        (renderer/render-template ctx node)
+                        node))
+                    value))]
     (case action
       :merge
       (if (empty? target)
         (reduce
           (fn [data [target value]]
             (println "injecting edn:" target value)
-            (rewrite-edn/assoc-in data [target] value))
+            (rewrite-edn/assoc-in data [target] (-> value io/edn->str rewrite-edn/parse-string)))
           data value)
         (do
           (println "injecting edn:" target value)
-          (rewrite-edn/assoc-in data target value))))))
+          (rewrite-edn/assoc-in data target (-> value io/edn->str rewrite-edn/parse-string)))))))
 
 (defn append-requires [zloc requires ctx]
   (let [zloc-ns         (z/find-value zloc z/next 'ns)
@@ -120,6 +118,21 @@
       (serialize item))))
 
 (comment
+
+  (let [zloc  (-> (slurp "test/resources/sample-system.edn")
+                  (rewrite-edn/parse-string))
+        child (->> (io/str->edn "{:x {:foo #ig/ref :bar}}")
+                   (prewalk
+                     (fn [node]
+                       (if (string? node)
+                         (renderer/render-template {} node)
+                         node))))]
+    (str (rewrite-edn/assoc-in zloc [:deps] (-> child (io/edn->str) (rewrite-edn/parse-string)))))
+
+  (->> (renderer/render-template {} "{:foo #ig/ref :bar}")
+       (io/str->edn))
+
+  (rewrite-edn/sexpr (rewrite-edn/parse-string "{:foo #ig/ref :bar}"))
 
   (append-requires
     "(ns wake.guestbook.core\n  (:require\n    [clojure.tools.logging :as log]\n    [integrant.core :as ig]\n    [wake.guestbook.config :as config]\n    [wake.guestbook.env :refer [defaults]]\n\n    ;; Edges\n\n\n\n\n\n\n\n    [kit.edge.utils.repl]\n    [kit.edge.server.undertow]\n    [wake.guestbook.web.handler]\n\n    ;; Routes\n    [wake.guestbook.web.routes.api]\n    [wake.guestbook.web.routes.pages]    )\n  (:gen-class))"

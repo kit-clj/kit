@@ -67,9 +67,9 @@
   (println "undefined action:" id))
 
 (defn read-config [module-path]
-  (-> (str module-path File/separator "config.edn")
-      (slurp)
-      (io/str->edn)))
+  (some-> (str module-path File/separator "config.edn")
+          (slurp)
+          (io/str->edn)))
 
 (defn modules-log-path [modules-root]
   (str modules-root File/separator "install-log.edn"))
