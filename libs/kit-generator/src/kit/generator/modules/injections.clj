@@ -32,16 +32,18 @@
     value))
 
 ;;TODO use update-value to log whether there was existing value and insert otherwise
+;;TODO check for existing value, if same then skip, if different warn and skip
 (defmethod inject :edn [{:keys [data target action value] :as ctx}]
   (let [value (template-value ctx value)]
     (case action
       :merge
       (reduce
         (fn [data [key value]]
-          (println "injecting edn, key:" key "value:" value)
+          (println "injecting edn, key:" key "value:" (str value))
           (rewrite-edn/assoc-in data (conj (vec target) key) (-> value io/edn->str rewrite-edn/parse-string)))
         data value))))
 
+;;TODO check for existing value, if same then skip, if different warn and skip
 (defn append-requires [zloc requires ctx]
   (let [zloc-ns         (z/find-value zloc z/next 'ns)
         zloc-require    (z/up (z/find-value zloc-ns z/next :require))
@@ -126,7 +128,7 @@
        :data   (rewrite-edn/parse-string "{:z :r :deps {:wooo :waaa}}")
        :target []
        :action :merge
-       :value  (io/str->edn "{:foo #ig/ref :bar}")})))
+       :value  (io/str->edn "{:foo #ig/ref :bar :baz \"\"}")})))
 
   (let [zloc  (-> #_(slurp "test/resources/sample-system.edn")
                 "{:z :r :deps {:wooo :waaa}}"
