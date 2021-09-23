@@ -23,25 +23,24 @@
       (println "adding configuration")
       (action new-value))))
 
+(defn template-value [ctx value]
+  (prewalk
+    (fn [node]
+      (if (string? node)
+        (renderer/render-template ctx node)
+        node))
+    value))
+
 ;;TODO use update-value to log whether there was existing value and insert otherwise
 (defmethod inject :edn [{:keys [data target action value] :as ctx}]
-  (let [value (-> (prewalk
-                    (fn [node]
-                      (if (string? node)
-                        (renderer/render-template ctx node)
-                        node))
-                    value))]
+  (let [value (template-value ctx value)]
     (case action
       :merge
-      (if (empty? target)
-        (reduce
-          (fn [data [target value]]
-            (println "injecting edn:" target value)
-            (rewrite-edn/assoc-in data [target] (-> value io/edn->str rewrite-edn/parse-string)))
-          data value)
-        (do
-          (println "injecting edn:" target value)
-          (rewrite-edn/assoc-in data target (-> value io/edn->str rewrite-edn/parse-string)))))))
+      (reduce
+        (fn [data [key value]]
+          (println "injecting edn:" key value)
+          (rewrite-edn/assoc-in data (conj (vec target) key) (-> value io/edn->str rewrite-edn/parse-string)))
+        data value))))
 
 (defn append-requires [zloc requires ctx]
   (let [zloc-ns         (z/find-value zloc z/next 'ns)
@@ -60,10 +59,11 @@
         z-loc))))
 
 (defmethod inject :clj [{:keys [data action value ctx]}]
-  (println "injecting clj" action value)
-  (let [action (case action
-                 :append-requires append-requires)]
-    (action data value ctx)))
+  (let [value (template-value ctx value)]
+    (println "injecting clj" action value)
+    ((case action
+       :append-requires append-requires)
+     data value ctx)))
 
 (defmethod inject :default [{:keys [type] :as injection}]
   (println "unrecognized injection type" type "for injection\n"
@@ -119,7 +119,8 @@
 
 (comment
 
-  (let [zloc  (-> (slurp "test/resources/sample-system.edn")
+  (let [zloc  (-> #_(slurp "test/resources/sample-system.edn")
+                "{:z :r :deps {:wooo :waaa}}"
                   (rewrite-edn/parse-string))
         child (->> (io/str->edn "{:x {:foo #ig/ref :bar}}")
                    (prewalk
@@ -127,7 +128,8 @@
                        (if (string? node)
                          (renderer/render-template {} node)
                          node))))]
-    (str (rewrite-edn/assoc-in zloc [:deps] (-> child (io/edn->str) (rewrite-edn/parse-string)))))
+    (str (rewrite-edn/assoc zloc [:deps] (-> child (io/edn->str) (rewrite-edn/parse-string))))
+    #_(str (rewrite-edn/assoc-in zloc [:deps] (-> child (io/edn->str) (rewrite-edn/parse-string)))))
 
   (->> (renderer/render-template {} "{:foo #ig/ref :bar}")
        (io/str->edn))
