@@ -86,35 +86,35 @@
 (defn generate [{:keys [modules] :as ctx} module-key feature-flag]
   (let [modules-root (:root modules)
         module-log   (read-modules-log modules-root)]
-    (if (= :success (module-log module-key))
-      (println "Aborting: module" (name module-key) "is already installed!")
-      (try
-        (let [module-path   (get-in modules [:modules module-key :path])
-              module-config (read-config module-path)
-              config        (get module-config feature-flag)
-              ctx           (assoc ctx :module-path module-path)]
-          (cond
-            (nil? module-config)
-            (do
-              (println "module" (name module-key) "not found, available modules:")
-              (pprint (modules/list-modules ctx)))
-            (nil? config)
-            (do
-              (println "feature" feature-flag "not found for module" module-key ", available features:")
-              (pprint (keys module-config)))
-            :else
-            (do
-              (doseq [action (:actions config)]
-                (handle-action ctx action))
-              (write-modules-log modules-root (assoc module-log module-key :success))
-              (println (or (:success-message config)
-                           (str (name module-key) " installed successfully!")))
-              (when (:require-restart? config)
-                (println "restart required!")))))
-        (catch Exception e
-          (println "failed to install module" module-key)
-          (write-modules-log modules-root (assoc module-log module-key :error))
-          (.printStackTrace e))))))
+    (when (= :success (module-log module-key))
+      (println "warning: module" (name module-key) "is already installed!"))
+    (try
+      (let [module-path   (get-in modules [:modules module-key :path])
+            module-config (read-config module-path)
+            config        (get module-config feature-flag)
+            ctx           (assoc ctx :module-path module-path)]
+        (cond
+          (nil? module-config)
+          (do
+            (println "module" (name module-key) "not found, available modules:")
+            (pprint (modules/list-modules ctx)))
+          (nil? config)
+          (do
+            (println "feature" feature-flag "not found for module" module-key ", available features:")
+            (pprint (keys module-config)))
+          :else
+          (do
+            (doseq [action (:actions config)]
+              (handle-action ctx action))
+            (write-modules-log modules-root (assoc module-log module-key :success))
+            (println (or (:success-message config)
+                         (str (name module-key) " installed successfully!")))
+            (when (:require-restart? config)
+              (println "restart required!")))))
+      (catch Exception e
+        (println "failed to install module" module-key)
+        (write-modules-log modules-root (assoc module-log module-key :error))
+        (.printStackTrace e)))))
 
 (comment
   (let [ctx {:ns-name   "myapp"

@@ -11,18 +11,6 @@
 
 (comment (ns-unmap 'kit.generator.modules.injections 'inject))
 
-(defn update-value [path original-value action new-value]
-  (println "updating configuration in" path)
-  (if-not (nil? original-value)
-    (do
-      (println "warning: found existing configuration")
-      (pprint original-value)
-      (println "\nfollowing configuration must be added")
-      (pprint new-value))
-    (do
-      (println "adding configuration")
-      (action new-value))))
-
 (defn template-value [ctx value]
   (prewalk
     (fn [node]
@@ -31,17 +19,38 @@
         node))
     value))
 
-;;TODO use update-value to log whether there was existing value and insert otherwise
-;;TODO check for existing value, if same then skip, if different warn and skip
+(defn assoc-value [data target key value]
+  (let [data-edn      (rewrite-edn/sexpr data)
+        current-value (get data-edn key)
+        path          (conj (vec target) key)]
+    (cond
+      (nil? current-value)
+      (do
+        (println "injecting\n path:" path "\n value:" (pr-str value))
+        (rewrite-edn/assoc-in data path (-> value io/edn->str rewrite-edn/parse-string)))
+
+      (= current-value value)
+      data
+
+      (not= current-value)
+      (do
+        (println "path already contains value!"
+                 "\n path:" path
+                 "\n current value:" current-value
+                 "\n module value:" (pr-str value))
+        data))))
+
 (defmethod inject :edn [{:keys [data target action value] :as ctx}]
   (let [value (template-value ctx value)]
     (case action
       :merge
       (reduce
         (fn [data [key value]]
-          (println "injecting edn, key:" key "value:" (str value))
-          (rewrite-edn/assoc-in data (conj (vec target) key) (-> value io/edn->str rewrite-edn/parse-string)))
+          (assoc-value data target key value))
         data value))))
+
+(defn require-exists? [requires require]
+  (boolean (some #{require} requires)))
 
 ;;TODO check for existing value, if same then skip, if different warn and skip
 (defn append-requires [zloc requires ctx]
@@ -50,9 +59,12 @@
         updated-require (reduce
                           (fn [zloc child]
                             ;;TODO formatting
-                            (->> (renderer/render-template ctx child)
-                                 (io/str->edn)
-                                 (z/append-child zloc)))
+                            (let [child-data (io/str->edn (renderer/render-template ctx child))]
+                              (if (require-exists? (z/sexpr zloc) child-data)
+                                (do
+                                  (println "require" child-data "already exists, skipping")
+                                  zloc)
+                                (z/append-child zloc child-data))))
                           zloc-require
                           requires)]
     (loop [z-loc updated-require]
@@ -62,7 +74,7 @@
 
 (defmethod inject :clj [{:keys [data action value ctx]}]
   (let [value (template-value ctx value)]
-    (println "injecting clj, action:" action "value:" value)
+    (println "applying\n action:" action "\n value:" value)
     ((case action
        :append-requires append-requires)
      data value ctx)))
@@ -114,6 +126,7 @@
         path->data (read-files ctx (keys injections))
         updated    (map
                      (fn [[path injections]]
+                       (println "updating file:" path)
                        (inject-at-path ctx (path->data path) path injections))
                      injections)]
     (doseq [item updated]
@@ -122,13 +135,13 @@
 (comment
 
   (println
-   (str
-    (inject
-      {:type   :edn
-       :data   (rewrite-edn/parse-string "{:z :r :deps {:wooo :waaa}}")
-       :target []
-       :action :merge
-       :value  (io/str->edn "{:foo #ig/ref :bar :baz \"\"}")})))
+    (str
+      (inject
+        {:type   :edn
+         :data   (rewrite-edn/parse-string "{:z :r :deps {:wooo :waaa}}")
+         :target []
+         :action :merge
+         :value  (io/str->edn "{:foo #ig/ref :bar :baz \"\"}")})))
 
   (let [zloc  (-> #_(slurp "test/resources/sample-system.edn")
                 "{:z :r :deps {:wooo :waaa}}"
