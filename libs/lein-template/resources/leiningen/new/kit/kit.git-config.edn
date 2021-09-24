@@ -1,6 +1,5 @@
-;; Config docs: https://github.com/clj-jgit/clj-jgit
-;; {:pw            ""
-;;  :name          ["id_rsa", "id_dsa", "id_ecdsa", "id_ed25519"]
-;;  :key-dir       "~/.ssh"
-;;  :cred-provider nil}
-{}
+{:name       "~/.ssh/id_rsa"
+ :passphrase ""
+ :options    {"StrictHostKeyChecking" "no"
+              "UserKnownHostsFile"    "/dev/null"}
+ :exclusive  true}

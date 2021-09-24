@@ -2,7 +2,7 @@
  :deps  {org.clojure/clojure       {:mvn/version "1.10.3"}
          hato                      {:mvn/version "0.8.1"}
          selmer                    {:mvn/version "1.12.40"}
-         clj-jgit                  {:mvn/version "1.0.1"}
+         clj-jgit                  {:mvn/version "0.8.10"}
          cljfmt                    {:mvn/version "0.7.0"}
          org.clojure/tools.logging {:mvn/version "1.1.0"}
          borkdude/rewrite-edn      {:mvn/version "0.0.2"}

@@ -20,15 +20,20 @@
 
 (defn clone-repo [root {:keys [name url tag]}]
   (try
-    ;;docs https://github.com/clj-jgit/clj-jgit
+    ;;docs https://github.com/clj-jgit/clj-jgit (version 0.8.10)
     (let [git-config (if (.exists (clojure.java.io/file "kit.git-config.edn"))
                        (read-string (slurp "kit.git-config.edn"))
-                       {})]
+                       {:name "~/.ssh/id_rsa"})]
       (git/with-identity
         git-config
         (let [module-root   (module-path root name url)
               module-config (str module-root File/separator "modules.edn")
-              repo          (git/git-clone url :dir module-root)]
+              ;; TODO: can customize this
+              repo          (git/git-clone2 url {:path               module-root
+                                                 :remote-name        "origin"
+                                                 :branch-name        "master"
+                                                 :bare               false
+                                                 :clone-all-branches true})]
           ;;todo
           #_(git/git-checkout repo tag)
           (io/update-edn-file module-config #(assoc % :module-root (module-name name url))))))

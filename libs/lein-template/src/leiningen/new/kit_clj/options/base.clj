@@ -11,6 +11,7 @@
    ["deps.edn" (helpers/render "deps.edn" data)]
    ["build.clj" (helpers/render "build.clj" data)]
    ["kit.edn" (helpers/render "kit.edn" data)]
+   ["kit.git-config.edn" (helpers/render "kit.git-config.edn" data)]
 
    ["env/dev/clj/{{sanitized}}/dev_middleware.clj" (helpers/render "env/dev/clj/dev_middleware.clj" data)]
    ["env/dev/clj/{{sanitized}}/env.clj" (helpers/render "env/dev/clj/env.clj" data)]
