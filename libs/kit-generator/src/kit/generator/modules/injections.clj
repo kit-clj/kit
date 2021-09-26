@@ -5,7 +5,8 @@
     [clojure.pprint :refer [pprint]]
     [clojure.walk :refer [prewalk]]
     [borkdude.rewrite-edn :as rewrite-edn]
-    [rewrite-clj.zip :as z]))
+    [rewrite-clj.zip :as z]
+    [rewrite-clj.node :as n]))
 
 (defmulti inject :type)
 
@@ -64,7 +65,14 @@
                                 (do
                                   (println "require" child-data "already exists, skipping")
                                   zloc)
-                                (z/append-child zloc child-data))))
+                                (-> zloc
+                                    ;; change #1: I might replace this line:
+                                    ;; (z/insert-newline-right)
+                                    ;; with this line:
+                                    (z/append-child (n/newline-node "\n"))
+                                    ;; change #2: and now indent to first existing require
+                                    (z/append-child* (n/spaces (-> zloc z/down z/node meta :col)))
+                                    (z/append-child child-data)))))
                           zloc-require
                           requires)]
     (loop [z-loc updated-require]
