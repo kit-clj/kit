@@ -24,6 +24,7 @@
             <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg %n</pattern>
         </encoder>
     </appender>
+    <logger name="com.zaxxer.hikari" level="warn" />
     <logger name="org.apache.http" level="warn" />
     <logger name="org.xnio.nio" level="warn" />
     <logger name="io.undertow" level="warn" />
