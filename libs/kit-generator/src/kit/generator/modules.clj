@@ -3,11 +3,11 @@
     [clojure.java.io :as jio]
     [clojure.string :as string]
     [clj-jgit.porcelain :as git]
-    [clojure.tools.logging :as log]
     [kit.generator.io :as io])
-  (:import java.io.File))
+  (:import
+    [java.io File FileNotFoundException]))
 
-(defn module-name [name git-url]
+(defn module-root [name git-url]
   (or name
       (-> git-url
           (string/split #"/")
@@ -16,9 +16,10 @@
           (first))))
 
 (defn module-path [root name git-url]
-  (str root File/separator (module-name name git-url)))
+  (str root File/separator (module-root name git-url)))
 
-(defn clone-repo [root {:keys [name url tag]}]
+(defn sync-repository!
+  [root {:keys [name url tag]}]
   (try
     ;;docs https://github.com/clj-jgit/clj-jgit (version 0.8.10)
     (let [git-config (if (.exists (clojure.java.io/file "kit.git-config.edn"))
@@ -26,23 +27,34 @@
                        {:name "~/.ssh/id_rsa"})]
       (git/with-identity
         git-config
-        (let [module-root   (module-path root name url)
-              module-config (str module-root File/separator "modules.edn")
-              ;; TODO: can customize this
-              repo          (git/git-clone2 url {:path               module-root
-                                                 :remote-name        "origin"
-                                                 :branch-name        "master"
-                                                 :bare               false
-                                                 :clone-all-branches true})]
-          ;;todo
-          #_(git/git-checkout repo tag)
-          (io/update-edn-file module-config #(assoc % :module-root (module-name name url))))))
+        (let [path          (module-path root name url)
+              module-config (str path File/separator "modules.edn")]
+          (try
+            (let [repo (git/load-repo path)]
+              (git/git-pull repo))
+            (catch FileNotFoundException _e
+              (git/git-clone2 url {:path               path
+                                   :remote-name        "origin"
+                                   :branch-name        (or tag "master")
+                                   :bare               false
+                                   :clone-all-branches false})
+              (io/update-edn-file module-config #(assoc % :module-root (module-root name url))))))))
     (catch Exception e
-      (println "failed to read module:" url "\ncause:" (.getMessage e)))))
+      (println "failed to clone module:" url "\ncause:" (.getMessage e)))))
 
-(defn clone-modules [{:keys [modules]}]
+(defn sync-modules!
+  "Clones or pulls modules from git repositories.
+
+  If on local disk git repository for module is present, it will `git pull`
+  Otherwise it will create a new repository by `git clone`
+
+  Each module is defined as a map with keys
+  :name - the name which will be used as the path locally
+  :url - the git repository URL
+  :tag - the branch to pull from"
+  [{:keys [modules]}]
   (doseq [repository (-> modules :repositories)]
-    (clone-repo (:root modules) repository)))
+    (sync-repository! (:root modules) repository)))
 
 (defn set-module-path [module-config base-path]
   (update module-config :path #(str base-path File/separator %)))
@@ -77,7 +89,7 @@
                          :repositories [{:url  "git@github.com:kit-clj/modules.git"
                                          :tag  "master"
                                          :name "kit_modules"}]}}]
-    (clone-modules ctx))
+    (sync-modules! ctx))
 
   (let [ctx {:full-name "kit/guestbook"
              :ns-name   "kit.guestbook"

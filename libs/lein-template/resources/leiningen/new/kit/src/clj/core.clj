@@ -5,16 +5,16 @@
     [<<ns-name>>.config :as config]
     [<<ns-name>>.env :refer [defaults]]
 
-    ;; Edges
-    <% if redis? %>[kit.edge.cache.redis]<% endif %>
-    <% if crux? %>[kit.edge.db.crux]<% endif %>
-    <% if sql? %>[kit.edge.db.sql]
-    [kit.edge.db.postgres]<% endif %>
-    <% if hato? %>[kit.edge.http.hato]<% endif %>
-    <% if quartz? %>[kit.edge.scheduling.quartz]<% endif %>
-    <% if selmer? %>[kit.edge.templating.selmer]<% endif %>
-    <% if metrics? %>[kit.edge.utils.metrics]<% endif %>
-    <% if repl? %>[kit.edge.utils.repl]<% endif %>
+    ;; Edges <% if redis? %>
+    [kit.edge.cache.redis]<% endif %> <% if crux? %>
+    [kit.edge.db.crux]<% endif %> <% if sql? %>
+    [kit.edge.db.sql]
+    [kit.edge.db.postgres]<% endif %> <% if hato? %>
+    [kit.edge.http.hato]<% endif %> <% if quartz? %>
+    [kit.edge.scheduling.quartz]<% endif %> <% if selmer? %>
+    [kit.edge.templating.selmer]<% endif %> <% if metrics? %>
+    [kit.edge.utils.metrics]<% endif %> <% if repl? %>
+    [kit.edge.utils.repl]<% endif %>
     [kit.edge.server.undertow]
     [<<ns-name>>.web.handler]
 

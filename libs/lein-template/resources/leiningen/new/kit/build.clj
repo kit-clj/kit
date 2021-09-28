@@ -1,14 +1,14 @@
 (ns build
-  (:require [clojure.tools.build.api :as b]
+  (:require [clojure.string :as string]
+            [clojure.tools.build.api :as b]
             [deps-deploy.deps-deploy :as deploy]))
 
 (def lib '<<full-name>>)
-(def main-cls (str (name lib) ".core"))
+(def main-cls (string/join "." (filter some? [(namespace lib) (name lib) "core"]))))
 (def version (format "0.0.1-SNAPSHOT"))
 (def target-dir "target")
 (def class-dir (str target-dir "/" "classes"))
 (def uber-file (format "%s/%s-standalone.jar" target-dir (name lib)))
-(def src ["src/clj" "resources"])
 (def basis (b/create-basis {:project "deps.edn"}))
 
 (defn clean
@@ -18,18 +18,21 @@
   (b/delete {:path target-dir}))
 
 (defn prep [_]
+  (println "Writing Pom...")
   (b/write-pom {:class-dir class-dir
                 :lib lib
                 :version version
                 :basis basis
-                :src-dirs ["src"]})
-  (b/copy-dir {:src-dirs ["src" "resources"]
+                :src-dirs ["src/clj"]})
+  (b/copy-dir {:src-dirs ["src" "resources" "env/prod"]
                :target-dir class-dir}))
 
 (defn uber [_]
+  (println "Compiling Clojure...")
   (b/compile-clj {:basis basis
-                  :src-dirs ["src"]
+                  :src-dirs ["src/clj" "env/prod/clj"]
                   :class-dir class-dir})
+  (println "Making uberjar...")
   (b/uber {:class-dir class-dir
            :uber-file uber-file
            :main main-cls

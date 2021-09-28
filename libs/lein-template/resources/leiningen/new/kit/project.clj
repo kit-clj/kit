@@ -20,16 +20,16 @@
 
                            ;; kit Libs
                            [kit-clj/kit-core "<<versions.kit-core>>"]
-                           [kit-clj/kit-undertow "<<versions.kit-undertow>>"]
-                           <% if crux? %>[kit-clj/kit-crux "<<versions.kit-crux>>"]<% endif %>
-                           <% if sql? %>[kit-clj/kit-sql "<<versions.kit-sql>>"]
-                           [kit-clj/kit-postgres "<<versions.kit-postgres>>"]<% endif %>
-                           <% if hato? %>[kit-clj/kit-hato "<<versions.kit-hato>>"]<% endif %>
-                           <% if quartz? %>[kit-clj/kit-quartz "<<versions.kit-quartz>>"]<% endif %>
-                           <% if redis? %>[kit-clj/kit-redis "<<versions.kit-redis>>"]<% endif %>
-                           <% if selmer? %>[kit-clj/kit-selmer "<<versions.kit-selmer>>"]<% endif %>
-                           <% if metrics? %>[kit-clj/kit-metrics "<<versions.kit-metrics>>"]<% endif %>
-                           <% if repl? %>[kit-clj/kit-repl "<<versions.kit-repl>>"]<% endif %>]
+                           [kit-clj/kit-undertow "<<versions.kit-undertow>>"]<% if crux? %>
+                           [kit-clj/kit-crux "<<versions.kit-crux>>"]<% endif %> <% if sql? %>
+                           [kit-clj/kit-sql "<<versions.kit-sql>>"]
+                           [kit-clj/kit-postgres "<<versions.kit-postgres>>"]<% endif %> <% if hato? %>
+                           [kit-clj/kit-hato "<<versions.kit-hato>>"]<% endif %> <% if quartz? %>
+                           [kit-clj/kit-quartz "<<versions.kit-quartz>>"]<% endif %> <% if redis? %>
+                           [kit-clj/kit-redis "<<versions.kit-redis>>"]<% endif %> <% if selmer? %>
+                           [kit-clj/kit-selmer "<<versions.kit-selmer>>"]<% endif %> <% if metrics? %>
+                           [kit-clj/kit-metrics "<<versions.kit-metrics>>"]<% endif %> <% if repl? %>
+                           [kit-clj/kit-repl "<<versions.kit-repl>>"]<% endif %>]
 
             :min-lein-version "2.0.0"
 

@@ -4,6 +4,8 @@
     [kit.generator.modules :as modules]
     [kit.generator.io :as io]))
 
+;; TODO: Add docstrings
+
 (defn read-ctx
   ([] (read-ctx nil))
   ([path]
@@ -11,8 +13,8 @@
        (slurp)
        (io/str->edn))))
 
-(defn clone-modules []
-  (modules/clone-modules (read-ctx)))
+(defn sync-modules []
+  (modules/sync-modules! (read-ctx)))
 
 (defn list-modules []
   (let [ctx (modules/load-modules (read-ctx))]
@@ -23,14 +25,13 @@
     (generator/generate ctx module-key (or feature-flag :default))))
 
 (defn list-installed-modules []
-  (defn list-installed-modules []
-    (doseq [[id status] (-> (read-ctx)
-                            :modules
-                            :root
-                            (generator/read-modules-log))]
-      (println id (if (= status :success)
-                    "installed successfully"
-                    "failed to install")))))
+  (doseq [[id status] (-> (read-ctx)
+                          :modules
+                          :root
+                          (generator/read-modules-log))]
+    (println id (if (= status :success)
+                  "installed successfully"
+                  "failed to install"))))
 
 (comment
   (read-ctx "test/resources/kit.edn")
