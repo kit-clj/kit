@@ -6,7 +6,11 @@
     [clojure.walk :refer [prewalk]]
     [borkdude.rewrite-edn :as rewrite-edn]
     [rewrite-clj.zip :as z]
-    [rewrite-clj.node :as n]))
+    [rewrite-clj.node :as n]
+    [net.cgrand.enlive-html :as html])
+  (:import
+    org.jsoup.Jsoup
+    org.jsoup.nodes.Document))
 
 (defmulti inject :type)
 
@@ -87,6 +91,10 @@
        :append-requires append-requires)
      data value ctx)))
 
+(defmethod inject :html [{:keys [data action target value ctx]}]
+  (case action
+    :append (apply str ((html/template (html/html-snippet data) [] target (html/append (html/html (template-value ctx value))))))))
+
 (defmethod inject :default [{:keys [type] :as injection}]
   (println "unrecognized injection type" type "for injection\n"
            (with-out-str (pprint injection))))
@@ -101,19 +109,37 @@
   (->> (z/root-string data)
        (spit path)))
 
+(defmethod serialize :html [{:keys [path data]}]
+  (->> (Jsoup/parse data)
+       (.html)
+       (spit path)))
+
+(defmulti read-file (fn [path _]
+                      (let [extension (.substring path (inc (.lastIndexOf path ".")))]
+                        (if (empty? extension)
+                          :default
+                          (keyword extension)))))
+
+(defmethod read-file :clj [_ data-str]
+  (z/of-string data-str))
+
+(defmethod read-file :edn [_ data-str]
+  (rewrite-edn/parse-string data-str))
+
+(defmethod read-file :html [_ data-str]
+  data-str)
+
+(defmethod read-file :default [_ data-str]
+  data-str)
+
 (defn read-files [ctx paths]
   (reduce
     (fn [path->data path]
       (try
-        (let [data-str (renderer/render-template ctx (slurp path))]
-          (->> (cond
-                 (.endsWith path ".clj")
-                 (z/of-string data-str)
-                 (.endsWith path ".edn")
-                 (rewrite-edn/parse-string data-str)
-                 :else
-                 data-str)
-               (assoc path->data path)))
+        (->> (slurp path)
+             (renderer/render-template ctx)
+             (read-file path)
+             (assoc path->data path))
         (catch Exception e
           (println "failed to read asset in project:" path
                    "\nerror:" (.getMessage e)))))
