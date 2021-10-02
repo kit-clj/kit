@@ -1,2 +1,2 @@
 - add Malli schemas
-- finish implementation of rewrite-clj
+- implement module dependency resolution

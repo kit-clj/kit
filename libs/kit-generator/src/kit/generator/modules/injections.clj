@@ -8,9 +8,7 @@
     [rewrite-clj.zip :as z]
     [rewrite-clj.node :as n]
     [net.cgrand.enlive-html :as html])
-  (:import
-    org.jsoup.Jsoup
-    org.jsoup.nodes.Document))
+  (:import org.jsoup.Jsoup))
 
 (defmulti inject :type)
 
@@ -64,7 +62,7 @@
         updated-require (reduce
                           (fn [zloc child]
                             ;;TODO formatting
-                            (let [child-data (io/str->edn (renderer/render-template ctx child))]
+                            (let [child-data (io/str->edn (template-value ctx child))]
                               (if (require-exists? (z/sexpr zloc) child-data)
                                 (do
                                   (println "require" child-data "already exists, skipping")
@@ -198,4 +196,10 @@
     "(ns wake.guestbook.core\n  (:require\n    [clojure.tools.logging :as log]\n    [integrant.core :as ig]\n    [wake.guestbook.config :as config]\n    [wake.guestbook.env :refer [defaults]]\n\n    ;; Edges\n\n\n\n\n\n\n\n    [kit.edge.utils.repl]\n    [kit.edge.server.undertow]\n    [wake.guestbook.web.handler]\n\n    ;; Routes\n    [wake.guestbook.web.routes.api]\n    [wake.guestbook.web.routes.pages]    )\n  (:gen-class))"
     ['[myapp.core :as foo]
      '[myapp.core.roures :as routes]])
+
+
+  (let [child "(defn build-cljs [_]\n  (println \"npx shadow-cljs release app...\")\n  (let [{:keys [exit] :as s} (sh \"npx\" \"shadow-cljs\" \"release\" \"app\")]\n    (when-not (zero? exit)\n      (throw (ex-info \"could not compile cljs\" s)))))"
+        ctx {}]
+    (io/str->edn (template-value ctx child)))
+
   )
