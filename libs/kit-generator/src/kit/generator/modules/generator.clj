@@ -83,7 +83,8 @@
 (defn write-modules-log [modules-root log]
   (spit (modules-log-path modules-root) log))
 
-(defn generate [{:keys [modules] :as ctx} module-key feature-flag]
+(defn generate [{:keys [modules] :as ctx} module-key {:keys [feature-flag]
+                                                      :or   {feature-flag :default}}]
   (let [modules-root (:root modules)
         module-log   (read-modules-log modules-root)]
     (when (= :success (module-log module-key))
@@ -125,6 +126,6 @@
                                          :tag  "master"
                                          :name "kit"}]
                          :modules      {:html {:path "html"}}}}]
-    (generate ctx :html :default)
+    (generate ctx :html {:feature-flag :default})
 
     ))

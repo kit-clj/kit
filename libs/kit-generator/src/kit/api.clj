@@ -20,9 +20,12 @@
   (let [ctx (modules/load-modules (read-ctx))]
     (modules/list-modules ctx)))
 
-(defn install-module [module-key & [feature-flag]]
-  (let [ctx (modules/load-modules (read-ctx))]
-    (generator/generate ctx module-key (or feature-flag :default))))
+(defn install-module
+  ([module-key]
+   (install-module module-key {:feature-flag :default}))
+  ([module-key opts]
+   (let [ctx (modules/load-modules (read-ctx))]
+     (generator/generate ctx module-key opts))))
 
 (defn list-installed-modules []
   (doseq [[id status] (-> (read-ctx)
@@ -35,6 +38,5 @@
 
 (comment
   (read-ctx "test/resources/kit.edn")
-
 
   )
