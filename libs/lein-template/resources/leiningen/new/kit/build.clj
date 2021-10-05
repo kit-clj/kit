@@ -4,7 +4,7 @@
             [deps-deploy.deps-deploy :as deploy]))
 
 (def lib '<<full-name>>)
-(def main-cls (string/join "." (filter some? [(namespace lib) (name lib) "core"]))))
+(def main-cls (string/join "." (filter some? [(namespace lib) (name lib) "core"])))
 (def version (format "0.0.1-SNAPSHOT"))
 (def target-dir "target")
 (def class-dir (str target-dir "/" "classes"))

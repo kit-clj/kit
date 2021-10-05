@@ -55,7 +55,12 @@
 (defn require-exists? [requires require]
   (boolean (some #{require} requires)))
 
-;;TODO check for existing value, if same then skip, if different warn and skip
+(defn top-of-ns [z-loc]
+  (loop [z-loc z-loc]
+    (if-let [parent (z/up z-loc)]
+      (recur parent)
+      z-loc)))
+
 (defn append-requires [zloc requires ctx]
   (let [zloc-ns         (z/find-value zloc z/next 'ns)
         zloc-require    (z/up (z/find-value zloc-ns z/next :require))
@@ -77,16 +82,46 @@
                                     (z/append-child child-data)))))
                           zloc-require
                           requires)]
-    (loop [z-loc updated-require]
-      (if-let [parent (z/up z-loc)]
-        (recur parent)
-        z-loc))))
+    (top-of-ns updated-require)))
+
+(defn append-build-task [zloc child ctx]
+  (let [ns-loc (z/up (z/find-value zloc z/next 'ns))]
+    (if (z/find-value zloc z/next (second child))
+      (println "task called" (second child) "already exists"
+               "\nplease add the following task manually:\n"
+               (pr-str child))
+      (-> ns-loc
+          (z/insert-right (template-value ctx child))
+          (z/insert-right (n/newline-node "\n\n"))
+          (top-of-ns)))))
+
+(defn append-build-task-call [zloc child ctx]
+  (let [uber-loc        (some-> zloc
+                                (z/find-value z/next 'uber)
+                                (z/find-value z/next 'b/compile-clj)
+                                (z/up))
+        ;;todo might want to be more clever checking whether the child exist
+        child-in-target (some-> (z/find-value uber-loc z/next (first child))
+                                (z/up))]
+    (cond
+      (nil? uber-loc)
+      (println "could not locate uber task in build.clj")
+      child-in-target
+      (println "call to" (pr-str child) "already exists")
+      :else
+      (-> uber-loc
+          (z/insert-right (template-value ctx child))
+          (z/insert-space-right)
+          (z/insert-right (n/newline-node "\n"))
+          (top-of-ns)))))
 
 (defmethod inject :clj [{:keys [data action value ctx]}]
   (let [value (template-value ctx value)]
     (println "applying\n action:" action "\n value:" value)
     ((case action
-       :append-requires append-requires)
+       :append-requires append-requires
+       :append-build-task append-build-task
+       :append-build-task-call append-build-task-call)
      data value ctx)))
 
 (defmethod inject :html [{:keys [data action target value ctx]}]
@@ -166,6 +201,25 @@
 
 (comment
 
+  (let [zloc (z/of-string "(ns foo) (defn cljs-build [])")]
+    (z/find-value zloc z/next 'cljs-build))
+
+  (let [zloc            (z/of-string "(ns build\n  (:require [clojure.tools.build.api :as b]\n            [clojure.string :as string]\n            [clojure.java.shell :refer [sh]]\n            [deps-deploy.deps-deploy :as deploy]))\n\n
+  (defn uber [_]\n  (b/compile-clj {:basis basis\n                  :src-dirs [\"src/clj\" \"env/prod/clj\"]\n                  :class-dir class-dir})\n  (build-cljs)\n  (println \"Making uberjar...\")\n  (b/uber {:class-dir class-dir\n           :uber-file uber-file\n           :main main-cls\n           :basis basis}))")
+        child           (io/str->edn "(build-cljs)")
+        uber-loc        (-> zloc
+                            (z/find-value z/next 'uber)
+                            (z/find-value z/next 'b/compile-clj)
+                            (z/up))
+        child-in-target (z/up (z/find-value uber-loc z/next (first child)))]
+    (= (z/sexpr child-in-target) child)
+    #_(-> uber-loc
+          (z/insert-right child)
+          (z/insert-space-right)
+          (z/insert-right (n/newline-node "\n")))
+
+    )
+
   (println
     (str
       (inject
@@ -199,7 +253,44 @@
 
 
   (let [child "(defn build-cljs [_]\n  (println \"npx shadow-cljs release app...\")\n  (let [{:keys [exit] :as s} (sh \"npx\" \"shadow-cljs\" \"release\" \"app\")]\n    (when-not (zero? exit)\n      (throw (ex-info \"could not compile cljs\" s)))))"
-        ctx {}]
+        ctx   {}]
     (io/str->edn (template-value ctx child)))
 
+
+  {:default
+   {:require-restart? true
+    :actions
+                      {:assets     [["assets/shadow-cljs.edn" "shadow-cljs.edn"]
+                                    ["assets/package.json" "package.json"]
+                                    ["assets/src/core.cljs" "src/cljs/<<sanitized>>/core.cljs"]]
+                       :injections [{:type   :html
+                                     :path   "resources/html/home.html"
+                                     :action :append
+                                     :target [:body]
+                                     :value  [:div {:id "app"}]}
+                                    {:type   :clj
+                                     :path   "build.clj"
+                                     :action :append-build-task
+                                     :value  (defn build-cljs []
+                                               (println "npx shadow-cljs release app...")
+                                               (let [{:keys [exit]
+                                                      :as   s} (sh "npx" "shadow-cljs" "release" "app")]
+                                                 (when-not (zero? exit)
+                                                   (throw (ex-info "could not compile cljs" s)))))}
+                                    {:type   :clj
+                                     :path   "build.clj"
+                                     :action :append-build-task-call
+                                     :value  (build-cljs)}]}}}
+
+
+  (defn uber [_]
+    (b/compile-clj {:basis     basis
+                    :src-dirs  ["src/clj" "env/prod/clj"]
+                    :class-dir class-dir})
+
+    (println "Making uberjar...")
+    (b/uber {:class-dir class-dir
+             :uber-file uber-file
+             :main      main-cls
+             :basis     basis}))
   )
