@@ -18,6 +18,8 @@
    ["env/dev/clj/user.clj" (helpers/render "env/dev/clj/user.clj" data)]
    ["env/dev/resources/logback.xml" (helpers/render "env/dev/resources/logback.xml" data)]
 
+   ["env/test/resources/logback.xml" (helpers/render "env/test/resources/logback.xml" data)]
+
    ["env/prod/clj/{{sanitized}}/env.clj" (helpers/render "env/prod/clj/env.clj" data)]
    ["env/prod/resources/logback.xml" (helpers/render "env/prod/resources/logback.xml" data)]
 
