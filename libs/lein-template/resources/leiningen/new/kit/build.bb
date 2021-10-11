@@ -4,9 +4,12 @@
 
 (def tasks
   {"run"
-   (fn [& args] (sh "echo" (str args)))
+   (fn [& args] (sh "clj" "-M:dev"))
+   "test"
+   (fn [& args] (println "TODO"))
    "uberjar"
-   (fn [& args] )})
+   (fn [& args] (println "TODO"))})
+
 
 (let [[command & args] *command-line-args*]
  (if-let [task (get tasks command)]
