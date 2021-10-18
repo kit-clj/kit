@@ -8,8 +8,7 @@
    "test"
    (fn [& args] (println "TODO"))
    "uberjar"
-   (fn [& args] (println "TODO"))})
-
+   (fn [& args] (println "clj" "-Sforce" "-T:build" "all"))})
 
 (let [[command & args] *command-line-args*]
  (if-let [task (get tasks command)]
