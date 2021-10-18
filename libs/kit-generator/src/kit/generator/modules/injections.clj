@@ -46,6 +46,8 @@
 (defmethod inject :edn [{:keys [data target action value] :as ctx}]
   (let [value (template-value ctx value)]
     (case action
+      :append
+      (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) value))
       :merge
       (reduce
         (fn [data [key value]]
