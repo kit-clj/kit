@@ -3,7 +3,9 @@
   '[clojure.java.shell :refer [sh]])
 
 (def tasks
-  {"run"
+  {"repl"
+   (fn [& args] (sh "clj" "-M:dev" "-M:repl"))
+   "run"
    (fn [& args] (sh "clj" "-M:dev"))
    "test"
    (fn [& args] (println "TODO"))
