@@ -23,25 +23,26 @@
     value))
 
 (defn assoc-value [data target key value]
-  (let [data-edn      (rewrite-edn/sexpr data)
-        current-value (get data-edn key)
-        path          (conj (vec target) key)]
-    (cond
-      (nil? current-value)
-      (do
-        (println "injecting\n path:" path "\n value:" (pr-str value))
-        (rewrite-edn/assoc-in data path (-> value io/edn->str rewrite-edn/parse-string)))
+  (when data
+    (let [data-edn      (rewrite-edn/sexpr data)
+          current-value (get data-edn key)
+          path          (conj (vec target) key)]
+      (cond
+        (nil? current-value)
+        (do
+          (println "injecting\n path:" path "\n value:" (pr-str value))
+          (rewrite-edn/assoc-in data path (-> value io/edn->str rewrite-edn/parse-string)))
 
-      (= current-value value)
-      data
+        (= current-value value)
+        data
 
-      (not= current-value)
-      (do
-        (println "path already contains value!"
-                 "\n path:" path
-                 "\n current value:" current-value
-                 "\n module value:" (pr-str value))
-        data))))
+        (not= current-value)
+        (do
+          (println "path already contains value!"
+                   "\n path:" path
+                   "\n current value:" current-value
+                   "\n module value:" (pr-str value))
+          data)))))
 
 (defmethod inject :edn [{:keys [data target action value] :as ctx}]
   (let [value (template-value ctx value)]

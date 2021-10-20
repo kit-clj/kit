@@ -2,11 +2,9 @@
 (require
   '[clojure.java.shell :refer [sh]])
 
-(defn run-with-args [
-
 (def tasks
   {"repl"
-   (fn [& args] (apply sh "clj" "-M:dev" "-M:repl" args)))
+   (fn [& args] (apply sh "clj" "-M:dev" "-M:repl" args))
    "run"
    (fn [& args] (apply sh "clj" "-M:dev" args))
    "test"
