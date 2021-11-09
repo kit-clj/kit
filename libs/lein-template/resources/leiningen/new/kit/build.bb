@@ -8,7 +8,7 @@
    "run"
    (fn [& args] (apply sh "clj" "-M:dev" args))
    "test"
-   (fn [& args] (println "TODO"))
+   (fn [& args] (apply sh "clj" "-M:test"))
    "uberjar"
    (fn [& args] (apply sh "clj" "-Sforce" "-T:build" "all" args))})
 

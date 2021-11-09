@@ -223,6 +223,13 @@
 
     )
 
+  (z/root-string
+    (inject
+      {:type   :clj
+       :data   (z/of-string "(ns foo (:require [bar.baz] [web.routes.pages]))")
+       :action :append-requires
+       :value  ["[web.routes.pages]"]}))
+
   (println
     (str
       (inject
