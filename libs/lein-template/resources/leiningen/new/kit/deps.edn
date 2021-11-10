@@ -18,16 +18,16 @@
 
            ;; kit Libs
            kit-clj/kit-core {:mvn/version "<<versions.kit-core>>"}
-           kit-clj/kit-undertow {:mvn/version "<<versions.kit-undertow>>"}
-           <% if crux? %>kit-clj/kit-crux {:mvn/version "<<versions.kit-crux>>"}<% endif %>
-           <% if sql? %>kit-clj/kit-sql {:mvn/version "<<versions.kit-sql>>"}
-           kit-clj/kit-postgres{:mvn/version "<<versions.kit-postgres>>"}<% endif %>
-           <% if hato? %>kit-clj/kit-hato {:mvn/version "<<versions.kit-hato>>"}<% endif %>
-           <% if quartz? %>kit-clj/kit-quartz {:mvn/version "<<versions.kit-quartz>>"}<% endif %>
-           <% if redis? %>kit-clj/kit-redis {:mvn/version "<<versions.kit-redis>>"}<% endif %>
-           <% if selmer? %>kit-clj/kit-selmer {:mvn/version "<<versions.kit-selmer>>"}<% endif %>
-           <% if metrics? %>kit-clj/kit-metrics {:mvn/version "<<versions.kit-metrics>>"}<% endif %>
-           <% if repl? %>kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %>
+           kit-clj/kit-undertow {:mvn/version "<<versions.kit-undertow>>"}<% if crux? %>
+           kit-clj/kit-crux {:mvn/version "<<versions.kit-crux>>"}<% endif %><% if sql? %>
+           kit-clj/kit-sql {:mvn/version "<<versions.kit-sql>>"}
+           kit-clj/kit-postgres{:mvn/version "<<versions.kit-postgres>>"}<% endif %><% if hato? %>
+           kit-clj/kit-hato {:mvn/version "<<versions.kit-hato>>"}<% endif %><% if quartz? %>
+           kit-clj/kit-quartz {:mvn/version "<<versions.kit-quartz>>"}<% endif %><% if redis? %>
+           kit-clj/kit-redis {:mvn/version "<<versions.kit-redis>>"}<% endif %><% if selmer? %>
+           kit-clj/kit-selmer {:mvn/version "<<versions.kit-selmer>>"}<% endif %><% if metrics? %>
+           kit-clj/kit-metrics {:mvn/version "<<versions.kit-metrics>>"}<% endif %><% if repl? %>
+           kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %>
            }
  :aliases {:uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.267"}}
                      :exec-fn      hf.depstar/uberjar
