@@ -2,102 +2,130 @@
   (:require
     [kit.generator.renderer :as renderer]
     [kit.generator.io :as io]
+    [kit.generator.zippers :as kzip]
     [clojure.pprint :refer [pprint]]
     [clojure.walk :refer [prewalk]]
-    [borkdude.rewrite-edn :as rewrite-edn]
     [rewrite-clj.zip :as z]
     [rewrite-clj.node :as n]
+    [rewrite-clj.parser :as p]
+    [borkdude.rewrite-edn :as rewrite-edn]
     [net.cgrand.enlive-html :as html])
   (:import org.jsoup.Jsoup))
 
 (defmulti inject :type)
 
-(comment (ns-unmap 'kit.generator.modules.injections 'inject))
-
-(defn template-value [ctx value]
-  (prewalk
-    (fn [node]
-      (if (string? node)
-        (renderer/render-template ctx node)
-        node))
-    value))
-
-(defn assoc-value [data target key value]
-  (when data
-    (let [data-edn      (rewrite-edn/sexpr data)
-          current-value (get data-edn key)
-          path          (conj (vec target) key)]
-      (cond
-        (nil? current-value)
-        (do
-          (println "injecting\n path:" path "\n value:" value)
-          (rewrite-edn/assoc-in data path (rewrite-edn/parse-string value)))
-
-        (= current-value (io/str->edn value))
-        data
-
-        (not= current-value)
-        (do
-          (println "path already contains value!"
-                   "\n path:" path
-                   "\n current value:" current-value
-                   "\n module value:" value)
-          data)))))
-
-(defmethod inject :edn [{:keys [data target action value] :as ctx}]
-  (let [value (template-value ctx value)]
-    (case action
-      :append
-      (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) (z/of-string value)))
-      :merge
-      (reduce
-        (fn [data [key value]]
-          (assoc-value data target key value))
-        data value))))
-
-(defn require-exists? [requires require]
-  (boolean (some #{require} requires)))
-
-(defn top-of-ns [z-loc]
+(defn topmost [z-loc]
   (loop [z-loc z-loc]
     (if-let [parent (z/up z-loc)]
       (recur parent)
       z-loc)))
 
-(defn append-requires [zloc requires ctx]
+(defn conflicting-keys
+  [node value-keys]
+  (some
+    #(contains? node %)
+    value-keys))
+
+(defn zipper-insert-kw-pairs
+  [zloc kw-zipper]
+  (let [k      kw-zipper
+        v      (z/right kw-zipper)]
+    (if-not (and (some? k) (some? v))
+      zloc
+      (recur
+        (-> zloc
+            (z/insert-right (z/node k))
+            (z/right)
+            (z/insert-right (z/node v))
+            (z/right))
+        (-> kw-zipper
+            (z/right)
+            (z/right))))))
+
+(defn spaces-of-zloc
+  [zloc]
+  (-> zloc
+      (z/node)
+      (meta)
+      :col))
+
+(defn edn-merge-value
+  [value]
+  (let [map-zipper (z/of-string value)]
+    (fn [node]
+      (-> node
+          (z/down)
+          (z/rightmost)
+          (zipper-insert-kw-pairs (z/down map-zipper))
+          (topmost)))))
+
+(comment
+  (z/root-string ((edn-merge-value
+                    "{:c {:d 1
+                               {:e 3} 4}
+                       :d 3}")
+                  (z/of-string "{:a 1
+                :b 2}"))))
+
+(defn edn-safe-merge
+  [zloc value]
+  (let [value-keys   (keys (io/str->edn value))
+        target-value (z/sexpr zloc)]
+    (if-let [conflicts (conflicting-keys target-value value-keys)]
+      (do (println "file has conflicting keys! Skipping"
+                   "\n keys:" conflicts)
+          zloc)
+      ((edn-merge-value value) zloc))))
+
+(defmethod inject :edn [{:keys [data target action value]}]
+  (case action
+    :append
+    ;; TODO: clean up to support formatting
+    (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) (z/node (z/of-string value))))
+    :merge
+    ;; TODO: update-in does it work?
+    (if (empty? target)
+      (edn-safe-merge data value)
+      (kzip/update-in data target #(edn-safe-merge % value)))))
+
+(defn require-exists? [requires require]
+  (boolean (some #{require} requires)))
+
+(defn append-requires [zloc requires]
   (let [zloc-ns         (z/find-value zloc z/next 'ns)
         zloc-require    (z/up (z/find-value zloc-ns z/next :require))
         updated-require (reduce
                           (fn [zloc child]
-                            (let [child-data (io/str->edn (template-value ctx child))]
+                            (let [child-data (io/str->edn child)]
                               (if (require-exists? (z/sexpr zloc) child-data)
                                 (do
                                   (println "require" child-data "already exists, skipping")
                                   zloc)
+                                ;; TODO: formatting
                                 (-> zloc
                                     ;; change #1: I might replace this line:
                                     ;; (z/insert-newline-right)
                                     ;; with this line:
                                     (z/append-child (n/newline-node "\n"))
                                     ;; change #2: and now indent to first existing require
-                                    (z/append-child* (n/spaces (-> zloc z/down z/node meta :col)))
-                                    (z/append-child (z/of-string child))))))
+                                    (z/append-child* (n/spaces (-> zloc (z/down) (spaces-of-zloc))))
+                                    (z/append-child child-data)))))
                           zloc-require
                           requires)]
-    (top-of-ns updated-require)))
+    (topmost updated-require)))
 
-(defn append-build-task [zloc child ctx]
+(defn append-build-task [zloc child]
   (let [ns-loc (z/up (z/find-value zloc z/next 'ns))]
     (if (z/find-value zloc z/next (second child))
       (println "task called" (second child) "already exists"
                "\nplease add the following task manually:\n"
                (pr-str child))
       (-> ns-loc
-          (z/insert-right (template-value ctx child))
+          (z/insert-right child)
           (z/insert-right (n/newline-node "\n\n"))
-          (top-of-ns)))))
+          (topmost)))))
 
-(defn append-build-task-call [zloc child ctx]
+(defn append-build-task-call [zloc child]
   (let [uber-loc        (some-> zloc
                                 (z/find-value z/next 'uber)
                                 (z/find-value z/next 'b/compile-clj)
@@ -112,23 +140,26 @@
       (println "call to" (pr-str child) "already exists")
       :else
       (-> uber-loc
-          (z/insert-right (template-value ctx child))
+          (z/insert-right child)
           (z/insert-space-right)
           (z/insert-right (n/newline-node "\n"))
-          (top-of-ns)))))
+          (topmost)))))
 
-(defmethod inject :clj [{:keys [data action value ctx]}]
-  (let [value (template-value ctx value)]
-    (println "applying\n action:" action "\n value:" value)
-    ((case action
-       :append-requires append-requires
-       :append-build-task append-build-task
-       :append-build-task-call append-build-task-call)
-     data value ctx)))
+(defmethod inject :clj [{:keys [data action value]}]
+  (println "applying\n action:" action "\n value:" (pr-str value))
+  ((case action
+     :append-requires append-requires
+     :append-build-task append-build-task
+     :append-build-task-call append-build-task-call)
+   data value))
 
-(defmethod inject :html [{:keys [data action target value ctx]}]
+(defmethod inject :html [{:keys [data action target value]}]
   (case action
-    :append (apply str ((html/template (html/html-snippet data) [] target (html/append (html/html (template-value ctx value))))))))
+    :append (apply str ((html/template (html/html-snippet data)
+                                       []
+                                       target
+                                       (html/append
+                                         (html/html value)))))))
 
 (defmethod inject :default [{:keys [type] :as injection}]
   (println "unrecognized injection type" type "for injection\n"
@@ -137,7 +168,7 @@
 (defmulti serialize :type)
 
 (defmethod serialize :edn [{:keys [path data]}]
-  (->> (str data)
+  (->> (z/root-string data)
        (spit path)))
 
 (defmethod serialize :clj [{:keys [path data]}]
@@ -159,7 +190,7 @@
   (z/of-string data-str))
 
 (defmethod read-file :edn [_ data-str]
-  (rewrite-edn/parse-string data-str))
+  (z/of-string data-str))
 
 (defmethod read-file :html [_ data-str]
   data-str)
@@ -192,14 +223,18 @@
   (let [injections (->> injections
                         (map (fn [injection] (update injection :path #(renderer/render-template ctx %))))
                         (group-by :path))
-        path->data (read-files ctx (keys injections))
-        updated    (map
-                     (fn [[path injections]]
-                       (println "updating file:" path)
-                       (inject-at-path ctx (path->data path) path injections))
-                     injections)]
-    (doseq [item updated]
-      (serialize item))))
+        path->data (read-files ctx (keys injections))]
+    (doseq [[path injections] injections]
+      (println "updating file:" path)
+      (->> (inject-at-path ctx (path->data path) path injections)
+           (serialize)))))
+
+
+
+
+
+
+
 
 (comment
 

@@ -3,7 +3,7 @@
     [kit.generator.io :as io]
     [kit.generator.modules :as modules]
     [kit.generator.modules.injections :as ij]
-    [kit.generator.renderer :refer [render-template render-asset]]
+    [kit.generator.renderer :as renderer]
     [clojure.java.io :as jio]
     [clojure.pprint :refer [pprint]])
   (:import java.io.File
@@ -49,14 +49,14 @@
     (cond
       ;; if asset is a string assume it's a directory to be created
       (string? asset)
-      (.mkdir (jio/file (render-template ctx asset)))
+      (.mkdir (jio/file (renderer/render-template ctx asset)))
       ;; otherwise asset should be a tuple of [source target] path strings
       (and (sequential? asset) (= 2 (count asset)))
       (let [[asset-path target-path] asset]
         (write-asset
           (->> (read-asset (concat-path module-path asset-path))
-               (render-asset ctx))
-          (render-template ctx target-path)))
+               (renderer/render-asset ctx))
+          (renderer/render-template ctx target-path)))
       :else
       (println "unrecognized asset type:" asset))))
 
@@ -66,10 +66,11 @@
 (defmethod handle-action :default [_ [id]]
   (println "undefined action:" id))
 
-(defn read-config [module-path]
-  (some-> (str module-path File/separator "config.edn")
-          (slurp)
-          (io/str->edn)))
+(defn read-config [ctx module-path]
+  (some->> (str module-path File/separator "config.edn")
+           (slurp)
+           (renderer/render-template ctx)
+           (io/str->edn)))
 
 (defn modules-log-path [modules-root]
   (str modules-root File/separator "install-log.edn"))
@@ -91,9 +92,9 @@
       (println "warning: module" (name module-key) "is already installed!"))
     (try
       (let [module-path   (get-in modules [:modules module-key :path])
-            module-config (read-config module-path)
-            config        (get module-config feature-flag)
-            ctx           (assoc ctx :module-path module-path)]
+            ctx           (assoc ctx :module-path module-path)
+            module-config (read-config ctx module-path)
+            config        (get module-config feature-flag)]
         (cond
           (nil? module-config)
           (do
