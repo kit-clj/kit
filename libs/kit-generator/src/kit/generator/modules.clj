@@ -77,8 +77,11 @@
          (assoc-in ctx [:modules :modules]))))
 
 (defn list-modules [ctx]
-  (doseq [[id {:keys [doc]}] (-> ctx :modules :modules)]
-    (println id "-" doc)))
+  (let [modules (-> ctx :modules :modules)]
+    (if (empty? modules)
+      (println "No modules installed, maybe run `sync-modules`")
+      (doseq [[id {:keys [doc]}] modules]
+        (println id "-" doc)))))
 
 (comment
   (let [ctx {:full-name "kit/guestbook"
