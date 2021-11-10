@@ -11,7 +11,7 @@
     [rewrite-clj.node :as n]
     [rewrite-clj.parser :as parser]
     [rewrite-clj.zip :as z]
-    [zprint.core :as zp])
+    [cljfmt.core :as cljfmt])
   (:import org.jsoup.Jsoup))
 
 (defmulti inject :type)
@@ -22,13 +22,20 @@
       (recur parent)
       z-loc)))
 
+(defn format-str [s]
+  (cljfmt/reformat-string
+    s
+    {:indentation?                          true
+     :split-keypairs-over-multiple-lines?   true
+     :insert-missing-whitespace?            true
+     :remove-multiple-non-indenting-spaces? true}))
+
 (defn reformat-string
   [form-string rules-config]
   (-> form-string
+      (format-str)
       (parser/parse-string-all)
-      (format/reformat-form rules-config)
-      #_(zp/zprint-str)
-      ))
+      (format/reformat-form rules-config)))
 
 (defn format-zloc
   [zloc]
@@ -78,14 +85,14 @@
 
 (comment
   (z/root-string ((edn-merge-value
-                    {:c {:d 1
+                    {:c {:d     1
                          {:e 3} 4}
                      :d 3})
                   (z/of-string "{:a 1
                 :b 2}")))
 
   (z/root-string ((edn-merge-value
-                    {:c {:d 1
+                    {:c {:d     1
                          {:e 3} 4}
                      :d 3})
                   (z/of-string "{}"))))

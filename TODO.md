@@ -6,7 +6,7 @@
 - [-] Namespaced modules (update in docs!)
 - [ ] Test all the build steps (run, repl, test, uberjar)
 - [ ] Refactor :append-requires, :append-build-task, :append-build-task-call into :append-after or :append
-
+- [ ] Switch from using group-by to reduce to preserve injection order
 # Stretch goals
 
 - [ ] Module dependencies
