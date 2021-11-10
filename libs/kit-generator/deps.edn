@@ -7,4 +7,6 @@
          org.clojure/tools.logging {:mvn/version "1.1.0"}
          borkdude/rewrite-edn      {:mvn/version "0.0.2"}
          enlive                    {:mvn/version "1.1.6"}
-         rewrite-clj               {:mvn/version "1.0.644-alpha"}}}
+         rewrite-clj               {:mvn/version "1.0.644-alpha"}
+         mvxcvi/cljstyle           {:mvn/version "0.15.0"}
+         zprint/zprint             {:mvn/version "1.1.2"}}}

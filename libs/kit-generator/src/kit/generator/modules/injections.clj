@@ -2,13 +2,16 @@
   (:require
     [kit.generator.renderer :as renderer]
     [kit.generator.io :as io]
+    [borkdude.rewrite-edn :as rewrite-edn]
     [clojure.pprint :refer [pprint]]
     [clojure.walk :refer [prewalk]]
-    [rewrite-clj.zip :as z]
+    [cljstyle.config :as fmt-config]
+    [cljstyle.format.core :as format]
+    [net.cgrand.enlive-html :as html]
     [rewrite-clj.node :as n]
-    [rewrite-clj.parser :as p]
-    [borkdude.rewrite-edn :as rewrite-edn]
-    [net.cgrand.enlive-html :as html])
+    [rewrite-clj.parser :as parser]
+    [rewrite-clj.zip :as z]
+    [zprint.core :as zp])
   (:import org.jsoup.Jsoup))
 
 (defmulti inject :type)
@@ -18,6 +21,19 @@
     (if-let [parent (z/up z-loc)]
       (recur parent)
       z-loc)))
+
+(defn reformat-string
+  [form-string rules-config]
+  (-> form-string
+      (parser/parse-string-all)
+      (format/reformat-form rules-config)
+      #_(zp/zprint-str)
+      ))
+
+(defn format-zloc
+  [zloc]
+  (z/replace zloc
+             (reformat-string (z/string zloc) (:rules fmt-config/default-config))))
 
 (defn conflicting-keys
   [node value-keys]
@@ -29,11 +45,12 @@
   (let [k kw-zipper
         v (z/right kw-zipper)]
     (if-not (and (some? k) (some? v))
-      zloc
+      (format-zloc (z/up zloc))
       (recur
         (-> zloc
             (z/insert-right (z/node k))
             (z/right)
+            (z/insert-newline-left)
             (z/insert-right (z/node v))
             (z/right))
         (-> kw-zipper
@@ -49,48 +66,79 @@
 
 (defn edn-merge-value
   [value]
-  (let [map-zipper (z/of-string value)]
+  (let [map-zipper (z/of-string (if (string? value)
+                                  value
+                                  (pr-str value)))]
     (fn [node]
-      (-> node
-          (z/down)
-          (z/rightmost)
-          (zipper-insert-kw-pairs (z/down map-zipper))
-          (topmost)))))
+      (if-let [inside-map (z/down node)]
+        (-> inside-map
+            (z/rightmost)
+            (zipper-insert-kw-pairs (z/down map-zipper)))
+        (z/replace node (z/node (format-zloc map-zipper)))))))
 
 (comment
   (z/root-string ((edn-merge-value
-                    "{:c {:d 1
-                               {:e 3} 4}
-                       :d 3}")
+                    {:c {:d 1
+                         {:e 3} 4}
+                     :d 3})
                   (z/of-string "{:a 1
-                :b 2}"))))
+                :b 2}")))
+
+  (z/root-string ((edn-merge-value
+                    {:c {:d 1
+                         {:e 3} 4}
+                     :d 3})
+                  (z/of-string "{}"))))
 
 (defn edn-safe-merge
   [zloc value]
-  (let [value-keys   (keys (io/str->edn value))
+  (let [value-keys   (keys (if (string? value)
+                             (io/str->edn value)
+                             value))
         target-value (z/sexpr zloc)]
-    (if-let [conflicts (conflicting-keys target-value value-keys)]
-      (do (println "file has conflicting keys! Skipping"
-                   "\n keys:" conflicts)
-          zloc)
-      ((edn-merge-value value) zloc))))
+    (let [conflicts (conflicting-keys target-value value-keys)]
+      (if (seq conflicts)
+        (do (println "file has conflicting keys! Skipping"
+                     "\n keys:" conflicts)
+            zloc)
+        ((edn-merge-value value) zloc)))))
 
 (defn zloc-get-in
-  [zloc [k & ks] ]
+  [zloc [k & ks]]
   (if-not k
     zloc
     (recur (z/get zloc k) ks)))
 
-(defmethod inject :edn [{:keys [data target action value]}]
+(defn find-value-in-zipper
+  [{:keys [zip-config]} value])
+
+(defmethod inject :edn [{:keys [data target action value ctx]}]
   (case action
     :append
     ;; TODO: clean up to support formatting
     (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) (z/node (z/of-string value))))
     :merge
-    ;; TODO: update-in does it work?
     (edn-safe-merge
       (zloc-get-in data target)
       value)))
+
+(comment
+  ;; get-in test
+  (z/root-string (edn-safe-merge
+                   (zloc-get-in (z/of-string "{:a 1
+                :b 2
+                :q {:jj 1}}") [:q])
+                   "{:c {:d 1
+                                {:e 3} 4}
+                        :d 3}"))
+  ;; get-in empty map test
+  (z/root-string (edn-safe-merge
+                   (zloc-get-in (z/of-string "{:a 1
+                :b 2
+                :q {}}") [:q])
+                   "{:c {:d 1
+                                {:e 3} 4}
+                        :d 3}")))
 
 (defn require-exists? [requires require]
   (boolean (some #{require} requires)))
@@ -113,7 +161,7 @@
                                     (z/append-child (n/newline-node "\n"))
                                     ;; change #2: and now indent to first existing require
                                     (z/append-child* (n/spaces (-> zloc (z/down) (spaces-of-zloc))))
-                                    (z/append-child child-data)))))
+                                    (z/append-child child-data #_(format-zloc child-data))))))
                           zloc-require
                           requires)]
     (topmost updated-require)))

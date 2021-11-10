@@ -5,7 +5,8 @@
     [kit.generator.modules.injections :as ij]
     [kit.generator.renderer :as renderer]
     [clojure.java.io :as jio]
-    [clojure.pprint :refer [pprint]])
+    [clojure.pprint :refer [pprint]]
+    [rewrite-clj.zip :as z])
   (:import java.io.File
            java.nio.file.Files))
 
@@ -69,8 +70,7 @@
 (defn read-config [ctx module-path]
   (some->> (str module-path File/separator "config.edn")
            (slurp)
-           (renderer/render-template ctx)
-           (io/str->edn)))
+           (renderer/render-template ctx)))
 
 (defn modules-log-path [modules-root]
   (str modules-root File/separator "install-log.edn"))
@@ -91,21 +91,25 @@
     (when (= :success (module-log module-key))
       (println "warning: module" (name module-key) "is already installed!"))
     (try
-      (let [module-path   (get-in modules [:modules module-key :path])
-            ctx           (assoc ctx :module-path module-path)
-            module-config (read-config ctx module-path)
-            config        (get module-config feature-flag)]
+      (let [module-path (get-in modules [:modules module-key :path])
+            ctx         (assoc ctx :module-path module-path)
+            config-str  (read-config ctx module-path)
+            edn-config  (io/str->edn config-str)
+            zip-config  (z/of-string config-str)
+            config      (get edn-config feature-flag)]
         (cond
-          (nil? module-config)
+          (nil? edn-config)
           (do
             (println "module" (name module-key) "not found, available modules:")
             (pprint (modules/list-modules ctx)))
+
           (nil? config)
           (do
             (println "feature" feature-flag "not found for module" module-key ", available features:")
-            (pprint (keys module-config)))
+            (pprint (keys edn-config)))
+
           :else
-          (do
+          (let [ctx (assoc ctx :zip-config zip-config)]
             (doseq [action (:actions config)]
               (handle-action ctx action))
             (write-modules-log modules-root (assoc module-log module-key :success))

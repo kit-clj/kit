@@ -2,6 +2,8 @@
 
 Lightweight, modular framework for scalable production systems.
 
+**ALPHA WARNING**: `kit-generator` and Kit modules / code generation is in **ALPHA** meaning the API for code generation is subject to change. This should not affect users of Kit, but will affect anyone developing modules or extending them. The libs/libraries are stable.
+
 ## Goal
 
 The goal of `kit` is to provide a template for a robust, scalable Clojure web application. It hides common plumbing that is standard across projects via its libs system, while exposing code that tends to be customized in the clj-new template.
@@ -46,13 +48,17 @@ Additional profiles:
 - `kit-redis` - An extension of [core.cache](https://github.com/clojure/core.cache) for Redis via [carmine](https://github.com/ptaoussanis/carmine)
 - `kit-repl` - Socket REPL integrant binding
 - `kit-selmer` - Templating configuration with [selmer](https://github.com/yogthos/Selmer)
-- `kit-sql` - Generic SQL integrant binding. Uses [conman](https://github.com/luminus-framework/conman), [next.jdbc](https://github.com/seancorfield/next-jdbc), [hugsql](https://www.hugsql.org/), and [migratus](https://github.com/yogthos/migratus) directly, or implicitly. By default imports `kit-postgres` lib which supports Postgresql
-- `kit-postgres` - lib with data bindings and utilites when working with Postgres
+- `kit-sql` - Generic SQL integrant binding. Uses [conman](https://github.com/luminus-framework/conman), [next.jdbc](https://github.com/seancorfield/next-jdbc), [hugsql](https://www.hugsql.org/), and [migratus](https://github.com/yogthos/migratus) directly, or implicitly. By default, imports `kit-postgres` lib which supports Postgresql
+- `kit-postgres` - lib with data bindings and utilities for working with Postgres
 - `kit-undertow` - Server binding via [luminus-undertow](https://github.com/luminus-framework/luminus-undertow)
+
+## Build Tool Support
+
+Presently only Clojure deps is supported, however there are plans to add Leiningen support.
 
 ## Documentation
 
-TODO: link
+[Documentation can be found here](https://kit-clj.github.io)
 
 ## Development setup
 
