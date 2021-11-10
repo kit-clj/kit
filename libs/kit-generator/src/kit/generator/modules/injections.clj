@@ -30,10 +30,10 @@
       (cond
         (nil? current-value)
         (do
-          (println "injecting\n path:" path "\n value:" (pr-str value))
-          (rewrite-edn/assoc-in data path (-> value io/edn->str rewrite-edn/parse-string)))
+          (println "injecting\n path:" path "\n value:" value)
+          (rewrite-edn/assoc-in data path (rewrite-edn/parse-string value)))
 
-        (= current-value value)
+        (= current-value (io/str->edn value))
         data
 
         (not= current-value)
@@ -41,14 +41,14 @@
           (println "path already contains value!"
                    "\n path:" path
                    "\n current value:" current-value
-                   "\n module value:" (pr-str value))
+                   "\n module value:" value)
           data)))))
 
 (defmethod inject :edn [{:keys [data target action value] :as ctx}]
   (let [value (template-value ctx value)]
     (case action
       :append
-      (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) value))
+      (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) (z/of-string value)))
       :merge
       (reduce
         (fn [data [key value]]
@@ -69,7 +69,6 @@
         zloc-require    (z/up (z/find-value zloc-ns z/next :require))
         updated-require (reduce
                           (fn [zloc child]
-                            ;;TODO formatting
                             (let [child-data (io/str->edn (template-value ctx child))]
                               (if (require-exists? (z/sexpr zloc) child-data)
                                 (do
@@ -82,7 +81,7 @@
                                     (z/append-child (n/newline-node "\n"))
                                     ;; change #2: and now indent to first existing require
                                     (z/append-child* (n/spaces (-> zloc z/down z/node meta :col)))
-                                    (z/append-child child-data)))))
+                                    (z/append-child (z/of-string child))))))
                           zloc-require
                           requires)]
     (top-of-ns updated-require)))
