@@ -7,7 +7,7 @@
   [[".gitignore" (helpers/render "gitignore" data)]
    ["README.md" (helpers/render "README.md" data)]
    ["Dockerfile" (helpers/render "Dockerfile" data)]
-   ["project.clj" (helpers/render "project.clj" data)]
+   ;["project.clj" (helpers/render "project.clj" data)] until lein support is ready
    ["build.bb" (helpers/render "build.bb" data)]
    ["deps.edn" (helpers/render "deps.edn" data)]
    ["build.clj" (helpers/render "build.clj" data)]
