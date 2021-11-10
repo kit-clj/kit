@@ -2,7 +2,6 @@
   (:require
     [kit.generator.renderer :as renderer]
     [kit.generator.io :as io]
-    [kit.generator.zippers :as kzip]
     [clojure.pprint :refer [pprint]]
     [clojure.walk :refer [prewalk]]
     [rewrite-clj.zip :as z]
@@ -22,14 +21,13 @@
 
 (defn conflicting-keys
   [node value-keys]
-  (some
-    #(contains? node %)
-    value-keys))
+  (filter #(contains? node %)
+          value-keys))
 
 (defn zipper-insert-kw-pairs
   [zloc kw-zipper]
-  (let [k      kw-zipper
-        v      (z/right kw-zipper)]
+  (let [k kw-zipper
+        v (z/right kw-zipper)]
     (if-not (and (some? k) (some? v))
       zloc
       (recur
@@ -77,6 +75,12 @@
           zloc)
       ((edn-merge-value value) zloc))))
 
+(defn zloc-get-in
+  [zloc [k & ks] ]
+  (if-not k
+    zloc
+    (recur (z/get zloc k) ks)))
+
 (defmethod inject :edn [{:keys [data target action value]}]
   (case action
     :append
@@ -84,9 +88,9 @@
     (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) (z/node (z/of-string value))))
     :merge
     ;; TODO: update-in does it work?
-    (if (empty? target)
-      (edn-safe-merge data value)
-      (kzip/update-in data target #(edn-safe-merge % value)))))
+    (edn-safe-merge
+      (zloc-get-in data target)
+      value)))
 
 (defn require-exists? [requires require]
   (boolean (some #{require} requires)))
