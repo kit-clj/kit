@@ -35,7 +35,8 @@
   (-> form-string
       (format-str)
       (parser/parse-string-all)
-      (format/reformat-form rules-config)))
+      ;(format/reformat-form rules-config)
+      ))
 
 (defn format-zloc
   [zloc]
@@ -73,9 +74,10 @@
 
 (defn edn-merge-value
   [value]
-  (let [map-zipper (z/of-string (if (string? value)
-                                  value
-                                  (pr-str value)))]
+  (let [map-zipper (if (string? value)
+                     (z/of-string value)
+                     (z/replace (z/of-string "")
+                         (n/sexpr value)))]
     (fn [node]
       (if-let [inside-map (z/down node)]
         (-> inside-map
@@ -95,7 +97,11 @@
                     {:c {:d     1
                          {:e 3} 4}
                      :d 3})
-                  (z/of-string "{}"))))
+                  (z/of-string "{}")))
+
+  (z/root-string ((edn-merge-value
+                    (io/str->edn "{:reitit.routes/pages\n                          {:base-path \"\"\n                             :env       #ig/ref :system/env}}"))
+                  (z/of-string "{:a 1}"))))
 
 (defn edn-safe-merge
   [zloc value]
