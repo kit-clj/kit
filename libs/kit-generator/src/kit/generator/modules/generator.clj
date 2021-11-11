@@ -89,7 +89,7 @@
   (let [modules-root (:root modules)
         module-log   (read-modules-log modules-root)]
     (when (= :success (module-log module-key))
-      (println "warning: module" (name module-key) "is already installed!"))
+      (println "warning: module" module-key "is already installed!"))
     (try
       (let [module-path (get-in modules [:modules module-key :path])
             ctx         (assoc ctx :module-path module-path)
@@ -100,7 +100,7 @@
         (cond
           (nil? edn-config)
           (do
-            (println "module" (name module-key) "not found, available modules:")
+            (println "module" module-key "not found, available modules:")
             (pprint (modules/list-modules ctx)))
 
           (nil? config)
@@ -114,7 +114,7 @@
               (handle-action ctx action))
             (write-modules-log modules-root (assoc module-log module-key :success))
             (println (or (:success-message config)
-                         (str (name module-key) " installed successfully!")))
+                         (str module-key " installed successfully!")))
             (when (:require-restart? config)
               (println "restart required!")))))
       (catch Exception e
