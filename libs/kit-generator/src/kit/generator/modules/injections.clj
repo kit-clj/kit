@@ -11,7 +11,10 @@
     [rewrite-clj.node :as n]
     [rewrite-clj.parser :as parser]
     [rewrite-clj.zip :as z]
-    [cljfmt.core :as cljfmt])
+    [cljfmt.core :as cljfmt]
+
+    ;; very hacky. Maybe better way to do it somehow? Contact rewrite-clj maintainers
+    [kit.generator.rewrite-clj-override])
   (:import org.jsoup.Jsoup))
 
 (defmulti inject :type)

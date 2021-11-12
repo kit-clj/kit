@@ -11,6 +11,10 @@
   [{:keys [label value]} writer]
   (.write writer (str "#" (name label) " " value)))
 
+(defmethod print-dup kit.generator.io.Tag
+  [{:keys [label value]} writer]
+  (.write writer (str "#" (name label) " " value)))
+
 (defn str->edn [config]
   (edn/read-string edn-reader-opts config))
 
