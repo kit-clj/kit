@@ -287,10 +287,17 @@
              (inject (assoc injection :ctx ctx :data data)))
            data injections)})
 
+(defn group-by-path [xs]
+  (reduce
+    (fn [m {:keys [path] :as item}]
+      (update m path (fnil conj []) item))
+    {}
+    xs))
+
 (defn inject-data [ctx injections]
   (let [injections (->> injections
                         (map (fn [injection] (update injection :path #(renderer/render-template ctx %))))
-                        (group-by :path))
+                        (group-by-path))
         path->data (read-files ctx (keys injections))]
     (doseq [[path injections] injections]
       (println "updating file:" path)
