@@ -13,14 +13,14 @@
   (length [_node]
     (inc (node/sum-lengths children)))
   (string [node]
-          (try
-    (let [sexprs (map node/sexpr (:children node))]
-      (if (= 'kit.generator.io.Tag (first sexprs))
-        (let [{:keys [label value]} (second sexprs)]
-          (str "#" label " " value))
+    (try
+      (let [sexprs (map node/sexpr (:children node))]
+        (if (= 'kit.generator.io.Tag (first sexprs))
+          (let [{:keys [label value]} (second sexprs)]
+            (str "#" label " " value))
+          (str "#" (node/concat-strings children))))
+      (catch Exception _
         (str "#" (node/concat-strings children)))))
-          (catch Exception _
-            (str "#" (node/concat-strings children))))
 
   node/InnerNode
   (inner? [_node] true)

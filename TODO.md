@@ -12,3 +12,4 @@
 - [ ] Module dependencies
 - [ ] Snippet generation
 - [ ] Better formatting of generated code
+- [ ] Hot loading dependencies with https://github.com/lambdaisland/classpath

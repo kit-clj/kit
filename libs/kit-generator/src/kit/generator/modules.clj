@@ -83,6 +83,9 @@
       (doseq [[id {:keys [doc]}] modules]
         (println id "-" doc)))))
 
+(defn module-exists? [ctx module-key]
+  (contains? (-> ctx :modules :modules) module-key))
+
 (comment
   (let [ctx {:full-name "kit/guestbook"
              :ns-name   "kit.guestbook"

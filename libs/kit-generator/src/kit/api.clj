@@ -25,7 +25,9 @@
    (install-module module-key {:feature-flag :default}))
   ([module-key opts]
    (let [ctx (modules/load-modules (read-ctx))]
-     (generator/generate ctx module-key opts))))
+     (if (modules/module-exists? ctx module-key)
+       (generator/generate ctx module-key opts)
+       (println "no module found with name:" module-key)))))
 
 (defn list-installed-modules []
   (doseq [[id status] (-> (read-ctx)

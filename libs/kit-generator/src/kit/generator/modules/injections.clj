@@ -80,7 +80,7 @@
   (let [map-zipper (if (string? value)
                      (z/of-string value)
                      (z/replace (z/of-string "")
-                         (n/sexpr value)))]
+                                (n/sexpr value)))]
     (fn [node]
       (if-let [inside-map (z/down node)]
         (-> inside-map
@@ -108,16 +108,19 @@
 
 (defn edn-safe-merge
   [zloc value]
-  (let [value-keys   (keys (if (string? value)
-                             (io/str->edn value)
-                             value))
-        target-value (z/sexpr zloc)]
-    (let [conflicts (conflicting-keys target-value value-keys)]
-      (if (seq conflicts)
-        (do (println "file has conflicting keys! Skipping"
-                     "\n keys:" conflicts)
-            zloc)
-        ((edn-merge-value value) zloc)))))
+  (try
+    (let [value-keys   (keys (if (string? value)
+                               (io/str->edn value)
+                               value))
+          target-value (z/sexpr zloc)]
+      (let [conflicts (conflicting-keys target-value value-keys)]
+        (if (seq conflicts)
+          (do (println "file has conflicting keys! Skipping"
+                       "\n keys:" conflicts)
+              zloc)
+          ((edn-merge-value value) zloc))))
+    (catch Exception e
+      (throw (Exception. (str "error merging!\n target:" zloc "\n value:" value) e)))))
 
 (defn zloc-get-in
   [zloc [k & ks]]
@@ -134,9 +137,9 @@
     ;; TODO: clean up to support formatting
     (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) (z/node (z/of-string value))))
     :merge
-    (edn-safe-merge
-      (zloc-get-in data target)
-      value)))
+    (if-let [zloc (zloc-get-in data target)]
+      (edn-safe-merge zloc value)
+      (println "could not find injection target:" target "in data:" data))))
 
 (comment
   ;; get-in test
