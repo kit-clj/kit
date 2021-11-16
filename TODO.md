@@ -13,3 +13,11 @@
 - [ ] Snippet generation
 - [ ] Better formatting of generated code
 - [ ] Hot loading dependencies with https://github.com/lambdaisland/classpath
+  
+  # marketing
+  
+  - [ ] Make a logo
+  - [ ] Record a work session
+  - [ ] Blog post explaining the rationale
+  - [ ] Present at meetups
+  - [ ] Reach out to podcasts
