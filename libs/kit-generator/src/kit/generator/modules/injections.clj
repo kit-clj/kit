@@ -135,13 +135,30 @@
   (case action
     :append
     ;; TODO: clean up to support formatting
-    (rewrite-edn/update-in data target #(conj (z/sexpr (z/edn %)) (z/node (z/of-string value))))
+    (z/edit data (fn [data]
+                   (if (empty? target)
+                     (conj data value)
+                     (update-in data target conj value))))
     :merge
     (if-let [zloc (zloc-get-in data target)]
       (edn-safe-merge zloc value)
       (println "could not find injection target:" target "in data:" data))))
 
 (comment
+
+  (z/root-string (z/edit
+                   (z/of-string "{:z :r :deps {:wooo :waaa} :paths [\"foo\"]}")
+                   (fn [x] (update x :paths conj "bar"))))
+
+  (type (clojure.edn/read-string "foo"))
+  (zloc-get-in (z/of-string "{:z :r :deps {:wooo :waaa}}") [])
+  (inject
+    {:type   :edn
+     :data   (z/of-string "{:z :r :deps {:wooo :waaa}}")
+     :target []
+     :action :merge
+     :value  "{:foo #ig/ref :bar :baz \"\"}"})
+
   ;; get-in test
   (z/root-string (edn-safe-merge
                    (zloc-get-in (z/of-string "{:a 1
@@ -346,10 +363,10 @@
     (str
       (inject
         {:type   :edn
-         :data   (rewrite-edn/parse-string "{:z :r :deps {:wooo :waaa}}")
+         :data   (z/of-string "{:z :r :deps {:wooo :waaa}}")
          :target []
          :action :merge
-         :value  (io/str->edn "{:foo #ig/ref :bar :baz \"\"}")})))
+         :value  "{:foo #ig/ref :bar :baz \"\"}"})))
 
   (let [zloc  (-> #_(slurp "test/resources/sample-system.edn")
                 "{:z :r :deps {:wooo :waaa}}"
