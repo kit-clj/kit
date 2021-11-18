@@ -25,7 +25,7 @@
   :metrics               #ig/ref :metrics/prometheus <% endif %>
   :api-path              "/api"
   :cookie-session-config {:cookie-secret          #or [#env COOKIE_SECRET "16charsecrethere"]
-                          :cookie-name            <<ns-name>>
+                          :cookie-name            "<<ns-name>>"
                           :cookie-default-max-age 86400}
   ;; from ring.middleware.defaults. anti-forgery `false` by default because services may not require it
   :site-defaults-config  {:params    {:urlencoded true
