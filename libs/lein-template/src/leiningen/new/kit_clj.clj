@@ -33,17 +33,18 @@
 
      :repl?     (not (helpers/option? "+bare" options))
 
-     :versions {:kit-core     "0.1.0"
-                :kit-undertow "0.1.0"
-                :kit-crux     "0.1.0"
-                :kit-sql      "0.1.0"
-                :kit-postgres "0.1.0"
-                :kit-hato     "0.1.0"
-                :kit-quartz   "0.1.0"
-                :kit-redis    "0.1.0"
-                :kit-selmer   "0.1.0"
-                :kit-metrics  "0.1.0"
-                :kit-repl     "0.1.0"}}))
+     :versions  {:kit-core      "1.0.0"
+                 :kit-undertow  "1.0.0"
+                 :kit-crux      "1.0.0"
+                 :kit-sql       "1.0.0"
+                 :kit-postgres  "1.0.0"
+                 :kit-hato      "1.0.0"
+                 :kit-quartz    "1.0.0"
+                 :kit-redis     "1.0.0"
+                 :kit-selmer    "1.0.0"
+                 :kit-metrics   "1.0.0"
+                 :kit-repl      "1.0.0"
+                 :kit-generator "0.1.0"}}))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
