@@ -6,7 +6,7 @@
             [deps-deploy.deps-deploy :as deploy]))
 
 (def libs-dir "libs")
-(def version (format "0.1.0"))
+(def versions (read-string (slurp "versions.edn")))
 (def group-id "kit-clj")
 (def src ["src"])
 (def basis (b/create-basis {:project "deps.edn"}))
@@ -19,40 +19,40 @@
 
 (defn make-jar
   "Create the jar from a source pom and source files"
-  [{:keys [class-dir lib version  basis src jar-file] :as m}]
+  [{:keys [class-dir lib version basis src jar-file] :as m}]
   (clojure.pprint/pprint (dissoc m :basis))
   (b/write-pom {:class-dir class-dir
-                :lib lib
-                :version version
-                :src-pom "pom.xml"
-                :basis basis
-                :src-dirs src})
-  (b/copy-dir {:src-dirs src
+                :lib       lib
+                :version   version
+                :src-pom   "pom.xml"
+                :basis     basis
+                :src-dirs  src})
+  (b/copy-dir {:src-dirs   src
                :target-dir class-dir})
   (b/jar {:class-dir class-dir
-          :jar-file jar-file}))
+          :jar-file  jar-file}))
 
 (defn install
   "Install jar to local repo"
   [{:keys [basis lib version jar-file class-dir]}]
   (println "Installing... " jar-file)
-  (b/install {:basis basis
-              :lib lib
-              :version version
-              :jar-file jar-file
+  (b/install {:basis     basis
+              :lib       lib
+              :version   version
+              :jar-file  jar-file
               :class-dir class-dir}))
 
 (defn- dep-hm [{:keys [libs]}]
-  (let [proj (map #(symbol group-id (.getName %)) libs)
+  (let [proj                    (map #(symbol group-id (.getName %)) libs)
         only-matching-group-ids (fn [ks] (into #{} (filter (fn [d] (= group-id (namespace d))) ks)))
-        deps (into [] (comp
-                        (map #(str % "/deps.edn"))
-                        (map slurp)
-                        (map edn/read-string)
-                        (map :deps)
-                        (map keys)
-                        (map only-matching-group-ids))
-                   libs)]
+        deps                    (into [] (comp
+                                           (map #(str % "/deps.edn"))
+                                           (map slurp)
+                                           (map edn/read-string)
+                                           (map :deps)
+                                           (map keys)
+                                           (map only-matching-group-ids))
+                                      libs)]
     (zipmap proj deps)))
 
 (defn- build-graph [{:keys [libs] :as m}]
@@ -67,24 +67,25 @@
     (concat sorted (reduce disj (set (keys dep-mappings)) sorted))))
 
 (defn- build-data [lib]
-  (let [l (str libs-dir "/" (name lib))
-        src-dir [(str l "/src") (str l "/resources")]
-        src-pom (str l "/pom.xml")
+  (let [l          (str libs-dir "/" (name lib))
+        src-dir    [(str l "/src") (str l "/resources")]
+        src-pom    (str l "/pom.xml")
         target-dir (str l "/target")
-        class-dir (str target-dir "/classes")
-        basis (b/create-basis {:project (str l "/deps.edn")})
-        jar-file (format "%s/%s-%s.jar" target-dir (name lib) version)]
+        class-dir  (str target-dir "/classes")
+        basis      (b/create-basis {:project (str l "/deps.edn")})
+        version    (get versions (name lib))
+        jar-file   (format "%s/%s-%s.jar" target-dir (name lib) version)]
     {:target-dir target-dir :class-dir class-dir :lib lib :version version :basis basis :src src-dir
-     :src-pom src-pom :jar-file jar-file}))
+     :src-pom    src-pom :jar-file jar-file}))
 
 (defn deploy
   "Deploy jar locally or to remote artifactory"
   [{:keys [src-pom installer sign-releases? jar-file] :or {installer :local sign-releases? false}}]
   (println "Deploying: " jar-file)
-  (deploy/deploy {:installer installer
+  (deploy/deploy {:installer      installer
                   :sign-releases? sign-releases?
-                  :pom-file src-pom
-                  :artifact jar-file}))
+                  :pom-file       src-pom
+                  :artifact       jar-file}))
 
 (defn- all [publish? lib]
   (let [bd (build-data lib)]
