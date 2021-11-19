@@ -1,3 +1,0 @@
-{:paths   ["src"]
- :deps    {integrant/integrant {:mvn/version "0.8.0"}
-           juxt/crux-core      {:mvn/version "21.04-1.16.0-beta"}}}

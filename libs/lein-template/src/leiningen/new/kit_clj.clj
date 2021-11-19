@@ -23,7 +23,7 @@
      :ns-name   (sanitize-ns name)
      :sanitized (name-to-path name)
 
-     :crux?     (or full? (helpers/option? "+crux" options))
+     :crux?     (or full? (helpers/option? "+xtdb" options) (helpers/option? "+crux" options))
      :sql?      (or full? (helpers/option? "+sql" options))
      :hato?     (or full? (helpers/option? "+hato" options))
      :metrics?  (or full? (helpers/option? "+metrics" options))
@@ -35,7 +35,7 @@
 
      :versions  {:kit-core      "1.0.0"
                  :kit-undertow  "1.0.0"
-                 :kit-crux      "1.0.0"
+                 :kit-xtdb      "1.0.0"
                  :kit-sql       "1.0.0"
                  :kit-postgres  "1.0.0"
                  :kit-hato      "1.0.0"
@@ -54,6 +54,7 @@
   #{"+bare"
     "+full"
     "+crux"
+    "+xtdb"
     "+hato"
     "+metrics"
     "+quartz"
