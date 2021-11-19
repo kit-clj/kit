@@ -70,9 +70,8 @@
  {}
  <% endif %>
  <% if sql? %>
- ;; todo handle different kinds of sql sqlite, mysql, etc
  :db.sql/connection
- #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<sanitized>>?user=<<sanitized>>&password=<<sanitized>>"}
+ #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<project-name>>?user=<<sanitized>>&password=<<project-name>>"}
            :test {}
            :prod {:jdbc-url   #env JDBC_URL
                   :init-size  1
