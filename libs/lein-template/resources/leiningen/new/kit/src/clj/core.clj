@@ -6,8 +6,8 @@
     [<<ns-name>>.env :refer [defaults]]
 
     ;; Edges <% if redis? %>
-    [kit.edge.cache.redis]<% endif %> <% if crux? %>
-    [kit.edge.db.crux]<% endif %> <% if sql? %>
+    [kit.edge.cache.redis]<% endif %> <% if xtdb? %>
+    [kit.edge.db.xtdb]<% endif %> <% if sql? %>
     [kit.edge.db.sql]
     [kit.edge.db.postgres]<% endif %> <% if hato? %>
     [kit.edge.http.hato]<% endif %> <% if quartz? %>

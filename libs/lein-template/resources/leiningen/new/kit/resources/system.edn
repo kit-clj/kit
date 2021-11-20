@@ -64,9 +64,9 @@
  <% if selmer? %>
  :templating/selmer
  {}<% endif %>
- <% if crux? %>
- ;; https://opencrux.com/reference/configuration.html
- :db.crux/node
+ <% if xtdb? %>
+ ;; https://docs.xtdb.com/administration/configuring/
+ :db.xtdb/node
  {}
  <% endif %>
  <% if sql? %>

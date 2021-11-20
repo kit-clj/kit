@@ -128,10 +128,11 @@
     zloc
     (recur (z/get zloc k) ks)))
 
+(rewrite-clj.parser/parse-string "foo" )
 (defn zloc-conj
   [zloc value]
   (let [value (if (string? value)
-                (z/of-string value)
+                (z/of-string (str "\"" value "\""))
                 (z/replace (z/of-string "")
                            (n/sexpr value)))]
     (-> zloc
@@ -147,16 +148,34 @@
     (z/assoc zloc k
              (z/node (z-assoc-in (z/get zloc k) ks v)))))
 
+(defn z-update-in [zloc [k & ks] f]
+  (if k
+    (z-update-in (z/get zloc k) ks f)
+    (when zloc (-> zloc f topmost))))
+
+(comment
+  (let [data (z/of-string "{:foo {:paths [\"foo\" \"bar\"]}}")
+        value "baz"]
+    (z/sexpr (z-update-in data [:foo :paths] #(zloc-conj % value))))
+
+  (if-let [zloc (zloc-get-in data target)]
+    (if (empty? target)
+      (zloc-conj zloc value)
+      (z-assoc-in data target (-> (zloc-conj zloc value)
+                                  (z/node))))
+    (println "could not find injection target:" target "in data:" data))
+
+  )
+
 (defmethod inject :edn [{:keys [data target action value ctx]}]
+  (println (type value))
   (case action
     :append
     ;; TODO: clean up to support formatting
-    (if-let [zloc (zloc-get-in data target)]
-      (if (empty? target)
-        (zloc-conj zloc value)
-        (z-assoc-in data target (z/node (zloc-conj zloc value))))
-      (println "could not find injection target:" target "in data:" data))
-
+    (if (empty? target)
+      (zloc-conj data value)
+      (or (z-update-in data target #(zloc-conj % value))
+          (println "could not find injection target:" target "in data:" (z/sexpr data))))
     :merge
     (if-let [zloc (zloc-get-in data target)]
       (edn-safe-merge zloc value)
@@ -170,6 +189,7 @@
 
   (type (clojure.edn/read-string "foo"))
   (zloc-get-in (z/of-string "{:z :r :deps {:wooo :waaa}}") [])
+
   (inject
     {:type   :edn
      :data   (z/of-string "{:z :r :deps {:wooo :waaa}}")

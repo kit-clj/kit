@@ -61,7 +61,7 @@
       :else
       (println "unrecognized asset type:" asset))))
 
-(defmethod handle-action :injections [ctx [_ injections]]
+(defmethod handle-actionhandle-action :injections [ctx [_ injections]]
   (ij/inject-data ctx injections))
 
 (defmethod handle-action :default [_ [id]]

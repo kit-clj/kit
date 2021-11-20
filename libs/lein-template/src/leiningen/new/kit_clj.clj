@@ -23,7 +23,7 @@
      :ns-name   (sanitize-ns name)
      :sanitized (name-to-path name)
 
-     :crux?     (or full? (helpers/option? "+xtdb" options) (helpers/option? "+crux" options))
+     :xtdb?     (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
      :sql?      (or full? (helpers/option? "+sql" options))
      :hato?     (or full? (helpers/option? "+hato" options))
      :metrics?  (or full? (helpers/option? "+metrics" options))
@@ -53,7 +53,6 @@
 (def available-set
   #{"+bare"
     "+full"
-    "+crux"
     "+xtdb"
     "+hato"
     "+metrics"
