@@ -128,7 +128,6 @@
     zloc
     (recur (z/get zloc k) ks)))
 
-(rewrite-clj.parser/parse-string "foo" )
 (defn zloc-conj
   [zloc value]
   (let [value (if (string? value)
@@ -155,7 +154,7 @@
 
 (comment
   (let [data (z/of-string "{:foo {:paths [\"foo\" \"bar\"]}}")
-        value "baz"]
+        value {:foo "baz"}]
     (z/sexpr (z-update-in data [:foo :paths] #(zloc-conj % value))))
 
   (if-let [zloc (zloc-get-in data target)]
