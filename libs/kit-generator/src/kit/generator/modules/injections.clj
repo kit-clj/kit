@@ -128,17 +128,35 @@
     zloc
     (recur (z/get zloc k) ks)))
 
-(defn find-value-in-zipper
-  [{:keys [zip-config]} value])
+(defn zloc-conj
+  [zloc value]
+  (let [value (if (string? value)
+                (z/of-string value)
+                (z/replace (z/of-string "")
+                           (n/sexpr value)))]
+    (-> zloc
+        (z/down)
+        (z/rightmost)
+        (z/insert-right (z/node value))
+        (z/up))))
+
+(defn z-assoc-in
+  [zloc [k & ks] v]
+  (if (empty? ks)
+    (z/assoc zloc k v)
+    (z/assoc zloc k
+             (z/node (z-assoc-in (z/get zloc k) ks v)))))
 
 (defmethod inject :edn [{:keys [data target action value ctx]}]
   (case action
     :append
     ;; TODO: clean up to support formatting
-    (z/edit data (fn [data]
-                   (if (empty? target)
-                     (conj data value)
-                     (update-in data target conj value))))
+    (if-let [zloc (zloc-get-in data target)]
+      (if (empty? target)
+        (zloc-conj zloc value)
+        (z-assoc-in data target (z/node (zloc-conj zloc value))))
+      (println "could not find injection target:" target "in data:" data))
+
     :merge
     (if-let [zloc (zloc-get-in data target)]
       (edn-safe-merge zloc value)
