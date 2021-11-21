@@ -1,3 +1,3 @@
 {:paths   ["src"]
- :deps    {org.postgresql/postgresql {:mvn/version "42.2.19"}
-           cheshire/cheshire         {:mvn/version "5.10.0"}}}
+ :deps    {org.postgresql/postgresql {:mvn/version "42.3.1"}
+           cheshire/cheshire         {:mvn/version "5.10.1"}}}

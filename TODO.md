@@ -7,6 +7,7 @@
 - [ ] Test all the build steps (run, repl, test, uberjar)
 - [ ] Refactor :append-requires, :append-build-task, :append-build-task-call into :append-after or :append
 - [ ] Switch from using group-by to reduce to preserve injection order
+- 
 # Stretch goals
 
 - [ ] Module dependencies
@@ -14,10 +15,10 @@
 - [ ] Better formatting of generated code
 - [ ] Hot loading dependencies with https://github.com/lambdaisland/classpath
   
-  # marketing
-  
-  - [ ] Make a logo
-  - [ ] Record a work session
-  - [ ] Blog post explaining the rationale
-  - [ ] Present at meetups
-  - [ ] Reach out to podcasts
+# marketing
+
+- [ ] Make a logo
+- [ ] Record a work session
+- [ ] Blog post explaining the rationale
+- [ ] Present at meetups
+- [ ] Reach out to podcasts
