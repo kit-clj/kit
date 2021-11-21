@@ -22,25 +22,27 @@
 
 (defn route-data
   [opts]
-  {:coercion   malli/coercion
-   :muuntaja   formats/instance
-   :swagger    {:id ::api}
-   :middleware [;; query-params & form-params
-                parameters/parameters-middleware
-                ;; content-negotiation
-                muuntaja/format-negotiate-middleware
-                ;; encoding response body
-                muuntaja/format-response-middleware
-                ;; exception handling
-                coercion/coerce-exceptions-middleware
-                ;; decoding request body
-                muuntaja/format-request-middleware
-                ;; coercing response bodys
-                coercion/coerce-response-middleware
-                ;; coercing request parameters
-                coercion/coerce-request-middleware
-                ;; exception handling
-                exception/wrap-exception]})
+  (merge
+    opts
+    {:coercion   malli/coercion
+     :muuntaja   formats/instance
+     :swagger    {:id ::api}
+     :middleware [;; query-params & form-params
+                  parameters/parameters-middleware
+                  ;; content-negotiation
+                  muuntaja/format-negotiate-middleware
+                  ;; encoding response body
+                  muuntaja/format-response-middleware
+                  ;; exception handling
+                  coercion/coerce-exceptions-middleware
+                  ;; decoding request body
+                  muuntaja/format-request-middleware
+                  ;; coercing response bodys
+                  coercion/coerce-response-middleware
+                  ;; coercing request parameters
+                  coercion/coerce-request-middleware
+                  ;; exception handling
+                  exception/wrap-exception]}))
 
 (derive :reitit.routes/api :reitit/routes)
 

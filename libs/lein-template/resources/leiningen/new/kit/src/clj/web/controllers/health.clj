@@ -7,6 +7,7 @@
 (defn healthcheck!
   [req]
   (http-response/ok
-    {:time (str (Date. (System/currentTimeMillis)))
-     :app  {:status  "up"
-            :message ""}}))
+    {:time     (str (Date. (System/currentTimeMillis)))
+     :up-since (str (Date. (.getStartTime (java.lang.management.ManagementFactory/getRuntimeMXBean))))
+     :app      {:status  "up"
+                :message ""}}))
