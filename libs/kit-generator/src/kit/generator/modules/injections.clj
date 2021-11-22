@@ -33,18 +33,15 @@
      :insert-missing-whitespace?            true
      :remove-multiple-non-indenting-spaces? true}))
 
-(defn reformat-string
-  [form-string rules-config]
+(defn reformat-string [form-string rules-config]
   (-> form-string
       (format-str)
       (parser/parse-string-all)
       ;(format/reformat-form rules-config)
       ))
 
-(defn format-zloc
-  [zloc]
-  (z/replace zloc
-             (reformat-string (z/string zloc) (:rules fmt-config/default-config))))
+(defn format-zloc [zloc]
+  (z/replace zloc (reformat-string (z/string zloc) (:rules fmt-config/default-config))))
 
 (defn conflicting-keys
   [node value-keys]
@@ -75,18 +72,13 @@
       (meta)
       :col))
 
-(defn edn-merge-value
-  [value]
-  (let [map-zipper (if (string? value)
-                     (z/of-string value)
-                     (z/replace (z/of-string "")
-                                (n/sexpr value)))]
-    (fn [node]
-      (if-let [inside-map (z/down node)]
-        (-> inside-map
-            (z/rightmost)
-            (zipper-insert-kw-pairs (z/down map-zipper)))
-        (z/replace node (z/node (format-zloc map-zipper)))))))
+(defn edn-merge-value [value]
+  (fn [node]
+    (if-let [inside-map (z/down node)]
+      (-> inside-map
+          (z/rightmost)
+          (zipper-insert-kw-pairs (z/down value)))
+      (z/replace node (z/node (format-zloc value))))))
 
 (comment
   (z/root-string ((edn-merge-value
@@ -106,12 +98,9 @@
                     (io/str->edn "{:reitit.routes/pages\n                          {:base-path \"\"\n                             :env       #ig/ref :system/env}}"))
                   (z/of-string "{:a 1}"))))
 
-(defn edn-safe-merge
-  [zloc value]
+(defn edn-safe-merge [zloc value]
   (try
-    (let [value-keys   (keys (if (string? value)
-                               (io/str->edn value)
-                               value))
+    (let [value-keys   (keys (z/sexpr value))
           target-value (z/sexpr zloc)]
       (let [conflicts (conflicting-keys target-value value-keys)]
         (if (seq conflicts)
@@ -128,32 +117,47 @@
     zloc
     (recur (z/get zloc k) ks)))
 
-(defn zloc-conj
-  [zloc value]
-  (let [value (if (string? value)
-                (z/of-string (str "\"" value "\""))
-                (z/replace (z/of-string "")
-                           (n/sexpr value)))]
-    (-> zloc
-        (z/down)
-        (z/rightmost)
-        (z/insert-right (z/node value))
-        (z/up))))
+(defn zloc-conj [zloc value]
+  (-> zloc
+      (z/down)
+      (z/rightmost)
+      (z/insert-right (z/node value))
+      (z/up)))
 
-(defn z-assoc-in
-  [zloc [k & ks] v]
+(defn z-assoc-in [zloc [k & ks] v]
   (if (empty? ks)
     (z/assoc zloc k v)
-    (z/assoc zloc k
-             (z/node (z-assoc-in (z/get zloc k) ks v)))))
+    (z/assoc zloc k (z/node (z-assoc-in (z/get zloc k) ks v)))))
 
 (defn z-update-in [zloc [k & ks] f]
   (if k
     (z-update-in (z/get zloc k) ks f)
-    (when zloc (-> zloc f topmost))))
+    (when zloc
+      (f zloc))))
+
+(defn normalize-value [value]
+  (if (string? value)
+    (z/of-string (str "\"" value "\""))
+    (z/replace (z/of-string "")
+               (n/sexpr value))))
+
+(defmethod inject :edn [{:keys [data target action value ctx]}]
+  (let [value (normalize-value value)]
+    (topmost
+      (case action
+        :append
+        (if (empty? target)
+          (zloc-conj data value)
+          (or (z-update-in data target #(zloc-conj % value))
+              (println "could not find injection target:" target "in data:" (z/sexpr data))))
+        :merge
+        (if-let [zloc (zloc-get-in data target)]
+          (edn-safe-merge zloc value)
+          (println "could not find injection target:" target "in data:" data))))))
 
 (comment
-  (let [data (z/of-string "{:foo {:paths [\"foo\" \"bar\"]}}")
+
+  (let [data  (z/of-string "{:foo {:paths [\"foo\" \"bar\"]}}")
         value {:foo "baz"}]
     (z/sexpr (z-update-in data [:foo :paths] #(zloc-conj % value))))
 
@@ -164,23 +168,6 @@
                                   (z/node))))
     (println "could not find injection target:" target "in data:" data))
 
-  )
-
-(defmethod inject :edn [{:keys [data target action value ctx]}]
-  (println (type value))
-  (case action
-    :append
-    ;; TODO: clean up to support formatting
-    (if (empty? target)
-      (zloc-conj data value)
-      (or (z-update-in data target #(zloc-conj % value))
-          (println "could not find injection target:" target "in data:" (z/sexpr data))))
-    :merge
-    (if-let [zloc (zloc-get-in data target)]
-      (edn-safe-merge zloc value)
-      (println "could not find injection target:" target "in data:" data))))
-
-(comment
 
   (z/root-string (z/edit
                    (z/of-string "{:z :r :deps {:wooo :waaa} :paths [\"foo\"]}")
@@ -218,26 +205,25 @@
 
 (defn append-requires [zloc requires]
   (let [zloc-ns         (z/find-value zloc z/next 'ns)
-        zloc-require    (z/up (z/find-value zloc-ns z/next :require))
-        updated-require (reduce
-                          (fn [zloc child]
-                            (let [child-data (io/str->edn child)]
-                              (if (require-exists? (z/sexpr zloc) child-data)
-                                (do
-                                  (println "require" child-data "already exists, skipping")
-                                  zloc)
-                                ;; TODO: formatting
-                                (-> zloc
-                                    ;; change #1: I might replace this line:
-                                    ;; (z/insert-newline-right)
-                                    ;; with this line:
-                                    (z/append-child (n/newline-node "\n"))
-                                    ;; change #2: and now indent to first existing require
-                                    (z/append-child* (n/spaces (-> zloc (z/down) (spaces-of-zloc))))
-                                    (z/append-child child-data #_(format-zloc child-data))))))
-                          zloc-require
-                          requires)]
-    (topmost updated-require)))
+        zloc-require    (z/up (z/find-value zloc-ns z/next :require))]
+    (reduce
+      (fn [zloc child]
+        (let [child-data (io/str->edn child)]
+          (if (require-exists? (z/sexpr zloc) child-data)
+            (do
+              (println "require" child-data "already exists, skipping")
+              zloc)
+            ;; TODO: formatting
+            (-> zloc
+                ;; change #1: I might replace this line:
+                ;; (z/insert-newline-right)
+                ;; with this line:
+                (z/append-child (n/newline-node "\n"))
+                ;; change #2: and now indent to first existing require
+                (z/append-child* (n/spaces (-> zloc (z/down) (spaces-of-zloc))))
+                (z/append-child child-data #_(format-zloc child-data))))))
+      zloc-require
+      requires)))
 
 (defn append-build-task [zloc child]
   (let [ns-loc (z/up (z/find-value zloc z/next 'ns))]
@@ -247,8 +233,7 @@
                (pr-str child))
       (-> ns-loc
           (z/insert-right child)
-          (z/insert-right (n/newline-node "\n\n"))
-          (topmost)))))
+          (z/insert-right (n/newline-node "\n\n"))))))
 
 (defn append-build-task-call [zloc child]
   (let [uber-loc        (some-> zloc
@@ -267,16 +252,16 @@
       (-> uber-loc
           (z/insert-right child)
           (z/insert-space-right)
-          (z/insert-right (n/newline-node "\n"))
-          (topmost)))))
+          (z/insert-right (n/newline-node "\n"))))))
 
 (defmethod inject :clj [{:keys [data action value]}]
   (println "applying\n action:" action "\n value:" (pr-str value))
-  ((case action
-     :append-requires append-requires
-     :append-build-task append-build-task
-     :append-build-task-call append-build-task-call)
-   data value))
+  (topmost
+    ((case action
+       :append-requires append-requires
+       :append-build-task append-build-task
+       :append-build-task-call append-build-task-call)
+     data value)))
 
 (defmethod inject :html [{:keys [data action target value]}]
   (case action
