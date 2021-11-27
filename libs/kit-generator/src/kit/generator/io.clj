@@ -1,11 +1,14 @@
 (ns kit.generator.io
   (:require
-    [clojure.edn :as edn]))
+    [clojure.edn :as edn]
+    [clojure.tools.reader :as reader]))
 
 (defrecord Tag [label value])
 
 (def edn-reader-opts {:default (fn [tag value]
-                                 (Tag. (str tag) (pr-str value)))})
+                                 (Tag. (str tag) value))
+                      :readers (merge reader/default-data-readers
+                                      {'env (comp symbol str)})})
 
 (defmethod print-method kit.generator.io.Tag
   [{:keys [label value]} writer]

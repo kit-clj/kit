@@ -1,6 +1,6 @@
 (ns kit.generator.rewrite-clj-override)
 
-;; Super hack
+;; Super hack. Someone who knows this please fix.
 (in-ns 'rewrite-clj.node.reader-macro)
 
 (defrecord ReaderMacroNode [children]
@@ -15,9 +15,20 @@
   (string [node]
     (try
       (let [sexprs (map node/sexpr (:children node))]
-        (if (= 'kit.generator.io.Tag (first sexprs))
+        (cond
+          (= 'kit.generator.io.Tag (first sexprs))
           (let [{:keys [label value]} (second sexprs)]
             (str "#" label " " value))
+
+          (= 'rewrite_clj.node.reader_macro.ReaderMacroNode (first sexprs))
+          (let [child-sexprs (:children (second sexprs))
+                kit?         (= 'kit.generator.io.Tag (first child-sexprs))]
+            (if kit?
+              (let [{:keys [label value]} (second child-sexprs)]
+                (str "#" label " " value))
+              (str "#" (node/concat-strings children))))
+
+          :else
           (str "#" (node/concat-strings children))))
       (catch Exception _
         (str "#" (node/concat-strings children)))))
