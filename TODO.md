@@ -5,6 +5,7 @@
 - [x] "jdbc:sqlite:<<sanitized>>_test.db" not inserting properly
 - [-] Namespaced modules (update in docs!)
 - [ ] Test all the build steps (run, repl, test, uberjar)
+- [ ] comprehensive tests for injections  
 - [ ] Refactor :append-requires, :append-build-task, :append-build-task-call into :append-after or :append
 - [ ] Switch from using group-by to reduce to preserve injection order
 - 
