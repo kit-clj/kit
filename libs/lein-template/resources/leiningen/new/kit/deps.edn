@@ -11,7 +11,7 @@
            ring/ring-core                  {:mvn/version "1.9.3"}
            ring/ring-defaults              {:mvn/version "0.3.3"}
 
-           ;; Date coercion
+           ;; Data coercion
            luminus-transit/luminus-transit {:mvn/version "0.1.2"
                                             :exclusions [com.cognitect/transit-clj]}
            metosin/muuntaja                {:mvn/version "0.6.8"}

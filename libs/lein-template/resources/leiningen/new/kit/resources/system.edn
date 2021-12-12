@@ -71,7 +71,7 @@
  <% endif %>
  <% if sql? %>
  :db.sql/connection
- #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<project-name>>?user=<<sanitized>>&password=<<project-name>>"}
+ #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<name>>?user=<<name>>&password=<<name>>"}
            :test {}
            :prod {:jdbc-url   #env JDBC_URL
                   :init-size  1
@@ -86,7 +86,7 @@
 
  :db.sql/migrations
  {:store            :database
-  :db               {:datasource #ig/ref :db/connection}
+  :db               {:datasource #ig/ref :db.sql/connection}
   :migrate-on-init? true}
  <% endif %>
 }
