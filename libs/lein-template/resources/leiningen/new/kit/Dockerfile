@@ -5,7 +5,7 @@ WORKDIR /
 COPY . /
 
 # deps.edn uberjar
-RUN clojure -X:uberjar
+RUN clj -Sforce -T:build all
 # leiningen uberjar. Uncomment if you are using leiningen and deleted your deps.edn file
 # RUN lein uberjar
 
