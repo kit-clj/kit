@@ -109,6 +109,7 @@
       (println "Can't find: " artifact-id))))
 
 (defn install-libs [{publish? :publish :or {publish? false} :as m}]
-  (let [libs (filter #(.isDirectory %) (.listFiles (jio/file libs-dir)))]
+  (let [libs (filter #(and (.isDirectory %) (not (.startsWith (.getName %) "."))) 
+               (.listFiles (jio/file libs-dir)))]
     (doseq [lib (topo-sort (build-graph {:libs libs}))]
       (all publish? lib))))
