@@ -44,7 +44,9 @@
                    :ns-default build}
 
 
-           :dev  {:extra-deps  {criterium/criterium         {:mvn/version "0.4.6"}
+           :dev  {:extra-deps  {;; uncomment to enable hot classpath reload in the REPL
+                                #_#_com.lambdaisland/classpath  {:mvn/version "0.0.27"}
+                                criterium/criterium         {:mvn/version "0.4.6"}
                                 expound/expound             {:mvn/version "0.8.9"}
                                 integrant/repl              {:mvn/version "0.3.2"}
                                 pjstadig/humane-test-output {:mvn/version "0.11.0"}

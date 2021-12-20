@@ -12,6 +12,9 @@
     [kit.api :as kit]
     [<<ns-name>>.core :refer [start-app]]))
 
+;; uncomment to enable hot loading for deps
+#_(watch-deps/start! {:aliases [:dev :test]})
+
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
 
 (add-tap (bound-fn* clojure.pprint/pprint))
