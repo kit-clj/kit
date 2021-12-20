@@ -1,9 +1,11 @@
 (ns build
-  (:require [clojure.tools.build.api :as b]
-            [clojure.java.io :as jio]
-            [clojure.edn :as edn]
-            [weavejester.dependency :as dep]
-            [deps-deploy.deps-deploy :as deploy]))
+  (:require
+   [clojure.tools.build.api :as b]
+   [clojure.java.io :as jio]
+   [clojure.edn :as edn]
+   [clojure.pprint :refer [pprint]]
+   [weavejester.dependency :as dep]
+   [deps-deploy.deps-deploy :as deploy]))
 
 (def libs-dir "libs")
 (def versions (read-string (slurp "versions.edn")))
@@ -20,7 +22,7 @@
 (defn make-jar
   "Create the jar from a source pom and source files"
   [{:keys [class-dir lib version basis src jar-file] :as m}]
-  (clojure.pprint/pprint (dissoc m :basis))
+  (pprint (dissoc m :basis))
   (b/write-pom {:class-dir class-dir
                 :lib       lib
                 :version   version
@@ -97,14 +99,14 @@
 
 (defn install-lib [{:keys [artifact-id] publish? :publish :or {publish? false} :as params}]
   (let [libs (distinct (filter #(.isDirectory %) (.listFiles (jio/file libs-dir))))
-        {:keys [graph dep-mappings]} (build-graph {:libs libs})]
-    (let [lib (symbol group-id (name artifact-id))]
-      (if (contains? dep-mappings lib)
-        (if (not-empty (dep/transitive-dependencies graph lib))
-          (doseq [lib (concat (dep/transitive-dependencies graph lib) [lib])]
-            (all publish? lib))
+        {:keys [graph dep-mappings]} (build-graph {:libs libs})
+        lib (some->> artifact-id name (symbol group-id))]
+    (if (contains? dep-mappings lib)
+      (if (not-empty (dep/transitive-dependencies graph lib))
+        (doseq [lib (concat (dep/transitive-dependencies graph lib) [lib])]
           (all publish? lib))
-        (println "Can't find: " artifact-id)))))
+        (all publish? lib))
+      (println "Can't find: " artifact-id))))
 
 (defn install-libs [{publish? :publish :or {publish? false} :as m}]
   (let [libs (filter #(.isDirectory %) (.listFiles (jio/file libs-dir)))]
