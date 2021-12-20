@@ -1,7 +1,20 @@
 (ns kit.edge.server.undertow
   (:require
     [integrant.core :as ig]
-    [luminus.http-server :as http]))
+    [clojure.tools.logging :as log]
+    [ring.adapter.undertow :refer [run-undertow]]))
+
+(defn start [handler {:keys [port] :as opts}]
+  (try
+    (let [server (run-undertow handler (dissoc opts :handler))]
+      (log/info "server started on port" port)
+      server)
+    (catch Throwable t
+      (log/error t (str "server failed to start on port: " port)))))
+
+(defn stop [server]
+  (.stop server)
+  (log/info "HTTP server stopped"))
 
 (defmethod ig/prep-key :server/undertow
   [_ config]
@@ -13,11 +26,11 @@
   [_ opts]
   (let [handler (atom (delay (:handler opts)))]
     {:handler handler
-     :server  (http/start (assoc opts :handler (fn [req] (@@handler req))))}))
+     :server  (start (fn [req] (@@handler req)) (dissoc opts :handler))}))
 
 (defmethod ig/halt-key! :server/undertow
   [_ {:keys [server]}]
-  (http/stop server))
+  (stop server))
 
 (defmethod ig/suspend-key! :server/undertow
   [_ {:keys [handler]}]
