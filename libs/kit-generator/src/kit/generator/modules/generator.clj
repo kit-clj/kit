@@ -84,6 +84,12 @@
 (defn write-modules-log [modules-root log]
   (spit (modules-log-path modules-root) log))
 
+(defn read-module-config [ctx modules module-key]
+  (let [module-path (get-in modules [:modules module-key :path])
+        ctx         (assoc ctx :module-path module-path)
+        config-str  (read-config ctx module-path)]
+    (io/str->edn config-str)))
+
 (defn generate [{:keys [modules] :as ctx} module-key {:keys [feature-flag]
                                                       :or   {feature-flag :default}}]
   (let [modules-root (:root modules)
