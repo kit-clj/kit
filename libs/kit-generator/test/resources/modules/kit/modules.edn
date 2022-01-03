@@ -2,4 +2,7 @@
  :modules
               {:html
                {:path "html"
-                :doc  "adds support for HTML templating using Selmer"}}}
+                :doc  "adds support for HTML templating using Selmer"}
+               :kit/cljs
+               {:path "cljs"
+                :doc "adds support for cljs using shadow-cljs"}}}

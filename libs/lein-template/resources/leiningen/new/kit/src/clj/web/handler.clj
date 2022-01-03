@@ -10,6 +10,7 @@
   (ring/ring-handler
     router
     (ring/routes
+      (ring/create-resource-handler {:path "/"})
       (when (some? api-path)
         (swagger-ui/create-swagger-ui-handler {:path api-path
                                                :url  (str api-path "/swagger.json")}))

@@ -15,7 +15,7 @@
         requires [['foo :as 'bar]
                   ['bar :as 'baz]]]
     (= "(ns foo.core\n (:require\n   [clojure.tools.logging :as log]\n   [integrant.core :as ig] \n   [foo :as bar] \n   [bar :as baz]))"
-       (z/root-string (append-requires zloc requires {})))))
+       (z/root-string (append-requires zloc requires)))))
 
 (deftest injection-test
   (when (.exists (jio/file test-config))

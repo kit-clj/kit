@@ -1,0 +1,39 @@
+{:default
+ {:require-restart? true
+  :requires [:kit/html]
+  :actions
+  {:assets     [["assets/shadow-cljs.edn" "shadow-cljs.edn"]
+                ["assets/package.json"    "package.json"]
+                ["assets/src/core.cljs"   "src/cljs/<<sanitized>>/core.cljs"]]
+   :injections [{:type   :html
+                 :path   "resources/html/home.html"
+                 :action :append
+                 :target [:body]
+                 :value  [:div {:id "app"}]}
+                {:type   :html
+                 :path   "resources/html/home.html"
+                 :action :append
+                 :target [:body]
+                 :value  [:script {:src "/js/app.js"}]}
+                 {:type :edn
+                  :path "deps.edn"
+                  :target [:paths]
+                  :action :append
+                  :value "target/classes/cljsbuild"}
+                {:type   :clj
+                 :path   "build.clj"
+                 :action :append-requires
+                 :value  ["[clojure.java.shell :refer [sh]]"]}
+                {:type   :clj
+                 :path   "build.clj"
+                 :action :append-build-task
+                 :value  (defn build-cljs []
+                           (println "npx shadow-cljs release app...")
+                           (let [{:keys [exit]
+                                  :as   s} (sh "npx" "shadow-cljs" "release" "app")]
+                             (when-not (zero? exit)
+                               (throw (ex-info "could not compile cljs" s)))))}
+                {:type   :clj
+                 :path   "build.clj"
+                 :action :append-build-task-call
+                 :value  (build-cljs)}]}}}

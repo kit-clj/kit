@@ -1,8 +1,7 @@
 (ns <<ns-name>>.env
   (:require
     [clojure.tools.logging :as log]
-    [<<ns-name>>.dev-middleware :refer [wrap-dev]]
-))
+    [<<ns-name>>.dev-middleware :refer [wrap-dev]]))
 
 (def defaults
   {:init       (fn []
