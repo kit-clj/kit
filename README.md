@@ -50,7 +50,7 @@ Additional profiles:
 - `kit-selmer` - Templating configuration with [selmer](https://github.com/yogthos/Selmer)
 - `kit-sql` - Generic SQL integrant binding. Uses [conman](https://github.com/luminus-framework/conman), [next.jdbc](https://github.com/seancorfield/next-jdbc), [hugsql](https://www.hugsql.org/), and [migratus](https://github.com/yogthos/migratus) directly, or implicitly. By default, imports `kit-postgres` lib which supports Postgresql
 - `kit-postgres` - lib with data bindings and utilities for working with Postgres
-- `kit-undertow` - Server binding via [luminus-undertow](https://github.com/luminus-framework/luminus-undertow)
+- `kit-undertow` - Server binding via [ring-undertow-adapter](https://github.com/luminus-framework/ring-undertow-adapter)
 
 ## Build Tool Support
 
