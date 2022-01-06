@@ -25,7 +25,7 @@
 
 (defmethod ig/init-key :router/routes
   [_ {:keys [routes]}]
-  (apply concat routes))
+  (apply conj [] routes))
 
 (defmethod ig/init-key :router/core
   [_ {:keys [routes] :as opts}]
