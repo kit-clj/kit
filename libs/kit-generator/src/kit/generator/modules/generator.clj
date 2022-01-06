@@ -94,39 +94,39 @@
                                                       :or   {feature-flag :default}}]
   (let [modules-root (:root modules)
         module-log   (read-modules-log modules-root)]
-    (when (= :success (module-log module-key))
-      (println "warning: module" module-key "is already installed!"))
-    (try
-      (let [module-path (get-in modules [:modules module-key :path])
-            ctx         (assoc ctx :module-path module-path)
-            config-str  (read-config ctx module-path)
-            edn-config  (io/str->edn config-str)
-            zip-config  (z/of-string config-str)
-            config      (get edn-config feature-flag)]
-        (cond
-          (nil? edn-config)
-          (do
-            (println "module" module-key "not found, available modules:")
-            (pprint (modules/list-modules ctx)))
+    (if (= :success (module-log module-key))
+      (println "module" module-key "is already installed!")
+      (try
+        (let [module-path (get-in modules [:modules module-key :path])
+              ctx         (assoc ctx :module-path module-path)
+              config-str  (read-config ctx module-path)
+              edn-config  (io/str->edn config-str)
+              zip-config  (z/of-string config-str)
+              config      (get edn-config feature-flag)]
+          (cond
+            (nil? edn-config)
+            (do
+              (println "module" module-key "not found, available modules:")
+              (pprint (modules/list-modules ctx)))
 
-          (nil? config)
-          (do
-            (println "feature" feature-flag "not found for module" module-key ", available features:")
-            (pprint (keys edn-config)))
+            (nil? config)
+            (do
+              (println "feature" feature-flag "not found for module" module-key ", available features:")
+              (pprint (keys edn-config)))
 
-          :else
-          (let [ctx (assoc ctx :zip-config zip-config)]
-            (doseq [action (:actions config)]
-              (handle-action ctx action))
-            (write-modules-log modules-root (assoc module-log module-key :success))
-            (println (or (:success-message config)
-                         (str module-key " installed successfully!")))
-            (when (:require-restart? config)
-              (println "restart required!")))))
-      (catch Exception e
-        (println "failed to install module" module-key)
-        (write-modules-log modules-root (assoc module-log module-key :error))
-        (.printStackTrace e)))))
+            :else
+            (let [ctx (assoc ctx :zip-config zip-config)]
+              (doseq [action (:actions config)]
+                (handle-action ctx action))
+              (write-modules-log modules-root (assoc module-log module-key :success))
+              (println (or (:success-message config)
+                           (str module-key " installed successfully!")))
+              (when (:require-restart? config)
+                (println "restart required!")))))
+        (catch Exception e
+          (println "failed to install module" module-key)
+          (write-modules-log modules-root (assoc module-log module-key :error))
+          (.printStackTrace e))))))
 
 (comment
   (let [ctx {:ns-name   "myapp"
