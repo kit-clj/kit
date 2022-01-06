@@ -12,8 +12,7 @@
 
 ;; Routes
 (defn api-routes [_opts]
-  [base-path
-   ["/swagger.json"
+  [["/swagger.json"
     {:get {:no-doc  true
            :swagger {:info {:title "<<ns-name>> API"}}
            :handler (swagger/create-swagger-handler)}}]
