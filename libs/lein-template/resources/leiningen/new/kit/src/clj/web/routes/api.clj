@@ -11,11 +11,11 @@
     [reitit.swagger :as swagger]))
 
 ;; Routes
-(defn api-routes [base-path]
+(defn api-routes [_opts]
   [base-path
    ["/swagger.json"
     {:get {:no-doc  true
-           :swagger {:info {:title "<<app>> API"}}
+           :swagger {:info {:title "<<ns-name>> API"}}
            :handler (swagger/create-swagger-handler)}}]
    ["/health"
     {:get health/healthcheck!}]])
@@ -50,4 +50,4 @@
   [_ {:keys [base-path]
       :or   {base-path ""}
       :as   opts}]
-  ["" (route-data opts) (api-routes base-path)])
+  [base-path (route-data opts) (api-routes opts)])
