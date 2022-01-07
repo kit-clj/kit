@@ -6,15 +6,11 @@
     [clojure.pprint :refer [pprint]]
     [clojure.walk :refer [prewalk]]
     [cljstyle.config :as fmt-config]
-    [cljstyle.format.core :as format]
     [net.cgrand.enlive-html :as html]
     [rewrite-clj.node :as n]
     [rewrite-clj.parser :as parser]
     [rewrite-clj.zip :as z]
-    [cljfmt.core :as cljfmt]
-
-    ;; very hacky. Maybe better way to do it somehow? Contact rewrite-clj maintainers
-    [kit.generator.rewrite-clj-override])
+    [cljfmt.core :as cljfmt])
   (:import org.jsoup.Jsoup))
 
 (defmulti inject :type)
@@ -149,17 +145,37 @@
         (if (empty? target)
           (zloc-conj data value)
           (or (z-update-in data target #(zloc-conj % value))
-              (println "could not find injection target:" target "in data:" (z/sexpr data))))
+              (println "could not find injection target:" target "in data:" (z/node data))))
         :merge
         (if-let [zloc (zloc-get-in data target)]
           (edn-safe-merge zloc value)
-          (println "could not find injection target:" target "in data:" data))))))
+          (println "could not find injection target:" target "in data:" (z/node data)))))))
 
 (comment
 
+  (binding [*print-namespace-maps* false]
+    (let [data  (z/of-string "{:foo :bar}")
+          value (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")]
+      (clojure.walk/postwalk
+        (fn [node]
+          (if (and (seq? node) #_(= 'read-string (first node)))
+            (println ">>>" (first node))
+            node))
+        (z/assoc data :z (n/sexpr value)))
+      #_(-> (z/assoc data :z (n/sexpr value))
+            z/node
+            str))
+    )
+
+  (let [data  (z/of-string "{:foo :bar}")
+        value (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")]
+    (z/assoc data :z (n/sexpr value)))
+
+  (str (z/node (z/of-string "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")))
+
   (let [data  (z/of-string "{:foo {:paths [\"foo\" \"bar\"]}}")
         value {:foo "baz"}]
-    (z/sexpr (z-update-in data [:foo :paths] #(zloc-conj % value))))
+    (z/sexpr (z/assoc data :foo value)))
 
   (if-let [zloc (zloc-get-in data target)]
     (if (empty? target)
@@ -176,12 +192,13 @@
   (type (clojure.edn/read-string "foo"))
   (zloc-get-in (z/of-string "{:z :r :deps {:wooo :waaa}}") [])
 
+
   (inject
     {:type   :edn
-     :data   (z/of-string "{:z :r :deps {:wooo :waaa}}")
+     :data   (z/of-string "{:z :r :deps {:foo :bar}}")
      :target []
      :action :merge
-     :value  "{:foo #ig/ref :bar :baz \"\"}"})
+     :value  (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")})
 
   ;; get-in test
   (z/root-string (edn-safe-merge
@@ -204,8 +221,8 @@
   (boolean (some #{require} requires)))
 
 (defn append-requires [zloc requires]
-  (let [zloc-ns         (z/find-value zloc z/next 'ns)
-        zloc-require    (z/up (z/find-value zloc-ns z/next :require))]
+  (let [zloc-ns      (z/find-value zloc z/next 'ns)
+        zloc-require (z/up (z/find-value zloc-ns z/next :require))]
     (reduce
       (fn [zloc child]
         (let [child-data (io/str->edn child)]

@@ -5,6 +5,8 @@
 
 (deftest edn-read-write-test
   (testing "round trip test"
+    (is (= "{:db.sql/connection #profile {:prod {:jdbc-url #env JDBC_URL}}}\n"
+           (io/edn->str (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}"))))
     (is (= "{:base-path \"/\", :env #ig/ref :system/env}\n"
            (io/edn->str (io/str->edn "{:base-path \"/\" :env #ig/ref :system/env}"))))
 

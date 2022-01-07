@@ -1,27 +1,13 @@
 (ns kit.generator.io
   (:require
-    [clojure.edn :as edn]
-    [clojure.tools.reader :as reader]))
-
-(defrecord Tag [label value])
-
-(def edn-reader-opts {:default (fn [tag value]
-                                 (Tag. (str tag) value))
-                      :readers reader/default-data-readers})
-
-(defmethod print-method kit.generator.io.Tag
-  [{:keys [label value]} writer]
-  (.write writer (str "#" (name label) " " value)))
-
-(defmethod print-dup kit.generator.io.Tag
-  [{:keys [label value]} writer]
-  (.write writer (str "#" (name label) " " value)))
+    [clojure.edn :as edn]))
 
 (defn str->edn [config]
-  (edn/read-string edn-reader-opts config))
+  (edn/read-string {:default tagged-literal} config))
 
 (defn edn->str [edn]
-  (with-out-str (prn edn)))
+  (binding [*print-namespace-maps* false]
+    (with-out-str (prn edn))))
 
 (defn update-edn-file [path f]
   (spit
@@ -30,19 +16,4 @@
         (str->edn)
         (f)
         (edn->str))))
-
-(comment
-  (edn->str (str->edn "{:base-path \"/\" :env #ig/ref :system/env}"))
-
-  (edn->str (str->edn "{:port    #long #or [#env PORT 3000]\n  :handler #ig/ref :handler/ring}"))
-
-  (edn->str (str->edn "{:port    #long #or [#env PORT 3000]\n  :handler #ig/ref :handler/ring}"))
-
-  (edn->str (str->edn "#or [#env PORT 3000]"))
-  (edn->str (str->edn "{:jdbc-url #env JDBC_URL}"))
-  (str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")
-
-  (edn->str (str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}"))
-
-  (edn->str (str->edn "{'foo :bar}")))
 
