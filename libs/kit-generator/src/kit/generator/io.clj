@@ -7,8 +7,7 @@
 
 (def edn-reader-opts {:default (fn [tag value]
                                  (Tag. (str tag) value))
-                      :readers (merge reader/default-data-readers
-                                      {'env (comp symbol str)})})
+                      :readers reader/default-data-readers})
 
 (defmethod print-method kit.generator.io.Tag
   [{:keys [label value]} writer]
@@ -36,6 +35,14 @@
   (edn->str (str->edn "{:base-path \"/\" :env #ig/ref :system/env}"))
 
   (edn->str (str->edn "{:port    #long #or [#env PORT 3000]\n  :handler #ig/ref :handler/ring}"))
+
+  (edn->str (str->edn "{:port    #long #or [#env PORT 3000]\n  :handler #ig/ref :handler/ring}"))
+
+  (edn->str (str->edn "#or [#env PORT 3000]"))
+  (edn->str (str->edn "{:jdbc-url #env JDBC_URL}"))
+  (str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")
+
+  (edn->str (str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}"))
 
   (edn->str (str->edn "{'foo :bar}")))
 
