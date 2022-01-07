@@ -11,4 +11,4 @@ test:
 	clj -M:test
 
 uberjar:
-	clj -Sforce -T:build all
+	clj -T:build all
