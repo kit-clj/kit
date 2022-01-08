@@ -16,27 +16,27 @@
   (.stop server)
   (log/info "HTTP server stopped"))
 
-(defmethod ig/prep-key :server/undertow
+(defmethod ig/prep-key :server/http
   [_ config]
   (merge {:port 3000
           :host "0.0.0.0"}
          config))
 
-(defmethod ig/init-key :server/undertow
+(defmethod ig/init-key :server/http
   [_ opts]
   (let [handler (atom (delay (:handler opts)))]
     {:handler handler
      :server  (start (fn [req] (@@handler req)) (dissoc opts :handler))}))
 
-(defmethod ig/halt-key! :server/undertow
+(defmethod ig/halt-key! :server/http
   [_ {:keys [server]}]
   (stop server))
 
-(defmethod ig/suspend-key! :server/undertow
+(defmethod ig/suspend-key! :server/http
   [_ {:keys [handler]}]
   (reset! handler (promise)))
 
-(defmethod ig/resume-key :server/undertow
+(defmethod ig/resume-key :server/http
   [k opts old-opts old-impl]
   (if (= (dissoc opts :handler) (dissoc old-opts :handler))
     (do (deliver @(:handler old-impl) (:handler opts))

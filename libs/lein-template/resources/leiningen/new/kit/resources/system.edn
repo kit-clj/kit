@@ -16,7 +16,7 @@
   :conn {:pool {}
          :spec {:uri #env REDIS_URI}}}<% endif %>
 
- :server/undertow
+ :server/http
  {:port    #long #or [#env PORT 3000]
   :host    #or [#env HTTP_HOST "0.0.0.0"]
   :handler #ig/ref :handler/ring}
