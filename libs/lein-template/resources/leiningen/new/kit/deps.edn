@@ -17,17 +17,17 @@
            metosin/muuntaja                {:mvn/version "0.6.8"}
 
            ;; kit Libs
-           kit-clj/kit-core {:mvn/version "<<versions.kit-core>>"}
-           kit-clj/kit-undertow {:mvn/version "<<versions.kit-undertow>>"}<% if xtdb? %>
-           kit-clj/kit-xtdb {:mvn/version "<<versions.kit-xtdb>>"}<% endif %><% if sql? %>
-           kit-clj/kit-sql {:mvn/version "<<versions.kit-sql>>"}
-           kit-clj/kit-postgres{:mvn/version "<<versions.kit-postgres>>"}<% endif %><% if hato? %>
-           kit-clj/kit-hato {:mvn/version "<<versions.kit-hato>>"}<% endif %><% if quartz? %>
-           kit-clj/kit-quartz {:mvn/version "<<versions.kit-quartz>>"}<% endif %><% if redis? %>
-           kit-clj/kit-redis {:mvn/version "<<versions.kit-redis>>"}<% endif %><% if selmer? %>
-           kit-clj/kit-selmer {:mvn/version "<<versions.kit-selmer>>"}<% endif %><% if metrics? %>
-           kit-clj/kit-metrics {:mvn/version "<<versions.kit-metrics>>"}<% endif %><% if repl? %>
-           kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %>
+           io.github.kit-clj/kit-core {:mvn/version "<<versions.kit-core>>"}
+           io.github.kit-clj/kit-undertow {:mvn/version "<<versions.kit-undertow>>"}<% if xtdb? %>
+           io.github.kit-clj/kit-xtdb {:mvn/version "<<versions.kit-xtdb>>"}<% endif %><% if sql? %>
+           io.github.kit-clj/kit-sql {:mvn/version "<<versions.kit-sql>>"}
+           io.github.kit-clj/kit-postgres{:mvn/version "<<versions.kit-postgres>>"}<% endif %><% if hato? %>
+           io.github.kit-clj/kit-hato {:mvn/version "<<versions.kit-hato>>"}<% endif %><% if quartz? %>
+           io.github.kit-clj/kit-quartz {:mvn/version "<<versions.kit-quartz>>"}<% endif %><% if redis? %>
+           io.github.kit-clj/kit-redis {:mvn/version "<<versions.kit-redis>>"}<% endif %><% if selmer? %>
+           io.github.kit-clj/kit-selmer {:mvn/version "<<versions.kit-selmer>>"}<% endif %><% if metrics? %>
+           io.github.kit-clj/kit-metrics {:mvn/version "<<versions.kit-metrics>>"}<% endif %><% if repl? %>
+           io.github.kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %>
            }
  :aliases {:uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.267"}}
                      :exec-fn      hf.depstar/uberjar
@@ -46,13 +46,13 @@
 
            :dev  {:extra-deps  {;; uncomment to enable hot classpath reload in the REPL
                                 #_#_com.lambdaisland/classpath  {:mvn/version "0.0.27"}
-                                criterium/criterium         {:mvn/version "0.4.6"}
-                                expound/expound             {:mvn/version "0.8.9"}
-                                integrant/repl              {:mvn/version "0.3.2"}
-                                pjstadig/humane-test-output {:mvn/version "0.11.0"}
-                                ring/ring-devel             {:mvn/version "1.9.4"}
-                                ring/ring-mock              {:mvn/version "0.4.0"}
-                                kit-clj/kit-generator       {:mvn/version "<<versions.kit-generator>>"}}
+                                criterium/criterium             {:mvn/version "0.4.6"}
+                                expound/expound                 {:mvn/version "0.8.9"}
+                                integrant/repl                  {:mvn/version "0.3.2"}
+                                pjstadig/humane-test-output     {:mvn/version "0.11.0"}
+                                ring/ring-devel                 {:mvn/version "1.9.4"}
+                                ring/ring-mock                  {:mvn/version "0.4.0"}
+                                io.github.kit-clj/kit-generator {:mvn/version "<<versions.kit-generator>>"}}
                   :extra-paths ["env/dev/clj" "env/dev/resources" "test/clj"]
                   :main-opts   ["-e" "(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)" "-r"]}
 
@@ -64,7 +64,7 @@
                                 pjstadig/humane-test-output          {:mvn/version "0.11.0"}
                                 ring/ring-devel                      {:mvn/version "1.9.3"}
                                 ring/ring-mock                       {:mvn/version "0.4.0"}
-                                kit-clj/kit-generator                {:mvn/version "<<versions.kit-generator>>"}}
+                                io.github.kit-clj/kit-generator      {:mvn/version "<<versions.kit-generator>>"}}
                   :exect-fn    cognitect.test-runner.api/test
                   :extra-paths ["env/dev/clj" "env/dev/resources" "env/test/resources" "test/clj"]
                   :main-opts   ["-e" "(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)"

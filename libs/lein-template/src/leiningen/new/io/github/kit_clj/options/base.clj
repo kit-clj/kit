@@ -1,6 +1,6 @@
-(ns leiningen.new.kit-clj.options.base
+(ns leiningen.new.io.github.kit-clj.options.base
   (:require
-    [leiningen.new.kit-clj.options.helpers :as helpers]))
+    [leiningen.new.io.github.kit-clj.options.helpers :as helpers]))
 
 (defn files
   [data]

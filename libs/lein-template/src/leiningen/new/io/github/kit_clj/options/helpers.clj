@@ -1,4 +1,4 @@
-(ns leiningen.new.kit-clj.options.helpers
+(ns leiningen.new.io.github.kit-clj.options.helpers
   (:require
     [leiningen.new.templates :refer [renderer sanitize]]
     [clojure.java.io :as io]

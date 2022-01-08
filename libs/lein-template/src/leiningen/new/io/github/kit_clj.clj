@@ -1,10 +1,10 @@
-(ns leiningen.new.kit-clj
+(ns leiningen.new.io.github.kit-clj
   (:require
     [leiningen.new.templates
      :refer [name-to-path sanitize-ns project-name ->files]]
-    [leiningen.new.kit-clj.options.base :as base]
-    [leiningen.new.kit-clj.options.helpers :as helpers]
-    [leiningen.new.kit-clj.options.sql :as sql]
+    [leiningen.new.io.github.kit-clj.options.base :as base]
+    [leiningen.new.io.github.kit-clj.options.helpers :as helpers]
+    [leiningen.new.io.github.kit-clj.options.sql :as sql]
     [clojure.set :as set]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

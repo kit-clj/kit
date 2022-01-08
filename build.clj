@@ -9,7 +9,7 @@
 
 (def libs-dir "libs")
 (def versions (read-string (slurp "versions.edn")))
-(def group-id "kit-clj")
+(def group-id "io.github.kit-clj")
 (def src ["src"])
 (def basis (b/create-basis {:project "deps.edn"}))
 

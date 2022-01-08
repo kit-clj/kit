@@ -12,11 +12,7 @@ Thanks to `integrant`, and `aero`, the libs are simple skeletons with the bulk o
 
 ## Quick Start
 
-`clojure -X:new :template kit-clj :name yourname/app :args '[+selmer]'`
-
-or
-
-`lein new kit app +selmer`
+`clojure -X:new :template io.github.kit-clj :name yourname/app :args '[+selmer]'`
 
 ### Profiles
 
