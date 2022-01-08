@@ -71,9 +71,9 @@
 (defn- build-data [lib]
   (let [l          (str libs-dir "/" (name lib))
         src-dir    [(str l "/src") (str l "/resources")]
-        src-pom    (str l "/pom.xml")
         target-dir (str l "/target")
         class-dir  (str target-dir "/classes")
+        src-pom    (str class-dir "/META-INF/maven/kit-clj/" (name lib) "/pom.xml")
         basis      (b/create-basis {:project (str l "/deps.edn")})
         version    (get versions (name lib))
         jar-file   (format "%s/%s-%s.jar" target-dir (name lib) version)]

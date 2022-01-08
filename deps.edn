@@ -3,9 +3,9 @@
  :aliases {:new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.309"}}
                  :exec-fn    clj-new/create
                  :exec-args  {:template kit-clj}}
-           :build {:deps {io.github.clojure/tools.build {:git/sha "7ef409b"
-                                                         :git/tag "v0.6.2" :git/url "https://github.com/clojure/tools.build.git"}
-                          slipset/deps-deploy {:mvn/version "0.1.5"}
+           :build {:deps {io.github.clojure/tools.build {:git/sha "34727f7"
+                                                         :git/tag "v0.7.5" :git/url "https://github.com/clojure/tools.build.git"}
+                          slipset/deps-deploy {:mvn/version "0.2.0"}
                           weavejester/dependency {:mvn/version "0.2.1"}}
                    :ns-default build}}
  }
