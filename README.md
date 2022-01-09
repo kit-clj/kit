@@ -62,6 +62,14 @@ To install the libraries locally
 
 `clojure -T:build install-libs`
 
+To install a single library locally
+
+`clojure -T:build install-lib :artifact-id :lein-template`
+
+To push a single library to Clojars
+
+`clojure -T:build install-lib :artifact-id :lein-template :publish true`
+
 ## Inspiration and thanks to
 
 - [integrant](https://github.com/weavejester/integrant) as the basis of the project
