@@ -16,22 +16,28 @@ Thanks to `integrant`, and `aero`, the libs are simple skeletons with the bulk o
 
 ## Latest versions
 
-**Stable**
-
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-core.svg)](https://clojars.org/io.github.kit-clj/kit-core)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-hato.svg)](https://clojars.org/io.github.kit-clj/kit-hato)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-metrics.svg)](https://clojars.org/io.github.kit-clj/kit-metrics)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-quartz.svg)](https://clojars.org/io.github.kit-clj/kit-quartz)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-redis.svg)](https://clojars.org/io.github.kit-clj/kit-redis)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-repl.svg)](https://clojars.org/io.github.kit-clj/kit-repl)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-selmer.svg)](https://clojars.org/io.github.kit-clj/kit-selmer)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql.svg)](https://clojars.org/io.github.kit-clj/kit-sql)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-postgres.svg)](https://clojars.org/io.github.kit-clj/kit-postgres)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-xtdb.svg)](https://clojars.org/io.github.kit-clj/kit-xtdb)
 
-**Development (API subject to change)**
-
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-generator.svg)](https://clojars.org/io.github.kit-clj/kit-generator)
+
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/lein-template.svg)](https://clojars.org/io.github.kit-clj/lein-template)
 
 ### Profiles
