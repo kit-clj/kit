@@ -3,6 +3,6 @@
  :sanitized "<<sanitized>>"
  :name      "<<name>>"
  :modules   {:root         "modules"
-             :repositories [{:url  "git@github.com:kit-clj/modules.git"
+             :repositories [{:url  "https://github.com/kit-clj/modules.git"
                              :tag  "master"
                              :name "kit-modules"}]}}
