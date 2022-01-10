@@ -5,7 +5,7 @@
     [kit.ig-utils :as ig-utils]
     [taoensso.carmine :as carmine]))
 
-(def ^:const default-ttl 3600)
+(def ^:const default-ttl 3600)                              ;; in seconds, 60 hours
 
 (declare inner-config)
 
@@ -17,8 +17,30 @@
 (defprotocol CacheConfig
   (get-config [this]))
 
+(defprotocol CacheKey
+  (cache-key [this]))
+
+(extend-protocol CacheKey
+  nil
+  (cache-key [this] "")
+  Integer
+  (cache-key [this] (str this))
+  Double
+  (cache-key [this] (str this))
+  Float
+  (cache-key [this] (str this))
+  Character
+  (cache-key [this] (str this))
+  String
+  (cache-key [this] this)
+  Object
+  (cache-key [this] (hash this)))
+
 (defn key-for [config item]
-  (str (:key-prefix config) ":" (pr-str item)))
+  (let [k (cache-key item)]
+    (if-some [prefix (:key-prefix config)]
+      (str prefix ":" k)
+      k)))
 
 (cache/defcache RedisCache [config]
   cache/CacheProtocol

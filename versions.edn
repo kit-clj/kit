@@ -5,7 +5,7 @@
  "kit-metrics"   "1.0.0"
  "kit-postgres"  "1.0.0"
  "kit-quartz"    "1.0.0"
- "kit-redis"     "1.0.0"
+ "kit-redis"     "1.0.1"
  "kit-repl"      "1.0.0"
  "kit-selmer"    "1.0.0"
  "kit-sql"       "1.0.0"

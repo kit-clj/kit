@@ -103,8 +103,8 @@
         lib (some->> artifact-id name (symbol group-id))]
     (if (contains? dep-mappings lib)
       (if (not-empty (dep/transitive-dependencies graph lib))
-        (doseq [lib (concat (dep/transitive-dependencies graph lib) [lib])]
-          (all publish? lib))
+        (doseq [lib' (concat (dep/transitive-dependencies graph lib) [lib])]
+          (all (= lib' lib) lib'))
         (all publish? lib))
       (println "Can't find: " artifact-id))))
 

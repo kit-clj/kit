@@ -1,5 +1,12 @@
 # Change Log
 
+## 10.01.2021
+
+### `io.github.kit-clj/kit-redis {:mvn/version 1.0.1}`
+
+- Change: `key-for` uses CacheKey protocol to convert based on type, defaulting to hashing Objects instead of `pr-str`
+- Change: `key-for` ignores prefixing keys when there is no default `key-prefix` in the component config
+
 ## 09.01.2021
 
 ### `io.github.kit-clj/lein-template {:mvn/version 0.1.1}`
