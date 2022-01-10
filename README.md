@@ -111,6 +111,8 @@ plans to add Leiningen support.
 
 ## Development setup
 
+Minimum Clojure CLI version: 1.10.3.933
+
 To install the libraries locally
 
 `clojure -T:build install-libs`
