@@ -29,7 +29,8 @@
                            [kit-clj/kit-redis "<<versions.kit-redis>>"]<% endif %> <% if selmer? %>
                            [kit-clj/kit-selmer "<<versions.kit-selmer>>"]<% endif %> <% if metrics? %>
                            [kit-clj/kit-metrics "<<versions.kit-metrics>>"]<% endif %> <% if repl? %>
-                           [kit-clj/kit-repl "<<versions.kit-repl>>"]<% endif %>]
+                           [kit-clj/kit-repl "<<versions.kit-repl>>"]<% endif %><% if nrepl? %>
+                           [kit-clj/kit-nrepl "<<versions.kit-nrepl>>"]<% endif %>]
 
             :min-lein-version "2.0.0"
 

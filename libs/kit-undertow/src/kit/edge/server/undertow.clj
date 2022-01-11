@@ -1,7 +1,7 @@
 (ns kit.edge.server.undertow
   (:require
-    [integrant.core :as ig]
     [clojure.tools.logging :as log]
+    [integrant.core :as ig]
     [ring.adapter.undertow :refer [run-undertow]]))
 
 (defn start [handler {:keys [port] :as opts}]

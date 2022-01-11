@@ -1,5 +1,26 @@
 # Change Log
 
+## 11.01.2021
+
+### `io.github.kit-clj/kit-nrepl {:mvn/version 1.0.0}`
+
+initial release
+
+### `io.github.kit-clj/kit-repl {:mvn/version 1.0.1}`
+
+- Fix: ensure org.clojure/tools.logging is included in deps in case used as standalone
+
+### `io.github.kit-clj/kit-undertow {:mvn/version 1.0.1}`
+
+- Fix: ensure org.clojure/tools.logging is included in deps in case used as standalone
+
+### `io.github.kit-clj/lein-template {:mvn/version 0.1.2}`
+
+- Change: Add `+nrepl` profile
+- Change: Bump `kit-redis` to 1.0.1
+- Change: Bump `kit-undertow` to 1.0.1
+- Change: Bump `kit-repl` to 1.0.1
+
 ## 10.01.2021
 
 ### `io.github.kit-clj/kit-redis {:mvn/version 1.0.1}`

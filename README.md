@@ -32,6 +32,7 @@ the system configuration EDN file.
 | io.github.kit-clj/kit-core      | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-core.svg)](https://clojars.org/io.github.kit-clj/kit-core)           |
 | io.github.kit-clj/kit-hato      | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-hato.svg)](https://clojars.org/io.github.kit-clj/kit-hato)           |
 | io.github.kit-clj/kit-metrics   | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-metrics.svg)](https://clojars.org/io.github.kit-clj/kit-metrics)     |
+| io.github.kit-clj/kit-nrepl     | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-nrepl.svg)](https://clojars.org/io.github.kit-clj/kit-nrepl)         |
 | io.github.kit-clj/kit-quartz    | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-quartz.svg)](https://clojars.org/io.github.kit-clj/kit-quartz)       |
 | io.github.kit-clj/kit-redis     | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-redis.svg)](https://clojars.org/io.github.kit-clj/kit-redis)         |
 | io.github.kit-clj/kit-repl      | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-repl.svg)](https://clojars.org/io.github.kit-clj/kit-repl)           |
@@ -60,6 +61,7 @@ Additional profiles:
 - `+quartz` - Adds the `kit-quartz` lib
 - `+redis` - Adds the `kit-redis` lib
 - `+selmer` - Adds the `kit-selmer` lib
+- `+nrepl` - Adds the `kit-nrepl` lib, removes the `kit-repl` lib
 - `+sql` - Adds the `kit-sql` and `kit-postgres` libs
 - `+full` - Adds the libs `kit-xtdb`, `kit-hato`
   , `kit-metrics`, `kit-quartz`, `kit-redis`, `kit-selmer`,
@@ -73,6 +75,7 @@ Additional profiles:
   a [XTDB](https://xtdb.com/) database node
 - `kit-hato` - HTTP client
   using [hato](https://github.com/gnarroway/hato)
+- `kit-nrepl` - [nREPL](https://github.com/nrepl/nrepl) component
 - `kit-metrics` - Configurable metrics
   using [iapetos](https://github.com/clj-commons/iapetos)
 - `kit-quartz` - Scheduler

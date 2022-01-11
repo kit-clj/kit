@@ -27,7 +27,8 @@
            io.github.kit-clj/kit-redis {:mvn/version "<<versions.kit-redis>>"}<% endif %><% if selmer? %>
            io.github.kit-clj/kit-selmer {:mvn/version "<<versions.kit-selmer>>"}<% endif %><% if metrics? %>
            io.github.kit-clj/kit-metrics {:mvn/version "<<versions.kit-metrics>>"}<% endif %><% if repl? %>
-           io.github.kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %>
+           io.github.kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %><% if nrepl? %>
+           io.github.kit-clj/kit-nrepl {:mvn/version "<<versions.kit-nrepl>>"}<% endif %>
            }
  :aliases {:uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.267"}}
                      :exec-fn      hf.depstar/uberjar

@@ -14,7 +14,8 @@
     [kit.edge.scheduling.quartz]<% endif %> <% if selmer? %>
     [kit.edge.templating.selmer]<% endif %> <% if metrics? %>
     [kit.edge.utils.metrics]<% endif %> <% if repl? %>
-    [kit.edge.utils.repl]<% endif %>
+    [kit.edge.utils.repl]<% endif %> <% if nrepl? %>
+    [kit.edge.utils.nrepl]<% endif %>
     [kit.edge.server.undertow]
     [<<ns-name>>.web.handler]
 

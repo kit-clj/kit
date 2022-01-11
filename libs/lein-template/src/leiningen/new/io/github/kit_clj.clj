@@ -31,19 +31,22 @@
      :redis?    (or full? (helpers/option? "+redis" options))
      :selmer?   (or full? (helpers/option? "+selmer" options))
 
-     :repl?     (not (helpers/option? "+bare" options))
+     :repl?     (and (not (helpers/option? "+bare" options))
+                     (not (helpers/option? "+nrepl" options)))
+     :nrepl?    (helpers/option? "+nrepl" options)
 
      :versions  {:kit-core      "1.0.0"
-                 :kit-undertow  "1.0.0"
+                 :kit-undertow  "1.0.1"
                  :kit-xtdb      "1.0.0"
                  :kit-sql       "1.0.0"
                  :kit-postgres  "1.0.0"
                  :kit-hato      "1.0.0"
                  :kit-quartz    "1.0.0"
-                 :kit-redis     "1.0.0"
+                 :kit-redis     "1.0.1"
                  :kit-selmer    "1.0.0"
                  :kit-metrics   "1.0.0"
-                 :kit-repl      "1.0.0"
+                 :kit-nrepl     "1.0.0"
+                 :kit-repl      "1.0.1"
                  :kit-generator "0.1.0"}}))
 
 
@@ -59,7 +62,8 @@
     "+quartz"
     "+redis"
     "+selmer"
-    "+sql"})
+    "+sql"
+    "+nrepl"})
 
 (defn check-available
   [options]

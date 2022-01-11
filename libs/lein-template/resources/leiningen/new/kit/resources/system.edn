@@ -10,6 +10,10 @@
  :repl/server
  {:port #long #or [#env REPL_PORT 7000]
   :host #or [#env REPL_HOST "0.0.0.0"]}<% endif %>
+<% if nrepl? %>
+ :nrepl/server
+ {:port #long #or [#env NREPL_PORT 7000]
+  :bind #or [#env NREPL_HOST "127.0.01"]}<% endif %>
  <% if redis? %>
  :cache/redis
  {:ttl  3600
