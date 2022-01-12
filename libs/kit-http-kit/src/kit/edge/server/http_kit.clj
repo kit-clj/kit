@@ -21,27 +21,27 @@
      (log/info "HTTP server stopped")
      result))
 
-(defmethod ig/prep-key :server/http
+(defmethod ig/prep-key :server/http-kit
   [_ config]
   (merge {:port 3000
           :host "0.0.0.0"}
          config))
 
-(defmethod ig/init-key :server/http
+(defmethod ig/init-key :server/http-kit
   [_ opts]
   (let [handler (atom (delay (:handler opts)))]
     {:handler handler
      :server  (start (fn [req] (@@handler req)) (dissoc opts :handler))}))
 
-(defmethod ig/halt-key! :server/http
+(defmethod ig/halt-key! :server/http-kit
   [{:keys [timeout]} {:keys [server]}]
   (stop server timeout))
 
-(defmethod ig/suspend-key! :server/http
+(defmethod ig/suspend-key! :server/http-kit
   [_ {:keys [handler]}]
   (reset! handler (promise)))
 
-(defmethod ig/resume-key :server/http
+(defmethod ig/resume-key :server/http-kit
   [k opts old-opts old-impl]
   (if (= (dissoc opts :handler) (dissoc old-opts :handler))
     (do (deliver @(:handler old-impl) (:handler opts))
