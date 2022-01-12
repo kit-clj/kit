@@ -1,6 +1,13 @@
 # Change Log
 
-## 11.01.2021
+## 12.01.2022
+
+### `io.github.kit-clj/lein-template {:mvn/version 0.1.3}`
+
+- Change: Default socket REPL port to 7200
+- Fix: Default local nREPL port to 127.0.0.1
+
+## 11.01.2022
 
 ### `io.github.kit-clj/kit-nrepl {:mvn/version 1.0.0}`
 
@@ -21,20 +28,20 @@ initial release
 - Change: Bump `kit-undertow` to 1.0.1
 - Change: Bump `kit-repl` to 1.0.1
 
-## 10.01.2021
+## 10.01.2022
 
 ### `io.github.kit-clj/kit-redis {:mvn/version 1.0.1}`
 
 - Change: `key-for` uses CacheKey protocol to convert based on type, defaulting to hashing Objects instead of `pr-str`
 - Change: `key-for` ignores prefixing keys when there is no default `key-prefix` in the component config
 
-## 09.01.2021
+## 09.01.2022
 
 ### `io.github.kit-clj/lein-template {:mvn/version 0.1.1}`
 
 - Change: repository URL for public modules to use HTTPS instead of SSH URL. Prevents breakage when SSH key fails to load
 
-## 08.01.2021
+## 08.01.2022
 
 ### `io.github.kit-clj/kit-core {:mvn/version 1.0.0}`
 
