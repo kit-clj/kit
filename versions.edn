@@ -1,4 +1,5 @@
 {"kit-core"      "1.0.0"
+ "kit-http-kit"  "1.0.0"
  "kit-xtdb"      "1.0.0"
  "kit-generator" "0.1.0"
  "kit-hato"      "1.0.0"
