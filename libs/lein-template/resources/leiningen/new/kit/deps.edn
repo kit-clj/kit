@@ -30,15 +30,7 @@
            io.github.kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %><% if nrepl? %>
            io.github.kit-clj/kit-nrepl {:mvn/version "<<versions.kit-nrepl>>"}<% endif %>
            }
- :aliases {:uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.267"}}
-                     :exec-fn      hf.depstar/uberjar
-                     :exec-args    {:aot        true
-                                    :jar        "<<name>>.jar"
-                                    :main-class <<name>>.core
-                                    :target-dir "target/uberjar"}
-                     :extra-paths ["env/prod/clj" "env/prod/resources"]}
-
-           :build {:deps {io.github.clojure/tools.build {:git/sha "7ef409b"
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/sha "7ef409b"
                                                          :git/tag "v0.6.2" :git/url "https://github.com/clojure/tools.build.git"}
                           slipset/deps-deploy {:mvn/version "0.1.5"}
                           weavejester/dependency {:mvn/version "0.2.1"}}
