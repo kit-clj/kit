@@ -8,8 +8,8 @@
     [integrant.core :as ig]))
 
 (defn register-definition
-  [registry {:keys [type metric opts]
-             :or   {opts {}}}]
+  [{:keys [type metric opts]
+    :or   {opts {}}}]
   ((case type
      :histogram prometheus/histogram
      :gauge prometheus/gauge
@@ -18,7 +18,6 @@
      (throw (ex-info "Metric not defined" {:type        ::not-defined
                                            :metric-type type
                                            :metric      metric})))
-   registry
    metric
    opts))
 
@@ -28,7 +27,7 @@
              fn?   true
              ring? true}}]
   (log/info :action "Initializing metrics")
-  (cond-> (reduce register-definition (prometheus/collector-registry) definitions)
+  (cond-> (apply prometheus/register (prometheus/collector-registry) (map register-definition definitions))
           jvm? (jvm/initialize)
           fn? (fn/initialize)
           ring? (ring/initialize)))

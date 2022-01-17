@@ -4,7 +4,7 @@
  "kit-generator" "0.1.0"
  "kit-hato"      "1.0.0"
  "kit-nrepl"     "1.0.0"
- "kit-metrics"   "1.0.0"
+ "kit-metrics"   "1.0.1"
  "kit-postgres"  "1.0.0"
  "kit-quartz"    "1.0.0"
  "kit-redis"     "1.0.1"
