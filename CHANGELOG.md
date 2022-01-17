@@ -1,5 +1,11 @@
 # Change Log
 
+## 17.01.2022
+
+### `io.github.kit-clj/kit-metrics {:mvn/version "1.0.1"}`
+
+- Breaking fix: metric definitions API is broken 
+
 ## 12.01.2022
 
 ### `io.github.kit-clj/lein-template {:mvn/version 0.1.3}`
