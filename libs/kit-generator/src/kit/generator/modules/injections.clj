@@ -139,7 +139,7 @@
 
 (defmethod inject :edn [{:keys [data target action value ctx]}]
   (let [value (normalize-value value)]
-    (topmost
+    (->
       (case action
         :append
         (if (empty? target)
@@ -149,7 +149,10 @@
         :merge
         (if-let [zloc (zloc-get-in data target)]
           (edn-safe-merge zloc value)
-          (println "could not find injection target:" target "in data:" (z/node data)))))))
+          (println "could not find injection target:" target "in data:" (z/node data))))
+      ;;TODO find a better way to do this
+      z/root-string
+      z/of-string)))
 
 (comment
 
@@ -193,12 +196,21 @@
   (zloc-get-in (z/of-string "{:z :r :deps {:wooo :waaa}}") [])
 
 
-  (inject
-    {:type   :edn
-     :data   (z/of-string "{:z :r :deps {:foo :bar}}")
-     :target []
-     :action :merge
-     :value  (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")})
+  (let [data  (z/of-string "{:z :r :deps {:foo :bar}}")
+        updated (inject
+                {:type   :edn
+                 :data   data
+                 :target []
+                 :action :merge
+                 :value  (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")})]
+    #_(z/root-string updated)
+    (z/root-string
+      (inject
+        {:type   :edn
+         :data   updated
+         :target []
+         :action :merge
+         :value  (io/str->edn "{:x :y}")})))
 
   ;; get-in test
   (z/root-string (edn-safe-merge
@@ -438,27 +450,27 @@
   {:default
    {:require-restart? true
     :actions
-                      {:assets     [["assets/shadow-cljs.edn" "shadow-cljs.edn"]
-                                    ["assets/package.json" "package.json"]
-                                    ["assets/src/core.cljs" "src/cljs/<<sanitized>>/core.cljs"]]
-                       :injections [{:type   :html
-                                     :path   "resources/html/home.html"
-                                     :action :append
-                                     :target [:body]
-                                     :value  [:div {:id "app"}]}
-                                    {:type   :clj
-                                     :path   "build.clj"
-                                     :action :append-build-task
-                                     :value  (defn build-cljs []
-                                               (println "npx shadow-cljs release app...")
-                                               (let [{:keys [exit]
-                                                      :as   s} (sh "npx" "shadow-cljs" "release" "app")]
-                                                 (when-not (zero? exit)
-                                                   (throw (ex-info "could not compile cljs" s)))))}
-                                    {:type   :clj
-                                     :path   "build.clj"
-                                     :action :append-build-task-call
-                                     :value  (build-cljs)}]}}}
+    {:assets     [["assets/shadow-cljs.edn" "shadow-cljs.edn"]
+                  ["assets/package.json" "package.json"]
+                  ["assets/src/core.cljs" "src/cljs/<<sanitized>>/core.cljs"]]
+     :injections [{:type   :html
+                   :path   "resources/html/home.html"
+                   :action :append
+                   :target [:body]
+                   :value  [:div {:id "app"}]}
+                  {:type   :clj
+                   :path   "build.clj"
+                   :action :append-build-task
+                   :value  (defn build-cljs []
+                             (println "npx shadow-cljs release app...")
+                             (let [{:keys [exit]
+                                    :as   s} (sh "npx" "shadow-cljs" "release" "app")]
+                               (when-not (zero? exit)
+                                 (throw (ex-info "could not compile cljs" s)))))}
+                  {:type   :clj
+                   :path   "build.clj"
+                   :action :append-build-task-call
+                   :value  (build-cljs)}]}}}
 
 
   (defn uber [_]
