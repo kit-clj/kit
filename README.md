@@ -76,6 +76,7 @@ Additional profiles:
 - `kit-hato` - HTTP client
   using [hato](https://github.com/gnarroway/hato)
 - `kit-nrepl` - [nREPL](https://github.com/nrepl/nrepl) component
+  for use in a running system. e.g. to connect to a production REPL
 - `kit-metrics` - Configurable metrics
   using [iapetos](https://github.com/clj-commons/iapetos)
 - `kit-quartz` - Scheduler
@@ -88,7 +89,8 @@ Additional profiles:
   of [core.cache](https://github.com/clojure/core.cache) for
   Redis
   via [carmine](https://github.com/ptaoussanis/carmine)
-- `kit-repl` - Socket REPL integrant binding
+- `kit-repl` - Socket REPL integrant binding for use in a running 
+  system. e.g. to connect to a production REPL
 - `kit-selmer` - Templating configuration
   with [selmer](https://github.com/yogthos/Selmer)
 - `kit-sql` - Generic SQL integrant binding.
