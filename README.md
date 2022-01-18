@@ -128,7 +128,9 @@ To install a single library locally
 
 To push a single library to Clojars
 
-`clojure -T:build install-lib :artifact-id :lein-template :publish true`
+`clojure -T:build install-lib :artifact-id <artifact-id> :publish true`
+
+eg: `clojure -T:build install-lib :artifact-id :kit-generator :publish true`
 
 ## Inspiration and thanks to
 
