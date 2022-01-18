@@ -114,24 +114,6 @@ plans to add Leiningen support.
 
 [Documentation can be found here](https://kit-clj.github.io)
 
-## Development setup
-
-Minimum Clojure CLI version: 1.10.3.933
-
-To install the libraries locally
-
-`clojure -T:build install-libs`
-
-To install a single library locally
-
-`clojure -T:build install-lib :artifact-id :lein-template`
-
-To push a single library to Clojars
-
-`clojure -T:build install-lib :artifact-id <artifact-id> :publish true`
-
-eg: `clojure -T:build install-lib :artifact-id :kit-generator :publish true`
-
 ## Inspiration and thanks to
 
 - [integrant](https://github.com/weavejester/integrant) as
