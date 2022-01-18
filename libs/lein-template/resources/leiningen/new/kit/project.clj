@@ -21,7 +21,9 @@
                            ;; kit Libs
                            [kit-clj/kit-core "<<versions.kit-core>>"]
                            [kit-clj/kit-undertow "<<versions.kit-undertow>>"]<% if xtdb? %>
-                           [kit-clj/kit-xtdb "<<versions.kit-xtdb>>"]<% endif %> <% if sql? %>
+                           [kit-clj/kit-xtdb "<<versions.kit-xtdb>>"]<% endif %><% if mysql? %>
+                           [kit-clj/kit-sql-general "<<versions.kit-sql-general>>"]
+                           [kit-clj/kit-mysql "<<versions.kit-mysql>>"]<% endif %> <% if pgsql? %>
                            [kit-clj/kit-sql "<<versions.kit-sql>>"]
                            [kit-clj/kit-postgres "<<versions.kit-postgres>>"]<% endif %> <% if hato? %>
                            [kit-clj/kit-hato "<<versions.kit-hato>>"]<% endif %> <% if quartz? %>

@@ -13,7 +13,7 @@
 (defn app-files [data]
   (concat
     (base/files data)
-    (when (:sql? data)
+    (when (:pgsql? data)
       (sql/files data))))
 
 (defn template-data [name options]
@@ -24,7 +24,10 @@
      :sanitized (name-to-path name)
 
      :xtdb?     (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
-     :sql?      (or full? (helpers/option? "+sql" options))
+     :pgsql?    (or full? (and (helpers/option? "+pgsql" options)
+                               (not (helpers/option? "+mysql" options))))
+     :mysql?    (and (helpers/option? "+mysql" options)
+                     (not (helpers/option? "+pgsql" options)))
      :hato?     (or full? (helpers/option? "+hato" options))
      :metrics?  (or full? (helpers/option? "+metrics" options))
      :quartz?   (or full? (helpers/option? "+quartz" options))
@@ -35,19 +38,21 @@
                      (not (helpers/option? "+nrepl" options)))
      :nrepl?    (helpers/option? "+nrepl" options)
 
-     :versions  {:kit-core      "1.0.0"
-                 :kit-undertow  "1.0.1"
-                 :kit-xtdb      "1.0.0"
-                 :kit-sql       "1.0.0"
-                 :kit-postgres  "1.0.0"
-                 :kit-hato      "1.0.0"
-                 :kit-quartz    "1.0.0"
-                 :kit-redis     "1.0.1"
-                 :kit-selmer    "1.0.0"
-                 :kit-metrics   "1.0.0"
-                 :kit-nrepl     "1.0.0"
-                 :kit-repl      "1.0.1"
-                 :kit-generator "0.1.0"}}))
+     :versions  {:kit-core             "1.0.0"
+                 :kit-undertow         "1.0.1"
+                 :kit-xtdb             "1.0.0"
+                 :kit-sql              "1.0.0"
+                 :kit-postgres         "1.0.0"
+                 :kit-sql-general      "1.0.0"
+                 :kit-mysql            "1.0.0"
+                 :kit-hato             "1.0.0"
+                 :kit-quartz           "1.0.0"
+                 :kit-redis            "1.0.1"
+                 :kit-selmer           "1.0.0"
+                 :kit-metrics          "1.0.0"
+                 :kit-nrepl            "1.0.0"
+                 :kit-repl             "1.0.1"
+                 :kit-generator        "0.1.0"}}))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -62,7 +67,8 @@
     "+quartz"
     "+redis"
     "+selmer"
-    "+sql"
+    "+pgsql"
+    "+mysql"
     "+nrepl"})
 
 (defn check-available

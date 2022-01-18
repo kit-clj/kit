@@ -73,7 +73,26 @@
  :db.xtdb/node
  {}
  <% endif %>
- <% if sql? %>
+ <% if mysql? %>
+ :db.sql.general/connection
+ #profile {:dev  {:jdbc-url "jdbc:mysql://127.0.0.1:3306/<<name>>?characterEncoding=utf8"}
+           :test {}
+           :prod {:auto-commit        true
+                  :read-only          false
+                  :connection-timeout 30000
+                  :validation-timeout 5000
+                  :idle-timeout       600000
+                  :max-lifetime       1800000
+                  :minimum-idle       10
+                  :maximum-pool-size  10
+                  :pool-name          "ds-pool"
+                  :username           "root"
+                  :password           "123456"
+                  :jdbc-url           #env JDBC_URL
+                  :driver-class-name  "com.mysql.jdbc.Driver"
+                  :register-mbeans    false}}
+ <% endif %>
+ <% if pgsql? %>
  :db.sql/connection
  #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<name>>?user=<<name>>&password=<<name>>"}
            :test {}

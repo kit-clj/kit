@@ -62,7 +62,8 @@ Additional profiles:
 - `+redis` - Adds the `kit-redis` lib
 - `+selmer` - Adds the `kit-selmer` lib
 - `+nrepl` - Adds the `kit-nrepl` lib, removes the `kit-repl` lib
-- `+sql` - Adds the `kit-sql` and `kit-postgres` libs
+- `+pgsql` - Adds the `kit-sql` and `kit-postgres` libs
+- `+mysql` - Adds the `kit-sql-general` and `kit-mysql` libs
 - `+full` - Adds the libs `kit-xtdb`, `kit-hato`
   , `kit-metrics`, `kit-quartz`, `kit-redis`, `kit-selmer`,
   and `kit-sql`
@@ -102,6 +103,9 @@ Additional profiles:
   imports `kit-postgres` lib which supports Postgresql
 - `kit-postgres` - lib with data bindings and utilities for
   working with Postgres
+- `kit-sql-general` - General sql layer, just contains connection pooling (via [hikari-cp](https://github.com/tomekw/hikari-cp)) and jdbc wrapper (via [next.jdbc](https://github.com/seancorfield/next-jdbc)).
+- `kit-mysql` - lib with data bindings and utilities for
+  working with MySQL8+
 - `kit-undertow` - Server binding
   via [ring-undertow-adapter](https://github.com/luminus-framework/ring-undertow-adapter)
 

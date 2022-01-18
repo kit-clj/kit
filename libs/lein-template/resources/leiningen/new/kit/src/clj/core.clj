@@ -7,7 +7,8 @@
 
     ;; Edges <% if redis? %>
     [kit.edge.cache.redis]<% endif %> <% if xtdb? %>
-    [kit.edge.db.xtdb]<% endif %> <% if sql? %>
+    [kit.edge.db.xtdb]<% endif %><% if mysql? %>
+    [kit.edge.db.sql.general]<% endif %><% if pgsql? %>
     [kit.edge.db.sql]
     [kit.edge.db.postgres]<% endif %> <% if hato? %>
     [kit.edge.http.hato]<% endif %> <% if quartz? %>
