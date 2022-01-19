@@ -97,8 +97,14 @@
     (when publish?
       (deploy (merge {:installer :remote} bd)))))
 
+(defn list-files [libs-dir]
+  (->> (jio/file libs-dir)
+       (.listFiles)
+       (filter #(and (.isDirectory %) (not (.startsWith (.getName %) "."))))
+       (distinct)))
+
 (defn install-lib [{:keys [artifact-id] publish? :publish :or {publish? false} :as params}]
-  (let [libs (distinct (filter #(.isDirectory %) (.listFiles (jio/file libs-dir))))
+  (let [libs (list-files libs-dir)
         {:keys [graph dep-mappings]} (build-graph {:libs libs})
         lib (some->> artifact-id name (symbol group-id))]
     (if (contains? dep-mappings lib)
@@ -109,7 +115,6 @@
       (println "Can't find: " artifact-id))))
 
 (defn install-libs [{publish? :publish :or {publish? false} :as m}]
-  (let [libs (filter #(and (.isDirectory %) (not (.startsWith (.getName %) "."))) 
-               (.listFiles (jio/file libs-dir)))]
+  (let [libs (list-files libs-dir)]
     (doseq [lib (topo-sort (build-graph {:libs libs}))]
       (all publish? lib))))
