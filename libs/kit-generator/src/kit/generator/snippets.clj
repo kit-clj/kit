@@ -2,7 +2,9 @@
   (:require
     [clojure.edn :as edn]
     [kit.generator.renderer :as renderer]
-    [clojure.string :as string]))
+    [clojure.string :as string]
+    [clojure.java.io :as io]
+    [clj-fuzzy.metrics :as fm]))
 
 (defn parse-keys [code]
   (loop [val     nil
@@ -59,35 +61,74 @@
           :description
           (update m :description str "\n" line)
           :code
-          (update m :code str line))
+          (update m :code str line)
+          :else
+          (throw (Exception. (str "unrecognized section in snippet: " section))))
         section
         lines))))
 (defn gen-snippet [snippets-db snippet-id & args]
   (if-let [{:keys [keys code]} (get-in snippets-db [snippet-id :code])]
     (if (= (count args) (count keys))
-        (edn/read-string (renderer/render-asset (merge {:*ns* *ns*} (zipmap keys args)) code))
-      (println "wrong number of arguments:\nplease provide following values:" keys)
-      )))
-
-(defn find-snippet [text]
-  )
+      (edn/read-string (renderer/render-asset (merge {:*ns* *ns*} (zipmap keys args)) code))
+      (println "wrong number of arguments:\nplease provide following values:" keys))))
 
 (defn print-snippets [snippets]
   (doseq [{:keys [description code]} snippets]
     (println "\n" description
              "\n" code)))
 
+(defn query-matches? [tag query]
+  (> (fm/jaro-winkler
+       (name tag)
+       (-> query
+           (string/replace #"[^A-Za-z\s]+" "")
+           (string/lower-case)))
+     0.8))
 
-(comment
+(defn find-snippets [snippets query]
+  (keep
+    (fn [[id {:keys [tags]}]]
+      (when (or (query-matches? (name id) query)
+                (some #(query-matches? % query) tags))
+        id))
+    snippets))
 
-  (parse-snippet (slurp "test/resources/snippet.md"))
+(defn format-name [s]
+  (loop [sb (StringBuilder.)
+         [c & chars] s]
+    (if (nil? c)
+      (.toString sb)
+      (recur
+        (.append sb
+                 (cond
+                   (zero? (.length sb))
+                   (Character/toLowerCase ^Character c)
+                   (and (= \- (.charAt sb (dec (.length sb))))
+                        (or (= \_ c) (= \- c)))
+                   ""
+                   (= \_ c)
+                   \-
+                   (Character/isUpperCase ^Character c)
+                   (if (= \- (.charAt sb (dec (.length sb))))
+                     (Character/toLowerCase ^Character c)
+                     (str "-" (Character/toLowerCase ^Character c)))
+                   :else
+                   c))
+        chars))))
 
-  (let [snippets-db {:route (parse-snippet (slurp "test/resources/snippet.md"))}]
-    (gen-snippet snippets-db :route "/foo" :get "foo.bar"))
+(defn file->keyword [file]
+  (keyword
+    (format-name (.getName (.getParentFile file)))
+    (format-name (string/replace (.getName file) #".md" ""))))
 
-  (gen-snippet
-    *ns*
-    {:foo
-     {:code
-      "(defn page-routes [_opts]\n  [[\"/\" {:get home}]   \n   [\"/save-message\" {:post (fn [req] {:body \"<<ns-name>>\"})}]])"}}
-    :foo))
+(defn load-snippets [path]
+  (->> (io/file path)
+       (file-seq)
+       (rest)
+       (filter #(.endsWith (.getName %) ".md"))
+       (map (fn [file] {(file->keyword file) (parse-snippet (slurp file))}))
+       (apply merge)))
+
+
+
+
