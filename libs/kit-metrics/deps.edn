@@ -1,5 +1,5 @@
 {:paths   ["src"]
- :deps    {org.clojure/tools.logging              {:mvn/version "1.2.3"}
+ :deps    {org.clojure/tools.logging              {:mvn/version "1.2.4"}
            clj-commons/iapetos                    {:mvn/version "0.1.12"}
            io.prometheus/simpleclient             {:mvn/version "0.14.1"}
            io.prometheus/simpleclient_common      {:mvn/version "0.14.1"}
