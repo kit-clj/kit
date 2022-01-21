@@ -1,8 +1,12 @@
-{:ns-name   "myapp"
+{:ns-name      "myapp"
  :sanitized    "myapp"
  :name         "myapp"
  :project-root "test/resources/generated"
  :modules      {:root         "test/resources/modules"
                 :repositories [{:url  "git@github.com:kit-clj/modules.git"
+                                :tag  "master"
+                                :name "kit"}]}
+ :snippets     {:root         "test/resources/snippets"
+                :repositories [{:url  "git@github.com:kit-clj/snippets.git"
                                 :tag  "master"
                                 :name "kit"}]}}

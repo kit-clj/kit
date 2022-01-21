@@ -4,7 +4,12 @@
     [kit.generator.renderer :as renderer]
     [clojure.string :as string]
     [clojure.java.io :as io]
+    [kit.generator.git :as git]
     [clj-fuzzy.metrics :as fm]))
+
+(defn sync-snippets! [{:keys [snippets]}]
+  (doseq [repository (-> snippets :repositories)]
+    (git/sync-repository! (:root snippets) repository)))
 
 (defn parse-keys [code]
   (loop [val     nil
