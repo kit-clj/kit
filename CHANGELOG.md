@@ -1,8 +1,40 @@
 # Change Log
 
+## 23.01.2022
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.5"}`
+
+- New: Add `+socket-repl` profile for socket REPL
+- Change: Default socket REPL host changed to `"127.0.0.1"`
+- Change: Bump dependencies
+- Change: Remove `kit-repl` library from default template profile
+- Change: Remove `+bare` profile
+- Change: Make socket repl as default in `+full` profile
+
+### `io.github.kit-clj/kit-generator {:mvn/version "0.1.2"}`
+
+- New: Snippet generation
+- Change: Bump dependencies
+
+### `io.github.kit-clj/kit-core {:mvn/version "1.0.1"}`
+
+- Change: Bump dependencies
+
+### `io.github.kit-clj/kit-http-kit {:mvn/version "1.0.1"}`
+
+- Change: Bump dependencies
+
+### `io.github.kit-clj/kit-metrics {:mvn/version "1.0.2"}`
+
+- Change: Bump dependencies
+
+### `io.github.kit-clj/kit-selmer {:mvn/version "1.0.1"}`
+
+- Change: Bump dependencies
+
 ## 17.01.2022
 
-### `io.github.kit-clj/lein-template {:mvn/version "0.1.3"}`
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.4"}`
 
 - Change: Add `nrepl` and `cider` deps aliases in template as default
 
