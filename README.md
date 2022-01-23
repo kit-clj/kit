@@ -21,9 +21,15 @@ Thanks to `integrant`, and `aero`, the libs are simple
 skeletons with the bulk of the customization being done in
 the system configuration EDN file.
 
-## Quick Start
+## Quick start
 
-`clojure -X:new :template io.github.kit-clj :name yourname/app :args '[+selmer]'`
+Kit requires [clj-new](https://github.com/seancorfield/clj-new), installed preferably as a tool:
+
+`clojure -Ttools install com.github.seancorfield/clj-new '{:git/tag "v1.2.381"}' :as new`
+
+To create a new kit application:
+
+`clojure -Tnew create :template io.github.kit-clj :name yourname/app`
 
 ## Latest versions
 
