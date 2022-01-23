@@ -1,4 +1,4 @@
-# kit
+# Kit
 
 Lightweight, modular framework for scalable production
 systems.
@@ -11,7 +11,7 @@ extending them. The libs/libraries are stable.
 
 ## Goal
 
-The goal of `kit` is to provide a template for a robust,
+The goal of Kit is to provide a template for a robust,
 scalable Clojure web application. It hides common plumbing
 that is standard across projects via its libs system, while
 exposing code that tends to be customized in the clj-new
@@ -27,7 +27,7 @@ Kit requires [clj-new](https://github.com/seancorfield/clj-new), installed prefe
 
 `clojure -Ttools install com.github.seancorfield/clj-new '{:git/tag "v1.2.381"}' :as new`
 
-To create a new kit application:
+To create a new Kit application:
 
 `clojure -Tnew create :template io.github.kit-clj :name yourname/app`
 
@@ -130,7 +130,7 @@ plans to add Leiningen support.
 - [re-frame template](https://github.com/day8/re-frame-template)
   for code used directly in `kit-template`
 - [Luminus framework](https://luminusweb.com/) from which
-  the initial project that `kit`'s predecessor was built
+  the initial project that Kit's predecessor was built
   upon
 
 ## License
