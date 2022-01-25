@@ -1,6 +1,7 @@
 (ns kit.generator.snippets
   (:require
     [clojure.edn :as edn]
+    [clojure.pprint :refer [pprint]]
     [kit.generator.renderer :as renderer]
     [clojure.string :as string]
     [clojure.java.io :as io]
@@ -71,16 +72,12 @@
           (throw (Exception. (str "unrecognized section in snippet: " section))))
         section
         lines))))
-(defn gen-snippet [snippets-db snippet-id & args]
+
+(defn gen-snippet [snippets-db snippet-id args]
   (if-let [{:keys [keys code]} (get-in snippets-db [snippet-id :code])]
-    (if (= (count args) (count keys))
+    (if (or (empty? keys) (= (count args) (count keys)))
       (edn/read-string (renderer/render-asset (merge {:*ns* *ns*} (zipmap keys args)) code))
       (println "wrong number of arguments:\nplease provide following values:" keys))))
-
-(defn print-snippets [snippets]
-  (doseq [{:keys [description code]} snippets]
-    (println "\n" description
-             "\n" code)))
 
 (defn query-matches? [tag query]
   (> (fm/jaro-winkler
@@ -90,13 +87,20 @@
            (string/lower-case)))
      0.8))
 
-(defn find-snippets [snippets query]
+(defn match-snippets [snippets query]
   (keep
-    (fn [[id {:keys [tags]}]]
+    (fn [[id {:keys [tags] :as snippet}]]
       (when (or (query-matches? (name id) query)
                 (some #(query-matches? % query) tags))
-        id))
+        (assoc snippet :id id)))
     snippets))
+
+(defn print-snippets [snippets query]
+  (doseq [item (interpose "\n----" (match-snippets snippets query))]
+    (if (string? item)
+      (println item)
+      (let [{:keys [id description]} item]
+        (println "\nsnippet:" id "\n" (string/trim description))))))
 
 (defn format-name [s]
   (loop [sb (StringBuilder.)
