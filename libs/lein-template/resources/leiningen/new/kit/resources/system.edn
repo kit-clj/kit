@@ -73,8 +73,8 @@
  :db.xtdb/node
  {}
  <% endif %>
- <% if mysql? %>
- :db.sql.general/connection
+ <% if hikari? %>
+ :db.sql/hikari-connection
  #profile {:dev  {:jdbc-url "jdbc:mysql://127.0.0.1:3306/<<name>>?characterEncoding=utf8"}
            :test {}
            :prod {:auto-commit        true
@@ -92,7 +92,7 @@
                   :driver-class-name  "com.mysql.jdbc.Driver"
                   :register-mbeans    false}}
  <% endif %>
- <% if pgsql? %>
+ <% if conman? %>
  :db.sql/connection
  #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<name>>?user=<<name>>&password=<<name>>"}
            :test {}
@@ -106,7 +106,8 @@
  {:conn     #ig/ref :db.sql/connection
   :options  {}
   :filename "queries.sql"}
-
+ <% endif %>
+ <% if sql? %>
  :db.sql/migrations
  {:store            :database
   :db               {:datasource #ig/ref :db.sql/connection}

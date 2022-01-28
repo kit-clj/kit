@@ -1,21 +1,21 @@
-(ns kit.edge.db.sql.general
+(ns kit.edge.db.sql.hikari
   (:require
+    [hikari-cp.core :as cp]
     [integrant.core :as ig]
     [kit.ig-utils :as ig-utils]
-    [hikari-cp.core :as cp]
     ))
 
-(defmethod ig/init-key :db.sql.general/connection
+(defmethod ig/init-key :db.sql/hikari-connection
   [_ pool-spec]
   (cp/make-datasource pool-spec))
 
-(defmethod ig/suspend-key! :db.sql.general/connection [_ _])
+(defmethod ig/suspend-key! :db.sql/hikari-connection [_ _])
 
-(defmethod ig/halt-key! :db.sql.general/connection
+(defmethod ig/halt-key! :db.sql/hikari-connection
   [_ conn]
   (cp/close-datasource conn))
 
-(defmethod ig/resume-key :db.sql.general/connection
+(defmethod ig/resume-key :db.sql/hikari-connection
   [key opts old-opts old-impl]
   (ig-utils/resume-handler key opts old-opts old-impl))
 
