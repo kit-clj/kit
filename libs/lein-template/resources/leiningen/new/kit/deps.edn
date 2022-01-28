@@ -19,9 +19,15 @@
            ;; kit Libs
            io.github.kit-clj/kit-core {:mvn/version "<<versions.kit-core>>"}
            io.github.kit-clj/kit-undertow {:mvn/version "<<versions.kit-undertow>>"}<% if xtdb? %>
-           io.github.kit-clj/kit-xtdb {:mvn/version "<<versions.kit-xtdb>>"}<% endif %><% if sql? %>
-           io.github.kit-clj/kit-sql {:mvn/version "<<versions.kit-sql>>"}
-           io.github.kit-clj/kit-postgres{:mvn/version "<<versions.kit-postgres>>"}<% endif %><% if hato? %>
+           io.github.kit-clj/kit-xtdb {:mvn/version "<<versions.kit-xtdb>>"}<% endif %><% if mysql? %>
+           io.github.kit-clj/kit-mysql {:mvn/version "<<versions.kit-mysql>>"}<%if conman? %>
+           io.github.kit-clj/kit-sql-conman {:mvn/version "<<versions.kit-sql-conman>>"}
+           io.github.kit-clj/kit-sql-migratus {:mvn/version "<<versions.kit-sql-migratus>>"}<% endif %><% if hikari? %>
+           io.github.kit-clj/kit-sql-hikari {:mvn/version "<<versions.kit-sql-hikari>>"}<% endif %><% endif %><% if sql? %>
+           io.github.kit-clj/kit-postgres{:mvn/version "<<versions.kit-postgres>>"}<%if conman? %>
+           io.github.kit-clj/kit-sql-conman {:mvn/version "<<versions.kit-sql-conman>>"}
+           io.github.kit-clj/kit-sql-migratus {:mvn/version "<<versions.kit-sql-conman>>"}<% endif %><% if hikari? %>
+           io.github.kit-clj/kit-sql-hikari {:mvn/version "<<versions.kit-sql-hikari>>"}<% endif %><% endif %><% if hato? %>
            io.github.kit-clj/kit-hato {:mvn/version "<<versions.kit-hato>>"}<% endif %><% if quartz? %>
            io.github.kit-clj/kit-quartz {:mvn/version "<<versions.kit-quartz>>"}<% endif %><% if redis? %>
            io.github.kit-clj/kit-redis {:mvn/version "<<versions.kit-redis>>"}<% endif %><% if selmer? %>

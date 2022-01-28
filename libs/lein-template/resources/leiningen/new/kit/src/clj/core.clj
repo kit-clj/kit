@@ -7,9 +7,12 @@
 
     ;; Edges <% if redis? %>
     [kit.edge.cache.redis]<% endif %> <% if xtdb? %>
-    [kit.edge.db.xtdb]<% endif %> <% if sql? %>
-    [kit.edge.db.sql]
-    [kit.edge.db.postgres]<% endif %> <% if hato? %>
+    [kit.edge.db.xtdb]<% endif %><% if hikari? %>
+    [kit.edge.db.sql.hikari]<% endif %><% if sql? %>
+    [kit.edge.db.sql.conman]
+    [kit.edge.db.sql.migratus]
+    [kit.edge.db.postgres]<% endif %><% if mysql? %>
+    [kit.edge.db.sql.mysql]<% endif %><% if hato? %>
     [kit.edge.http.hato]<% endif %> <% if quartz? %>
     [kit.edge.scheduling.quartz]<% endif %> <% if selmer? %>
     [kit.edge.templating.selmer]<% endif %> <% if metrics? %>

@@ -110,7 +110,7 @@
     (if (contains? dep-mappings lib)
       (if (not-empty (dep/transitive-dependencies graph lib))
         (doseq [lib' (concat (dep/transitive-dependencies graph lib) [lib])]
-          (all (= lib' lib) lib'))
+          (all (and publish? (= lib' lib)) lib'))
         (all publish? lib))
       (println "Can't find: " artifact-id))))
 

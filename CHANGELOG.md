@@ -1,5 +1,31 @@
 # Change Log
 
+## 28.01.2022
+
+### `io.github.kit-clj/kit-mysql {:mvn/version 1.0.0}`
+
+- Initial release [PR #18](https://github.com/kit-clj/kit/pull/18)
+
+### `io.github.kit-clj/kit-sql {:mvn/version 1.1.0}`
+
+- Change: Now just a bare bones wrapper that imports kit-sql-conman and kit-sql-migratus for compatibility purposes
+
+### `io.github.kit-clj/kit-sql-conman {:mvn/version 1.0.0}`
+
+- Initial release
+
+### `io.github.kit-clj/kit-sql-hikari {:mvn/version 1.0.1}`
+
+- Initial release
+
+### `io.github.kit-clj/kit-sql-migratus {:mvn/version 1.0.0}`
+
+- Initial release
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.6"}`
+
+- Template updated for the sql variants
+
 ## 23.01.2022
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.5"}`
