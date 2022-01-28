@@ -13,7 +13,7 @@
 (defn app-files [data]
   (concat
     (base/files data)
-    (when (:pgsql? data)
+    (when (:sql? data)
       (sql/files data))))
 
 (defn template-data [name options]
@@ -24,52 +24,46 @@
      :sanitized (name-to-path name)
 
      :xtdb?     (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
-     :pgsql?    (or full? (and (helpers/option? "+pgsql" options)
-                               (not (helpers/option? "+mysql" options))))
-     :mysql?    (and (helpers/option? "+mysql" options)
-                     (not (helpers/option? "+pgsql" options)))
+     :sql?      (or full? (helpers/option? "+sql" options))
      :hato?     (or full? (helpers/option? "+hato" options))
      :metrics?  (or full? (helpers/option? "+metrics" options))
      :quartz?   (or full? (helpers/option? "+quartz" options))
      :redis?    (or full? (helpers/option? "+redis" options))
      :selmer?   (or full? (helpers/option? "+selmer" options))
 
-     :repl?     (and (not (helpers/option? "+bare" options))
-                     (not (helpers/option? "+nrepl" options)))
+     :repl?     (or full? (helpers/option? "+socket-repl" options))
      :nrepl?    (helpers/option? "+nrepl" options)
 
-     :versions  {:kit-core             "1.0.0"
-                 :kit-undertow         "1.0.1"
-                 :kit-xtdb             "1.0.0"
-                 :kit-sql              "1.0.0"
-                 :kit-postgres         "1.0.0"
-                 :kit-sql-general      "1.0.0"
-                 :kit-mysql            "1.0.0"
-                 :kit-hato             "1.0.0"
-                 :kit-quartz           "1.0.0"
-                 :kit-redis            "1.0.1"
-                 :kit-selmer           "1.0.0"
-                 :kit-metrics          "1.0.0"
-                 :kit-nrepl            "1.0.0"
-                 :kit-repl             "1.0.1"
-                 :kit-generator        "0.1.0"}}))
+     :versions  {:kit-core      "1.0.1"
+                 :kit-http-kit  "1.0.1"
+                 :kit-xtdb      "1.0.0"
+                 :kit-generator "0.1.2"
+                 :kit-hato      "1.0.0"
+                 :kit-nrepl     "1.0.0"
+                 :kit-metrics   "1.0.2"
+                 :kit-postgres  "1.0.0"
+                 :kit-quartz    "1.0.0"
+                 :kit-redis     "1.0.1"
+                 :kit-repl      "1.0.1"
+                 :kit-selmer    "1.0.1"
+                 :kit-sql       "1.0.0"
+                 :kit-undertow  "1.0.1"}}))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Check Options
 
 (def available-set
-  #{"+bare"
-    "+full"
+  #{"+full"
     "+xtdb"
     "+hato"
     "+metrics"
     "+quartz"
     "+redis"
     "+selmer"
-    "+pgsql"
-    "+mysql"
-    "+nrepl"})
+    "+sql"
+    "+nrepl"
+    "+socket-repl"})
 
 (defn check-available
   [options]
@@ -81,7 +75,7 @@
 
 (defn check-conflicts
   [options]
-  (when (> (count (filter #{"+full" "+bare"} options))
+  #_(when (> (count (filter #{"+full" "+bare"} options))
            1)
     (throw (ex-info "Cannot have both +full and +bare profile present" {}))))
 

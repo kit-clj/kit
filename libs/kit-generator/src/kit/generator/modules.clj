@@ -1,46 +1,9 @@
 (ns kit.generator.modules
   (:require
     [clojure.java.io :as jio]
-    [clojure.string :as string]
-    [clj-jgit.porcelain :as git]
+    [kit.generator.git :as git]
     [kit.generator.io :as io])
-  (:import
-    [java.io File FileNotFoundException]))
-
-(defn module-root [name git-url]
-  (or name
-      (-> git-url
-          (string/split #"/")
-          (last)
-          (string/split #"\.")
-          (first))))
-
-(defn module-path [root name git-url]
-  (str root File/separator (module-root name git-url)))
-
-(defn sync-repository!
-  [root {:keys [name url tag]}]
-  (try
-    ;;docs https://github.com/clj-jgit/clj-jgit (version 0.8.10)
-    (let [git-config (if (.exists (clojure.java.io/file "kit.git-config.edn"))
-                       (read-string (slurp "kit.git-config.edn"))
-                       {:name "~/.ssh/id_rsa"})]
-      (git/with-identity
-        git-config
-        (let [path          (module-path root name url)
-              module-config (str path File/separator "modules.edn")]
-          (try
-            (let [repo (git/load-repo path)]
-              (git/git-pull repo))
-            (catch FileNotFoundException _e
-              (git/git-clone2 url {:path               path
-                                   :remote-name        "origin"
-                                   :branch-name        (or tag "master")
-                                   :bare               false
-                                   :clone-all-branches false})
-              (io/update-edn-file module-config #(assoc % :module-root (module-root name url))))))))
-    (catch Exception e
-      (println "failed to clone module:" url "\ncause:" (.getMessage e)))))
+  (:import java.io.File))
 
 (defn sync-modules!
   "Clones or pulls modules from git repositories.
@@ -53,8 +16,12 @@
   :url - the git repository URL
   :tag - the branch to pull from"
   [{:keys [modules]}]
-  (doseq [repository (-> modules :repositories)]
-    (sync-repository! (:root modules) repository)))
+  (doseq [{:keys [name url] :as repository} (-> modules :repositories)]
+    (git/sync-repository!
+      (:root modules)
+      repository
+      (fn [path]
+        (io/update-edn-file (str path File/separator "modules.edn") #(assoc % :module-root (git/repo-root name url)))))))
 
 (defn set-module-path [module-config base-path]
   (update module-config :path #(str base-path File/separator %)))
@@ -85,27 +52,3 @@
 
 (defn module-exists? [ctx module-key]
   (contains? (-> ctx :modules :modules) module-key))
-
-(comment
-  (let [ctx {:full-name "kit/guestbook"
-             :ns-name   "kit.guestbook"
-             :sanitized "kit/guestbook"
-             :name      "guestbook"
-             :modules   {:root         "kit-modules"
-                         :repositories [{:url  "git@github.com:kit-clj/modules.git"
-                                         :tag  "master"
-                                         :name "kit_modules"}]}}]
-    (sync-modules! ctx))
-
-  (let [ctx {:full-name "kit/guestbook"
-             :ns-name   "kit.guestbook"
-             :sanitized "kit/guestbook"
-             :name      "guestbook"
-             :modules   {:root         "kit-modules"
-                         :repositories [{:url  "git@github.com:kit-clj/modules.git"
-                                         :tag  "master"
-                                         :name "kit_modules"}]}}]
-    #_(load-modules ctx)
-    (list-modules (load-modules ctx)))
-
-  )

@@ -1,4 +1,4 @@
-# kit
+# Kit
 
 Lightweight, modular framework for scalable production
 systems.
@@ -11,7 +11,7 @@ extending them. The libs/libraries are stable.
 
 ## Goal
 
-The goal of `kit` is to provide a template for a robust,
+The goal of Kit is to provide a template for a robust,
 scalable Clojure web application. It hides common plumbing
 that is standard across projects via its libs system, while
 exposing code that tends to be customized in the clj-new
@@ -21,9 +21,15 @@ Thanks to `integrant`, and `aero`, the libs are simple
 skeletons with the bulk of the customization being done in
 the system configuration EDN file.
 
-## Quick Start
+## Quick start
 
-`clojure -X:new :template io.github.kit-clj :name yourname/app :args '[+selmer]'`
+Kit requires [clj-new](https://github.com/seancorfield/clj-new), installed preferably as a tool:
+
+`clojure -Ttools install com.github.seancorfield/clj-new '{:git/tag "v1.2.381"}' :as new`
+
+To create a new Kit application:
+
+`clojure -Tnew create :template io.github.kit-clj :name yourname/app`
 
 ## Latest versions
 
@@ -50,24 +56,20 @@ Default libs included with no profile specified:
 
 - `kit-core`
 - `kit-undertow`
-- `kit-repl`
 
 Additional profiles:
-
-- `+bare` - Only includes the `kit-core` and `kit-undertow`
-  libraries as the foundation
 - `+xtdb` - Adds the `kit-xtdb` lib
 - `+hato` - Adds the `kit-hato` lib
 - `+metrics` - Adds the `kit-metrics` lib
 - `+quartz` - Adds the `kit-quartz` lib
 - `+redis` - Adds the `kit-redis` lib
 - `+selmer` - Adds the `kit-selmer` lib
-- `+nrepl` - Adds the `kit-nrepl` lib, removes the `kit-repl` lib
-- `+pgsql` - Adds the `kit-sql` and `kit-postgres` libs
-- `+mysql` - Adds the `kit-sql-general` and `kit-mysql` libs
+- `+nrepl` - Adds the `kit-nrepl` lib
+- `+socket-repl` - Adds the `kit-repl` lib
+- `+sql` - Adds the `kit-sql` and `kit-postgres` libs
 - `+full` - Adds the libs `kit-xtdb`, `kit-hato`
-  , `kit-metrics`, `kit-quartz`, `kit-redis`, `kit-selmer`,
-  and `kit-sql`
+  , `kit-metrics`, `kit-quartz`, `kit-redis`, `kit-selmer`, 
+  `kit-repl`, and `kit-sql`
 
 ## Libs
 
@@ -104,9 +106,6 @@ Additional profiles:
   imports `kit-postgres` lib which supports Postgresql
 - `kit-postgres` - lib with data bindings and utilities for
   working with Postgres
-- `kit-sql-general` - General sql layer, just contains connection pooling (via [hikari-cp](https://github.com/tomekw/hikari-cp)) and jdbc wrapper (via [next.jdbc](https://github.com/seancorfield/next-jdbc)).
-- `kit-mysql` - lib with data bindings and utilities for
-  working with MySQL8+
 - `kit-undertow` - Server binding
   via [ring-undertow-adapter](https://github.com/luminus-framework/ring-undertow-adapter)
 
@@ -128,7 +127,7 @@ plans to add Leiningen support.
 - [re-frame template](https://github.com/day8/re-frame-template)
   for code used directly in `kit-template`
 - [Luminus framework](https://luminusweb.com/) from which
-  the initial project that `kit`'s predecessor was built
+  the initial project that Kit's predecessor was built
   upon
 
 ## License

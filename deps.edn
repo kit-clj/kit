@@ -1,6 +1,6 @@
 {:deps    {}
 
- :aliases {:new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.1.309"}}
+ :aliases {:new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.2.381"}}
                  :exec-fn    clj-new/create
                  :exec-args  {:template kit-clj}}
            :build {:deps {io.github.clojure/tools.build {:git/sha "34727f7"
