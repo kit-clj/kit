@@ -16,4 +16,4 @@ pom.xml.asc
 .DS_Store
 .nrepl-port
 .lsp
-.clj-kondo/
+.clj-kondo/.cache/
