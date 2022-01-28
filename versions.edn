@@ -1,7 +1,7 @@
 {"kit-core"         "1.0.1"
  "kit-http-kit"     "1.0.1"
  "kit-xtdb"         "1.0.0"
- "kit-generator"    "0.1.2"
+ "kit-generator"    "0.1.3"
  "kit-hato"         "1.0.0"
  "kit-nrepl"        "1.0.0"
  "kit-metrics"      "1.0.2"
@@ -16,4 +16,4 @@
  "kit-sql-conman"   "1.0.0"
  "kit-sql-hikari"   "1.0.1"
  "kit-undertow"     "1.0.1"
- "lein-template"    "0.1.6"}
+ "lein-template"    "0.1.7"}
