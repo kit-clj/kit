@@ -55,6 +55,7 @@
                  :kit-selmer       "1.0.1"
                  :kit-sql          "1.1.0"
                  :kit-sql-conman   "1.0.0"
+                 :kit-sql-hikari   "1.0.1"
                  :kit-sql-migratus "1.0.0"
                  :kit-undertow     "1.0.1"}}))
 
