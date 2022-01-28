@@ -35,25 +35,25 @@ To create a new Kit application:
 
 ## Latest versions
 
-| Library                            | Latest Version                                                                                                                                  |
-|------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| io.github.kit-clj/kit-core         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-core.svg)](https://clojars.org/io.github.kit-clj/kit-core)           |
-| io.github.kit-clj/kit-hato         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-hato.svg)](https://clojars.org/io.github.kit-clj/kit-hato)           |
-| io.github.kit-clj/kit-metrics      | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-metrics.svg)](https://clojars.org/io.github.kit-clj/kit-metrics)     |
-| io.github.kit-clj/kit-nrepl        | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-nrepl.svg)](https://clojars.org/io.github.kit-clj/kit-nrepl)         |
-| io.github.kit-clj/kit-quartz       | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-quartz.svg)](https://clojars.org/io.github.kit-clj/kit-quartz)       |
-| io.github.kit-clj/kit-redis        | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-redis.svg)](https://clojars.org/io.github.kit-clj/kit-redis)         |
-| io.github.kit-clj/kit-repl         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-repl.svg)](https://clojars.org/io.github.kit-clj/kit-repl)           |
-| io.github.kit-clj/kit-selmer       | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-selmer.svg)](https://clojars.org/io.github.kit-clj/kit-selmer)       |
-| io.github.kit-clj/kit-sql          | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql.svg)](https://clojars.org/io.github.kit-clj/kit-sql)             |
-| io.github.kit-clj/kit-sql-conman   | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql.svg)](https://clojars.org/io.github.kit-clj/kit-sql-conman)      |
-| io.github.kit-clj/kit-sql-hikari   | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql.svg)](https://clojars.org/io.github.kit-clj/kit-sql-hikari)      |
-| io.github.kit-clj/kit-sql-migratus | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql.svg)](https://clojars.org/io.github.kit-clj/kit-sql-migratus)    |
-| io.github.kit-clj/kit-postgres     | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-postgres.svg)](https://clojars.org/io.github.kit-clj/kit-postgres)   |
-| io.github.kit-clj/kit-mysql        | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-postgres.svg)](https://clojars.org/io.github.kit-clj/kit-mysql)      |
-| io.github.kit-clj/kit-xtdb         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-xtdb.svg)](https://clojars.org/io.github.kit-clj/kit-xtdb)           |
-| io.github.kit-clj/kit-generator    | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-generator.svg)](https://clojars.org/io.github.kit-clj/kit-generator) |
-| io.github.kit-clj/lein-template    | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/lein-template.svg)](https://clojars.org/io.github.kit-clj/lein-template) |
+| Library                            | Latest Version                                                                                                                                        |
+|------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| io.github.kit-clj/kit-core         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-core.svg)](https://clojars.org/io.github.kit-clj/kit-core)                 |
+| io.github.kit-clj/kit-hato         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-hato.svg)](https://clojars.org/io.github.kit-clj/kit-hato)                 |
+| io.github.kit-clj/kit-metrics      | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-metrics.svg)](https://clojars.org/io.github.kit-clj/kit-metrics)           |
+| io.github.kit-clj/kit-nrepl        | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-nrepl.svg)](https://clojars.org/io.github.kit-clj/kit-nrepl)               |
+| io.github.kit-clj/kit-quartz       | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-quartz.svg)](https://clojars.org/io.github.kit-clj/kit-quartz)             |
+| io.github.kit-clj/kit-redis        | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-redis.svg)](https://clojars.org/io.github.kit-clj/kit-redis)               |
+| io.github.kit-clj/kit-repl         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-repl.svg)](https://clojars.org/io.github.kit-clj/kit-repl)                 |
+| io.github.kit-clj/kit-selmer       | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-selmer.svg)](https://clojars.org/io.github.kit-clj/kit-selmer)             |
+| io.github.kit-clj/kit-sql          | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql.svg)](https://clojars.org/io.github.kit-clj/kit-sql)                   |
+| io.github.kit-clj/kit-sql-conman   | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql-conman.svg)](https://clojars.org/io.github.kit-clj/kit-sql-conman)     |
+| io.github.kit-clj/kit-sql-hikari   | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql-hikari.svg)](https://clojars.org/io.github.kit-clj/kit-sql-hikari)     |
+| io.github.kit-clj/kit-sql-migratus | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-sql-migratus.svg)](https://clojars.org/io.github.kit-clj/kit-sql-migratus) |
+| io.github.kit-clj/kit-postgres     | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-postgres.svg)](https://clojars.org/io.github.kit-clj/kit-postgres)         |
+| io.github.kit-clj/kit-mysql        | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-mysql.svg)](https://clojars.org/io.github.kit-clj/kit-mysql)               |
+| io.github.kit-clj/kit-xtdb         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-xtdb.svg)](https://clojars.org/io.github.kit-clj/kit-xtdb)                 |
+| io.github.kit-clj/kit-generator    | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-generator.svg)](https://clojars.org/io.github.kit-clj/kit-generator)       |
+| io.github.kit-clj/lein-template    | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/lein-template.svg)](https://clojars.org/io.github.kit-clj/lein-template)       |
 
 ### Profiles
 
