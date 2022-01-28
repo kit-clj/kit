@@ -31,11 +31,12 @@
           (let [repo (git/load-repo path)]
             (git/git-pull repo))
           (catch FileNotFoundException _e
-            (git/git-clone url :path               path
+            (git/git-clone url :dir                path
                                :remote-name        "origin"
                                :branch-name        (or tag "master")
                                :bare               false
                                :clone-all-branches false)))
         (when callback (callback path))))
     (catch Exception e
-      (println "failed to clone module:" url "\ncause:" (.getMessage e)))))
+      (println "failed to clone module:" url "\ncause:" (.getMessage e))
+      (.printStackTrace e))))
