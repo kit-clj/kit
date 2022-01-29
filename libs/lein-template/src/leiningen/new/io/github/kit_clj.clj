@@ -5,7 +5,9 @@
     [leiningen.new.io.github.kit-clj.options.base :as base]
     [leiningen.new.io.github.kit-clj.options.helpers :as helpers]
     [leiningen.new.io.github.kit-clj.options.sql :as sql]
-    [clojure.set :as set]))
+    [clojure.java.io :as io]
+    [clojure.set :as set]
+    [clojure.walk :as walk]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Files & Data for Template
@@ -15,6 +17,11 @@
     (base/files data)
     (when (:sql? data)
       (sql/files data))))
+
+(def versions (-> (io/resource "versions.edn")
+                  (slurp)
+                  (read-string)
+                  (walk/keywordize-keys)))
 
 (defn template-data [name options]
   (let [full? (helpers/option? "+full" options)]
@@ -40,24 +47,7 @@
      :repl?     (or full? (helpers/option? "+socket-repl" options))
      :nrepl?    (helpers/option? "+nrepl" options)
 
-     :versions  {:kit-core         "1.0.1"
-                 :kit-http-kit     "1.0.1"
-                 :kit-xtdb         "1.0.0"
-                 :kit-generator    "0.1.2"
-                 :kit-hato         "1.0.0"
-                 :kit-nrepl        "1.0.0"
-                 :kit-metrics      "1.0.2"
-                 :kit-postgres     "1.0.0"
-                 :kit-mysql        "1.0.0"
-                 :kit-quartz       "1.0.0"
-                 :kit-redis        "1.0.1"
-                 :kit-repl         "1.0.1"
-                 :kit-selmer       "1.0.1"
-                 :kit-sql          "1.1.0"
-                 :kit-sql-conman   "1.0.0"
-                 :kit-sql-hikari   "1.0.1"
-                 :kit-sql-migratus "1.0.0"
-                 :kit-undertow     "1.0.1"}}))
+     :versions  versions}))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
