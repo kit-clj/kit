@@ -12,6 +12,8 @@
 - Initial release
 </details>
 
+
+
 <details>
 <summary>kit-hato</summary>
 
@@ -19,6 +21,8 @@
 
 - Initial release
 </details>
+
+
 
 <details>
 <summary>kit-metrics</summary>
@@ -36,6 +40,8 @@
 - Initial release
 </details>
 
+
+
 <details>
 <summary>kit-quartz</summary>
 
@@ -43,6 +49,8 @@
 
 - Initial release
 </details>
+
+
 
 <details>
 <summary>kit-redis</summary>
@@ -57,6 +65,8 @@
 - Initial release
 </details>
 
+
+
 <details>
 <summary>kit-repl</summary>
 
@@ -69,6 +79,8 @@
 - Initial release
 </details>
 
+
+
 <details>
 <summary>kit-nrepl</summary>
 
@@ -76,6 +88,8 @@
 
 - Initial release
 </details>
+
+
 
 <details>
 <summary>kit-sql</summary>
@@ -89,6 +103,8 @@
 - Initial release
 </details>
 
+
+
 <details>
 <summary>kit-sql-conman</summary>
 
@@ -96,6 +112,8 @@
 
 - Initial release
 </details>
+
+
 
 <details>
 <summary>kit-sql-hikari</summary>
@@ -106,6 +124,8 @@
 
 </details>
 
+
+
 <details>
 <summary>kit-sql-migratus</summary>
 
@@ -113,6 +133,8 @@
 
 - Initial release
 </details>
+
+
 
 <details>
 <summary>kit-postgres</summary>
@@ -122,6 +144,8 @@
 - Initial release
 </details>
 
+
+
 <details>
 <summary>kit-mysql</summary>
 
@@ -129,6 +153,8 @@
 
 - Initial release [PR #18](https://github.com/kit-clj/kit/pull/18)
 </details>
+
+
 
 <details>
 <summary>kit-undertow</summary>
@@ -142,6 +168,8 @@
 - Initial release
 </details>
 
+
+
 <details>
 <summary>kit-http-kit</summary>
 
@@ -154,6 +182,8 @@
 - Initial release
 </details>
 
+
+
 <details>
 <summary>kit-xtdb</summary>
 
@@ -161,6 +191,8 @@
 
 - Initial release
 </details>
+
+
 
 <details>
 <summary>kit-selmer</summary>
@@ -173,6 +205,8 @@
 
 - Initial release
 </details>
+
+
 
 <details>
 <summary>lein-template</summary>
@@ -209,7 +243,6 @@
 
 - Change: Add `nrepl` and `cider` deps aliases in template as default
 
-
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.3"}`
 
 - Change: Default socket REPL port to 7200
@@ -231,6 +264,8 @@
 - Initial ALPHA release, API subject to change
 </details>
 
+
+
 <details>
 <summary>kit-generator</summary>
 
@@ -246,4 +281,6 @@
 ### `io.github.kit-clj/kit-generator {:mvn/version 0.1.0}`
 
 - Initial ALPHA release, API subject to change
-</details> 
+</details>
+
+
