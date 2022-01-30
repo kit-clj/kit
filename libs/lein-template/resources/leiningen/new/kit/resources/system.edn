@@ -61,19 +61,18 @@
  {:routes #ig/refset :reitit/routes}
 
  :router/core
- {:routes #ig/ref :router/routes}
- <% if quartz? %>
+ {:routes #ig/ref :router/routes} <% if quartz? %>
+
  :cronut/scheduler
- {:schedule []}<% endif %>
- <% if selmer? %>
+ {:schedule []}<% endif %> <% if selmer? %>
+
  :templating/selmer
- {}<% endif %>
- <% if xtdb? %>
+ {}<% endif %> <% if xtdb? %>
+
  ;; https://docs.xtdb.com/administration/configuring/
  :db.xtdb/node
- {}
- <% endif %>
- <% if hikari? %>
+ {} <% endif %><% if hikari? %>
+
  :db.sql/hikari-connection
  #profile {:dev  {:jdbc-url "jdbc:mysql://127.0.0.1:3306/<<name>>?characterEncoding=utf8"}
            :test {}
@@ -90,9 +89,8 @@
                   :password           "123456"
                   :jdbc-url           #env JDBC_URL
                   :driver-class-name  "com.mysql.jdbc.Driver"
-                  :register-mbeans    false}}
- <% endif %>
- <% if conman? %>
+                  :register-mbeans    false}} <% endif %><% if conman? %>
+
  :db.sql/connection
  #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<name>>?user=<<name>>&password=<<name>>"}
            :test {}
@@ -105,12 +103,10 @@
  :db.sql/query-fn
  {:conn     #ig/ref :db.sql/connection
   :options  {}
-  :filename "queries.sql"}
- <% endif %>
- <% if sql? %>
+  :filename "queries.sql"} <% endif %><% if migratus? %>
+
  :db.sql/migrations
  {:store            :database
   :db               {:datasource #ig/ref :db.sql/connection}
-  :migrate-on-init? true}
- <% endif %>
+  :migrate-on-init? true} <% endif %>
 }

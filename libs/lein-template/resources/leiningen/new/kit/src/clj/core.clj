@@ -8,9 +8,9 @@
     ;; Edges <% if redis? %>
     [kit.edge.cache.redis]<% endif %> <% if xtdb? %>
     [kit.edge.db.xtdb]<% endif %><% if hikari? %>
-    [kit.edge.db.sql.hikari]<% endif %><% if sql? %>
-    [kit.edge.db.sql.conman]
-    [kit.edge.db.sql.migratus]
+    [kit.edge.db.sql.hikari]<% endif %><% if conman? %>
+    [kit.edge.db.sql.conman]<% endif %><% if migratus? %>
+    [kit.edge.db.sql.migratus]<% endif %><% if postgres? %>
     [kit.edge.db.postgres]<% endif %><% if mysql? %>
     [kit.edge.db.sql.mysql]<% endif %><% if hato? %>
     [kit.edge.http.hato]<% endif %> <% if quartz? %>

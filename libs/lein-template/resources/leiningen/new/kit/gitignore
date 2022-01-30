@@ -9,3 +9,6 @@ log/
 # IntelliJ
 *.iml
 .idea/
+
+# clj-kondo
+.clj-kondo/.cache/

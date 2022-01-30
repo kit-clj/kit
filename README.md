@@ -72,12 +72,16 @@ Additional profiles:
 - `+selmer` - Adds the `kit-selmer` lib
 - `+nrepl` - Adds the `kit-nrepl` lib
 - `+socket-repl` - Adds the `kit-repl` lib
-- `+pgsql` - Adds the `kit-sql` and `kit-postgres` libs
+- `+sql` - Adds the default SQL libraries: `kit-sql-conman`
+  , `kit-sql-migratus`, and `kit-postgres` libs
+- `+conman` - Adds the `kit-sql-conman` lib
+- `+hikari` - Adds the `kit-sql-hikari` lib
+- `+migratus` - Adds the `kit-sql-migratus` lib
 - `+mysql` - Adds the `kit-sql-general` and `kit-mysql` libs
 - `+full` - Adds the libs `kit-xtdb`, `kit-hato`
   , `kit-metrics`, `kit-quartz`, `kit-redis`, `kit-selmer`
-  , `kit-repl`
-  and `kit-sql`
+  , `kit-repl`, `kit-sql-conman`, `kit-postgres`,
+  and `kit-sql-migratus`
 
 ## Libs
 
@@ -114,16 +118,19 @@ Additional profiles:
   , [hugsql](https://www.hugsql.org/),
   and [migratus](https://github.com/yogthos/migratus)
   directly, or implicitly
-- `kit-sql-conman` - Uses [conman](https://github.com/luminus-framework/conman)
+- `kit-sql-conman` -
+  Uses [conman](https://github.com/luminus-framework/conman)
   , [next.jdbc](https://github.com/seancorfield/next-jdbc)
   , [hugsql](https://www.hugsql.org/),
-- `kit-sql-hikari` - General sql layer, just contains connection
-  pooling (
+- `kit-sql-hikari` - General sql layer, just contains
+  connection pooling (
   via [hikari-cp](https://github.com/tomekw/hikari-cp)) and
   jdbc wrapper (
   via [next.jdbc](https://github.com/seancorfield/next-jdbc))
   .
-- `kit-sql-migratus` - uses [migratus](https://github.com/yogthos/migratus) for SQL migrations
+- `kit-sql-migratus` -
+  uses [migratus](https://github.com/yogthos/migratus) for
+  SQL migrations
 - `kit-postgres` - lib with data bindings and utilities for
   working with Postgres
 - `kit-mysql` - lib with data bindings and utilities for

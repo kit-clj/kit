@@ -15,8 +15,10 @@
 (defn app-files [data]
   (concat
     (base/files data)
-    (when (:sql? data)
-      (sql/files data))))
+    (when (:conman? data)
+      (sql/queries-files data))
+    (when (:migratus? data)
+      (sql/migrations-files data))))
 
 (def versions (-> (io/resource "versions.edn")
                   (slurp)
@@ -31,13 +33,20 @@
      :sanitized (name-to-path name)
 
      :xtdb?     (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
-     :sql?      (or full? (helpers/option? "+sql" options))
+     ;; SQL data coercion
+     :postgres? (or full?
+                    (helpers/option? "+sql" options)
+                    (helpers/option? "+postgres" options))
      :mysql?    (helpers/option? "+mysql" options)
-     :conman?   (and (or full?
-                         (helpers/option? "+sql" options)
-                         (helpers/option? "+mysql" options))
-                     (not (helpers/option? "+mysql" options)))
+     ;; SQL libs
+     :conman?   (or full?
+                    (helpers/option? "+sql" options)
+                    (helpers/option? "+conman" options))
+     :migratus? (or full?
+                    (helpers/option? "+sql" options)
+                    (helpers/option? "+migratus" options))
      :hikari?   (helpers/option? "+hikari" options)
+
      :hato?     (or full? (helpers/option? "+hato" options))
      :metrics?  (or full? (helpers/option? "+metrics" options))
      :quartz?   (or full? (helpers/option? "+quartz" options))
@@ -61,9 +70,16 @@
     "+quartz"
     "+redis"
     "+selmer"
-    "+sql"
-    "+mysql"
+
+    ;; sql variants
+    "+sql"                                                  ;; default sql config
+    "+conman"
     "+hikari"
+    "+migratus"
+    ;; sql data coercion
+    "+mysql"
+    "+postgres"
+
     "+nrepl"
     "+socket-repl"})
 

@@ -2,7 +2,10 @@
   (:require
     [leiningen.new.io.github.kit-clj.options.helpers :as helpers]))
 
-(defn files
+(defn queries-files
   [data]
-  [["resources/queries.sql" (helpers/render "resources/queries.sql" data)]
-   ["resources/migrations/placeholder.txt" (helpers/render "resources/migrations/placeholder.txt" data)]])
+  [["resources/queries.sql" (helpers/render "resources/queries.sql" data)]])
+
+(defn migrations-files
+  [data]
+  [["resources/migrations/placeholder.txt" (helpers/render "resources/migrations/placeholder.txt" data)]])
