@@ -24,6 +24,8 @@
             <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg %n</pattern>
         </encoder>
     </appender>
+    <logger name="org.eclipse.aether" level="warn" />
+    <logger name="io.methvin.watcher" level="warn" />
     <logger name="org.eclipse.jgit" level="warn" />
     <logger name="com.zaxxer.hikari" level="warn" />
     <logger name="org.apache.http" level="warn" />
