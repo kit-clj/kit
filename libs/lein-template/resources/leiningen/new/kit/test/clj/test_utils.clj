@@ -3,7 +3,7 @@
     [<<ns-name>>.core :as core]))
 
 (defn system-state []
-  (or @core/system state/system))
+  @core/system)
 
 (defn system-fixture
   []
