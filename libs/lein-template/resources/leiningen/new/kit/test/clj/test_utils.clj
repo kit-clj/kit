@@ -1,9 +1,11 @@
 (ns <<ns-name>>.test-utils
   (:require
-    [<<ns-name>>.core :as core]))
+    [<<ns-name>>.core :as core]
+    [integrant.repl.state :as state]))
 
-(defn system-state []
-  @core/system)
+(defn system-state 
+  []
+  (or @core/system state/system))
 
 (defn system-fixture
   []
