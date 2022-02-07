@@ -210,6 +210,11 @@
 
 <details>
 <summary>lein-template</summary>
+  
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.10"}`
+  
+- Fix missing require in test utils
+- Add test stub in template
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.9"}`
 
