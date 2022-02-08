@@ -9,6 +9,12 @@
     [clojure.set :as set]
     [clojure.walk :as walk]))
 
+(defn rand-str
+  [n]
+  (->> (repeatedly #(char (+ (rand 26) 65)))
+       (take n)
+       (apply str)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Files & Data for Template
 
@@ -27,36 +33,37 @@
 
 (defn template-data [name options]
   (let [full? (helpers/option? "+full" options)]
-    {:full-name name
-     :name      (project-name name)
-     :ns-name   (sanitize-ns name)
-     :sanitized (name-to-path name)
+    {:full-name             name
+     :name                  (project-name name)
+     :ns-name               (sanitize-ns name)
+     :sanitized             (name-to-path name)
+     :default-cookie-secret (rand-str 16)
 
-     :xtdb?     (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
+     :xtdb?                 (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
      ;; SQL data coercion
-     :postgres? (or full?
-                    (helpers/option? "+sql" options)
-                    (helpers/option? "+postgres" options))
-     :mysql?    (helpers/option? "+mysql" options)
+     :postgres?             (or full?
+                                (helpers/option? "+sql" options)
+                                (helpers/option? "+postgres" options))
+     :mysql?                (helpers/option? "+mysql" options)
      ;; SQL libs
-     :conman?   (or full?
-                    (helpers/option? "+sql" options)
-                    (helpers/option? "+conman" options))
-     :migratus? (or full?
-                    (helpers/option? "+sql" options)
-                    (helpers/option? "+migratus" options))
-     :hikari?   (helpers/option? "+hikari" options)
+     :conman?               (or full?
+                                (helpers/option? "+sql" options)
+                                (helpers/option? "+conman" options))
+     :migratus?             (or full?
+                                (helpers/option? "+sql" options)
+                                (helpers/option? "+migratus" options))
+     :hikari?               (helpers/option? "+hikari" options)
 
-     :hato?     (or full? (helpers/option? "+hato" options))
-     :metrics?  (or full? (helpers/option? "+metrics" options))
-     :quartz?   (or full? (helpers/option? "+quartz" options))
-     :redis?    (or full? (helpers/option? "+redis" options))
-     :selmer?   (or full? (helpers/option? "+selmer" options))
+     :hato?                 (or full? (helpers/option? "+hato" options))
+     :metrics?              (or full? (helpers/option? "+metrics" options))
+     :quartz?               (or full? (helpers/option? "+quartz" options))
+     :redis?                (or full? (helpers/option? "+redis" options))
+     :selmer?               (or full? (helpers/option? "+selmer" options))
 
-     :repl?     (or full? (helpers/option? "+socket-repl" options))
-     :nrepl?    (helpers/option? "+nrepl" options)
+     :repl?                 (or full? (helpers/option? "+socket-repl" options))
+     :nrepl?                (helpers/option? "+nrepl" options)
 
-     :versions  versions}))
+     :versions              versions}))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
