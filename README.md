@@ -147,6 +147,10 @@ plans to add Leiningen support.
 
 [Documentation can be found here](https://kit-clj.github.io)
 
+## Emacs Integration
+
+An [emacs package](https://github.com/jpe90/emacs-clj-deps-new) is available which provides a Magit-style interface to `clj-new` and `deps-new` and provides a command to create Kit web applications.
+
 ## Inspiration and thanks to
 
 - [integrant](https://github.com/weavejester/integrant) as
