@@ -7,8 +7,8 @@
   [[".gitignore" (helpers/render "gitignore" data)]
    ["README.md" (helpers/render "README.md" data)]
    ["Dockerfile" (helpers/render "Dockerfile" data)]
-   ;["project.clj" (helpers/render "project.clj" data)] until lein support is ready
    ["Makefile" (helpers/render "Makefile" data)]
+   ["bb.edn" (helpers/render "bb.edn" data)]
    ["deps.edn" (helpers/render "deps.edn" data)]
    ["build.clj" (helpers/render "build.clj" data)]
    ["kit.edn" (helpers/render "kit.edn" data)]

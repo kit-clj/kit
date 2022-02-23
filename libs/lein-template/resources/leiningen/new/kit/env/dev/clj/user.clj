@@ -3,7 +3,7 @@
   (:require
     [clojure.pprint]
     [clojure.spec.alpha :as s]
-    [clojure.tools.namespace.repl :refer [set-refresh-dirs]]
+    [clojure.tools.namespace.repl :as repl]
     [criterium.core :as c]                                  ;; benchmarking
     [expound.alpha :as expound]
     [integrant.core :as ig]
@@ -37,7 +37,9 @@
 ;; the two profiles.
 (dev-prep!)
 
-(set-refresh-dirs "src/clj")
+(repl/set-refresh-dirs "src/clj")
+
+(def refresh repl/refresh)
 
 (comment
   (go)
