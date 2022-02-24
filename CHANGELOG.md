@@ -212,6 +212,10 @@
 <summary>lein-template</summary>
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.11"}`
+- added `clojure.tools.namespace.rep/refresh` in `user` namespace
+- added `bb.edn` script with tasks for starting nREPL, testing, and building an uberjar  
+  
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.11"}`
 
 - Change default cookie secret to randomly generated secret at template generation
   
