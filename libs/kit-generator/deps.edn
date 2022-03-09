@@ -1,12 +1,12 @@
 {:paths ["src"]
  :deps  {org.clojure/clojure       {:mvn/version "1.10.3"}
          hato/hato                 {:mvn/version "0.8.2"}
-         selmer/selmer             {:mvn/version "1.12.49"}
+         selmer/selmer             {:mvn/version "1.12.50"}
          clj-jgit/clj-jgit         {:mvn/version "1.0.2"}
          org.clojure/tools.logging {:mvn/version "1.2.4"}
          borkdude/rewrite-edn      {:mvn/version "0.1.0"}
          enlive/enlive             {:mvn/version "1.1.6"}
          rewrite-clj/rewrite-clj   {:mvn/version "1.0.699-alpha"}
          mvxcvi/cljstyle           {:mvn/version "0.15.0"}
-         cljfmt                    {:mvn/version "0.8.0"}
-         clj-fuzzy                 {:mvn/version "0.4.1"}}}
+         cljfmt/cljfmt             {:mvn/version "0.8.0"}
+         clj-fuzzy/clj-fuzzy       {:mvn/version "0.4.1"}}}
