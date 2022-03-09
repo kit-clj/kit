@@ -4,7 +4,7 @@
  :deps    {org.clojure/clojure             {:mvn/version "1.10.3"}
 
            ;; Routing
-           metosin/reitit                  {:mvn/version "0.5.15"}
+           metosin/reitit                  {:mvn/version "0.5.16"}
 
            ;; Ring
            metosin/ring-http-response      {:mvn/version "0.9.3"}
@@ -33,8 +33,8 @@
            io.github.kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %><% if nrepl? %>
            io.github.kit-clj/kit-nrepl {:mvn/version "<<versions.kit-nrepl>>"}<% endif %>
            }
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/sha "34727f7"
-                                                         :git/tag "v0.7.5" :git/url "https://github.com/clojure/tools.build.git"}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/sha "e3e3532"
+                                                         :git/tag "v0.8.0" :git/url "https://github.com/clojure/tools.build.git"}
                           slipset/deps-deploy {:mvn/version "0.2.0"}
                           weavejester/dependency {:mvn/version "0.2.1"}}
                    :ns-default build}
@@ -55,7 +55,7 @@
            :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "0.9.0"}}
                    :main-opts  ["-m" "nrepl.cmdline" "-i"]}
            :cider {:extra-deps {nrepl/nrepl       {:mvn/version "0.9.0"}
-                                cider/cider-nrepl {:mvn/version "0.28.0"}}
+                                cider/cider-nrepl {:mvn/version "0.28.3"}}
                    :main-opts  ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]" "-i"]}
 
            :test {:extra-deps  {criterium/criterium                  {:mvn/version "0.4.6"}
