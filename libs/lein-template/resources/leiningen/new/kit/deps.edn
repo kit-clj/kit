@@ -12,7 +12,7 @@
            ring/ring-defaults              {:mvn/version "0.3.3"}
 
            ;; Data coercion
-           luminus-transit/luminus-transit {:mvn/version "0.1.4"
+           luminus-transit/luminus-transit {:mvn/version "0.1.5"
                                             :exclusions [com.cognitect/transit-clj]}
            metosin/muuntaja                {:mvn/version "0.6.8"}
 
