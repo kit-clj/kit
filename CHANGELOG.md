@@ -108,6 +108,10 @@
 <details>
 <summary>kit-sql-conman</summary>
 
+### `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.1"}`
+
+- Fix: Remove unused reference to conman in require
+
 ### `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.0"}`
 
 - Initial release
@@ -210,6 +214,10 @@
 
 <details>
 <summary>lein-template</summary>
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.16"}`
+
+- bump to `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.1"}`
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.15"}`
 

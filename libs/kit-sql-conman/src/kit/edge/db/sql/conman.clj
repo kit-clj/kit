@@ -2,8 +2,7 @@
   (:require
     [conman.core :as conman]
     [integrant.core :as ig]
-    [kit.ig-utils :as ig-utils]
-    [migratus.core :as migratus]))
+    [kit.ig-utils :as ig-utils]))
 
 (defmethod ig/init-key :db.sql/connection
   [_ pool-spec]
