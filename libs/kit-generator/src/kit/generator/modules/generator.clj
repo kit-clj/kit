@@ -90,6 +90,15 @@
         config-str  (read-config ctx module-path)]
     (io/str->edn config-str)))
 
+(defn apply-features
+  [edn-config {:keys [feature-requires]
+               :as config}]
+  (if-some feature-requires
+    (merge
+      (apply merge (map #(get edn-config %) feature-requires))
+      config)
+    config))
+
 (defn generate [{:keys [modules] :as ctx} module-key {:keys [feature-flag]
                                                       :or   {feature-flag :default}}]
   (let [modules-root (:root modules)
@@ -115,13 +124,14 @@
               (pprint (keys edn-config)))
 
             :else
-            (let [ctx (assoc ctx :zip-config zip-config)]
-              (doseq [action (:actions config)]
+            (let [final-config (apply-features edn-config config)
+                  ctx (assoc ctx :zip-config zip-config)]
+              (doseq [action (:actions final-config)]
                 (handle-action ctx action))
               (write-modules-log modules-root (assoc module-log module-key :success))
-              (println (or (:success-message config)
+              (println (or (:success-message final-config)
                            (str module-key " installed successfully!")))
-              (when (:require-restart? config)
+              (when (:require-restart? final-config)
                 (println "restart required!")))))
         (catch Exception e
           (println "failed to install module" module-key)
