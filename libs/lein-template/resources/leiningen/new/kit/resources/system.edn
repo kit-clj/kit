@@ -36,8 +36,8 @@
                                       :keywordize true}
                           :cookies   true
                           :session   {:flash true
-                                      :cookie-attrs {:cookie-name "<<ns-name>>"
-                                                     :max-age     86400
+                                      :cookie-name "<<ns-name>>"
+                                      :cookie-attrs {:max-age     86400
                                                      :http-only   true
                                                      :same-site   :strict}}
                           :security  {:anti-forgery   false
