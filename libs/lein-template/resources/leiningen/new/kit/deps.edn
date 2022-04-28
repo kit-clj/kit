@@ -1,7 +1,7 @@
 {:paths   ["src/clj"
            "resources"]
 
- :deps    {org.clojure/clojure             {:mvn/version "1.11.0"}
+ :deps    {org.clojure/clojure             {:mvn/version "1.11.1"}
 
            ;; Routing
            metosin/reitit                  {:mvn/version "0.5.17"}

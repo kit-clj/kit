@@ -215,6 +215,11 @@
 <details>
 <summary>lein-template</summary>
 
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.17"}`
+
+- fix issue with default cookie session store configuration 
+- bump to `org.clojure/clojure {:mvn/version "1.11.1"}`
+
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.16"}`
 
 - bump to `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.1"}`
