@@ -215,6 +215,10 @@
 <details>
 <summary>lein-template</summary>
 
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.18"}`
+
+- fix cookie name in incorrect place (thanks [@jaimesangcap](https://github.com/jaimesangcap))
+
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.17"}`
 
 - fix issue with default cookie session store configuration 
