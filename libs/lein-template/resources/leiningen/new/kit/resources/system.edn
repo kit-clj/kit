@@ -72,7 +72,18 @@
 
  ;; https://docs.xtdb.com/administration/configuring/
  :db.xtdb/node
- {} <% endif %><% if hikari? %>
+ #profile {:dev {:xtdb.http-server/server {:port 3100}
+                 :xtdb/tx-log         {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
+                                                  :db-dir      "data/dev/tx-log"
+                                                  :sync?       true}}
+                 :xtdb/document-store {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
+                                                  :db-dir      "data/dev/doc-store"
+                                                  :sync?       true}}
+                 :xtdb/index-store    {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
+                                                  :db-dir      "data/dev/index-store"
+                                                  :sync?       true}}}
+           :test {}
+           :prod {}} <% endif %><% if hikari? %>
 
  :db.sql/hikari-connection
  #profile {:dev  {:jdbc-url "jdbc:mysql://127.0.0.1:3306/<<name>>?characterEncoding=utf8"}
