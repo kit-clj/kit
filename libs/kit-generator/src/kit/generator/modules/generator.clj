@@ -91,8 +91,7 @@
     (io/str->edn config-str)))
 
 (defn apply-features
-  [edn-config {:keys [feature-requires]
-               :as config}]
+  [edn-config {:keys [feature-requires] :as config}]
   (if-some feature-requires
     (merge
       (apply merge (map #(get edn-config %) feature-requires))
@@ -124,14 +123,14 @@
               (pprint (keys edn-config)))
 
             :else
-            (let [final-config (apply-features edn-config config)
+            (let [{:keys [actions success-message require-restart?]} (apply-features edn-config config)
                   ctx (assoc ctx :zip-config zip-config)]
-              (doseq [action (:actions final-config)]
+              (doseq [action actions]
                 (handle-action ctx action))
               (write-modules-log modules-root (assoc module-log module-key :success))
-              (println (or (:success-message final-config)
+              (println (or success-message
                            (str module-key " installed successfully!")))
-              (when (:require-restart? final-config)
+              (when require-restart?
                 (println "restart required!")))))
         (catch Exception e
           (println "failed to install module" module-key)
