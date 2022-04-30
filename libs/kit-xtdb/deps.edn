@@ -1,3 +1,5 @@
 {:paths ["src"]
- :deps  {integrant/integrant {:mvn/version "0.8.0"}
-         com.xtdb/xtdb-core  {:mvn/version "1.20.0"}}}
+ :deps  {integrant/integrant       {:mvn/version "0.8.0"}
+         com.xtdb/xtdb-core        {:mvn/version "1.21.0-beta3"}
+         com.xtdb/xtdb-rocksdb     {:mvn/version "1.21.0-beta3"}
+         com.xtdb/xtdb-http-server {:mvn/version "1.21.0-beta3"}}}
