@@ -94,8 +94,8 @@
 (defn get-throw-on-not-found
   [m k]
   (or (get m k)
-      (throw (ex-info "Key not found" {:key            k
-                                       :available-keys (keys m)}))))
+      (throw (ex-info "Key not found or nil" {:key            k
+                                              :available-keys (keys m)}))))
 
 (defn apply-features
   [edn-config {:keys [feature-requires] :as config}]
