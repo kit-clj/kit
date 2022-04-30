@@ -94,10 +94,9 @@
 (defn apply-features
   [edn-config {:keys [feature-requires] :as config}]
   (if (some? feature-requires)
-    (merge
-      (apply deep-merge/concat-merge
-             (map #(get edn-config %) feature-requires))
-      config)
+    (apply deep-merge/concat-merge
+           (conj (mapv #(get edn-config %) feature-requires)
+                 config))
     config))
 
 (defn generate [{:keys [modules] :as ctx} module-key {:keys [feature-flag]
