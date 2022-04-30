@@ -91,12 +91,20 @@
         config-str  (read-config ctx module-path)]
     (io/str->edn config-str)))
 
+(defn get-throw-on-not-found
+  [m k]
+  (or (get m k)
+      (throw (ex-info "Key not found" {:key            k
+                                       :available-keys (keys m)}))))
+
 (defn apply-features
   [edn-config {:keys [feature-requires] :as config}]
   (if (some? feature-requires)
-    (apply deep-merge/concat-merge
-           (conj (mapv #(get edn-config %) feature-requires)
-                 config))
+    (do
+      (println "applying features to config:" feature-requires)
+      (apply deep-merge/concat-merge
+            (conj (mapv get-throw-on-not-found feature-requires)
+                  config)))
     config))
 
 (defn generate [{:keys [modules] :as ctx} module-key {:keys [feature-flag]
