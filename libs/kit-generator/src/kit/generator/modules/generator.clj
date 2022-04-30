@@ -6,6 +6,7 @@
     [kit.generator.renderer :as renderer]
     [clojure.java.io :as jio]
     [clojure.pprint :refer [pprint]]
+    [deep.merge :as deep-merge]
     [rewrite-clj.zip :as z])
   (:import java.io.File
            java.nio.file.Files))
@@ -92,9 +93,10 @@
 
 (defn apply-features
   [edn-config {:keys [feature-requires] :as config}]
-  (if-some feature-requires
+  (if (some? feature-requires)
     (merge
-      (apply merge (map #(get edn-config %) feature-requires))
+      (apply deep-merge/concat-merge
+             (map #(get edn-config %) feature-requires))
       config)
     config))
 
