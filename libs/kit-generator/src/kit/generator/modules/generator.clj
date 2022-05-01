@@ -103,7 +103,7 @@
     (do
       (println "applying features to config:" feature-requires)
       (apply deep-merge/concat-merge
-            (conj (mapv get-throw-on-not-found feature-requires)
+            (conj (mapv #(get-throw-on-not-found edn-config %) feature-requires)
                   config)))
     config))
 
