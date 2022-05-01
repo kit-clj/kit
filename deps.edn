@@ -4,7 +4,7 @@
                  :exec-fn    clj-new/create
                  :exec-args  {:template kit-clj}}
            :build {:deps {io.github.clojure/tools.build {:git/sha "e3e3532"
-                                                         :git/tag "v0.8.0" :git/url "https://github.com/clojure/tools.build.git"}
+                                                         :git/tag "v0.8.1" :git/url "https://github.com/clojure/tools.build.git"}
                           slipset/deps-deploy {:mvn/version "0.2.0"}
                           weavejester/dependency {:mvn/version "0.2.1"}}
                    :ns-default build}}
