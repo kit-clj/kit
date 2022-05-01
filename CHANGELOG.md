@@ -191,6 +191,10 @@
 <details>
 <summary>kit-xtdb</summary>
 
+### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.1"}`
+
+- Bump dependencies
+
 ### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.0"}`
 
 - Initial release
@@ -214,6 +218,10 @@
 
 <details>
 <summary>lein-template</summary>
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.20"}`
+
+- bump kit-xtdb
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.19"}`
 
