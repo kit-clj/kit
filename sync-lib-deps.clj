@@ -22,7 +22,7 @@
    "kit-xtdb"])
 
 (def dependencies
-  (edn/read-string (slurp "dependencies.edn")))
+  (:deps (edn/read-string (slurp "bb.edn"))))
 
 (defn deps-token?
   [zloc]
@@ -67,8 +67,8 @@
       (println "File does not exist" f)
       (System/exit 1))
     (let [updated (str (replace-dependencies (slurp f) dependencies))]
-      (println updated)
-      #_(spit f updated)))
+      #_(println updated)
+      (spit f updated)))
 
 (comment
   (def test-code
