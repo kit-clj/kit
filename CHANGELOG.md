@@ -243,6 +243,10 @@
 <details>
 <summary>lein-template</summary>
 
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.22"}`
+
+- bump kit-generator
+
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.21"}`
 
 - bump dependencies
@@ -344,6 +348,10 @@
 
 <details>
 <summary>kit-generator</summary>
+
+### `io.github.kit-clj/kit-generator {:mvn/version "0.1.5"}`
+
+- New: `feature-requires` support for modules to chain deep merge features 
 
 ### `io.github.kit-clj/kit-generator {:mvn/version "0.1.4"}`
 
