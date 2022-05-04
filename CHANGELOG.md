@@ -45,6 +45,10 @@
 <details>
 <summary>kit-quartz</summary>
 
+### `io.github.kit-clj/kit-quartz {:mvn/version "1.0.1"}`
+
+- bump dependencies
+
 ### `io.github.kit-clj/kit-quartz {:mvn/version "1.0.0"}`
 
 - Initial release
@@ -54,6 +58,10 @@
 
 <details>
 <summary>kit-redis</summary>
+
+### `io.github.kit-clj/kit-redis {:mvn/version "1.0.2"}`
+
+- bump dependencies
 
 ### `io.github.kit-clj/kit-redis {:mvn/version "1.0.1"}`
 
@@ -94,6 +102,10 @@
 <details>
 <summary>kit-sql</summary>
 
+### `io.github.kit-clj/kit-sql {:mvn/version "1.1.1"}`
+
+- bump dependencies
+
 ### `io.github.kit-clj/kit-sql {:mvn/version "1.1.0"}`
 
 - Change: Now just a bare bones wrapper that imports kit-sql-conman and kit-sql-migratus for compatibility purposes
@@ -107,6 +119,10 @@
 
 <details>
 <summary>kit-sql-conman</summary>
+
+### `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.2"}`
+
+- bump dependencies
 
 ### `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.1"}`
 
@@ -143,6 +159,10 @@
 <details>
 <summary>kit-postgres</summary>
 
+### `io.github.kit-clj/kit-postgres {:mvn/version "1.0.1"}`
+
+- bump dependencies
+
 ### `io.github.kit-clj/kit-postgres {:mvn/version "1.0.0"}`
 
 - Initial release
@@ -152,6 +172,10 @@
 
 <details>
 <summary>kit-mysql</summary>
+
+### `io.github.kit-clj/kit-mysql {:mvn/version "1.0.1"}`
+
+- bump dependencies
 
 ### `io.github.kit-clj/kit-mysql {:mvn/version "1.0.0"}`
 
@@ -191,6 +215,10 @@
 <details>
 <summary>kit-xtdb</summary>
 
+### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.1"}`
+
+- Bump dependencies
+
 ### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.0"}`
 
 - Initial release
@@ -214,6 +242,22 @@
 
 <details>
 <summary>lein-template</summary>
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.21"}`
+
+- bump dependencies
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.20"}`
+
+- bump kit-xtdb
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.19"}`
+
+- add rocksdb and xtdb http server for dev profile (thanks [@green-coder](https://github.com/green-coder))
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.18"}`
+
+- fix cookie name in incorrect place (thanks [@jaimesangcap](https://github.com/jaimesangcap))
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.17"}`
 
@@ -300,6 +344,10 @@
 
 <details>
 <summary>kit-generator</summary>
+
+### `io.github.kit-clj/kit-generator {:mvn/version "0.1.4"}`
+
+- bump dependencies
 
 ### `io.github.kit-clj/kit-generator {:mvn/version "0.1.3"}`
 
