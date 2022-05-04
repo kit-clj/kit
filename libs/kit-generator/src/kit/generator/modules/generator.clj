@@ -6,6 +6,7 @@
     [kit.generator.renderer :as renderer]
     [clojure.java.io :as jio]
     [clojure.pprint :refer [pprint]]
+    [deep.merge :as deep-merge]
     [rewrite-clj.zip :as z])
   (:import java.io.File
            java.nio.file.Files))
@@ -90,6 +91,22 @@
         config-str  (read-config ctx module-path)]
     (io/str->edn config-str)))
 
+(defn get-throw-on-not-found
+  [m k]
+  (or (get m k)
+      (throw (ex-info "Key not found or nil" {:key            k
+                                              :available-keys (keys m)}))))
+
+(defn apply-features
+  [edn-config {:keys [feature-requires] :as config}]
+  (if (some? feature-requires)
+    (do
+      (println "applying features to config:" feature-requires)
+      (apply deep-merge/concat-merge
+            (conj (mapv #(get-throw-on-not-found edn-config %) feature-requires)
+                  config)))
+    config))
+
 (defn generate [{:keys [modules] :as ctx} module-key {:keys [feature-flag]
                                                       :or   {feature-flag :default}}]
   (let [modules-root (:root modules)
@@ -115,13 +132,14 @@
               (pprint (keys edn-config)))
 
             :else
-            (let [ctx (assoc ctx :zip-config zip-config)]
-              (doseq [action (:actions config)]
+            (let [{:keys [actions success-message require-restart?]} (apply-features edn-config config)
+                  ctx (assoc ctx :zip-config zip-config)]
+              (doseq [action actions]
                 (handle-action ctx action))
               (write-modules-log modules-root (assoc module-log module-key :success))
-              (println (or (:success-message config)
+              (println (or success-message
                            (str module-key " installed successfully!")))
-              (when (:require-restart? config)
+              (when require-restart?
                 (println "restart required!")))))
         (catch Exception e
           (println "failed to install module" module-key)
