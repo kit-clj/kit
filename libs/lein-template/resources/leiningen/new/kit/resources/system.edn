@@ -54,8 +54,8 @@
  :reitit.routes/api
  {:base-path "/api"
   :env       #ig/ref :system/env <% if metrics? %>
-
-  :metrics   #ig/ref :metrics/prometheus <% endif %>
+  :metrics   #ig/ref :metrics/prometheus <% endif %><% if conman? %>
+  :query-fn #ig/ref :db.sql/query-fn<% endif %>
   }
 
  :router/routes
