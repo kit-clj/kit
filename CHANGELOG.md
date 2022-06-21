@@ -187,6 +187,10 @@
 <details>
 <summary>kit-undertow</summary>
 
+### `io.github.kit-clj/kit-undertow {:mvn/version "1.0.2"}`
+
+- Bump version
+
 ### `io.github.kit-clj/kit-undertow {:mvn/version "1.0.1"}`
 
 - Fix: ensure org.clojure/tools.logging is included in deps in case used as standalone
@@ -242,6 +246,10 @@
 
 <details>
 <summary>lein-template</summary>
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.23"}`
+
+- bump kit-undertow
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.22"}`
 
