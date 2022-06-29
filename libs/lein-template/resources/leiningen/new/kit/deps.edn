@@ -69,7 +69,8 @@
                                 ring/ring-devel                      {:mvn/version "1.9.5"}
                                 ring/ring-mock                       {:mvn/version "0.4.0"}
                                 io.github.kit-clj/kit-generator      {:mvn/version "<<versions.kit-generator>>"}
-                                org.clojure/tools.namespace          {:mvn/version "1.2.0"}}
+                                org.clojure/tools.namespace          {:mvn/version "1.2.0"}
+                                com.lambdaisland/classpath           {:mvn/version "0.0.27"}}
                   :exect-fn    cognitect.test-runner.api/test
                   :extra-paths ["env/dev/clj" "env/dev/resources" "env/test/resources" "test/clj"]
                   :main-opts   ["-e" "(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)"
