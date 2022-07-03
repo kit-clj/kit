@@ -9,6 +9,7 @@
   integrant/integrant                    {:mvn/version "0.8.0"}
   org.clojure/tools.logging              {:mvn/version "1.2.4"}
   ch.qos.logback/logback-classic         {:mvn/version "1.2.11"}
+  com.lambdaisland/classpath             {:mvn/version "0.0.27"}
   ;; kit-hato
   hato/hato                              {:mvn/version "0.8.2"}
   ;; kit-http-kit
