@@ -46,7 +46,7 @@
 (defn list-modules [ctx]
   (let [modules (-> ctx :modules :modules)]
     (if (empty? modules)
-      (println "No modules installed, maybe run `sync-modules`")
+      (println "No modules installed, maybe run `(kit/sync-modules)`")
       (doseq [[id {:keys [doc]}] modules]
         (println id "-" doc)))))
 
