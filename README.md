@@ -23,15 +23,15 @@ the system configuration EDN file.
 
 ## Quick start
 
-Kit
-requires [clj-new](https://github.com/seancorfield/clj-new),
-installed preferably as a tool:
+**Install the latest `clj` and `neil` tools:**
+```shell
+brew install clojure babashka/brew/neil
+```
 
-`clojure -Ttools install com.github.seancorfield/clj-new '{:git/tag "v1.2.381"}' :as new`
-
-To create a new Kit application:
-
-`clojure -Tnew create :template io.github.kit-clj :name yourname/app`
+**Create a new Kit project in the "app" directory:**
+```shell
+neil new io.github.kit-clj/kit yourname/app
+```
 
 ## Latest versions
 

@@ -1,0 +1,124 @@
+{
+ :system/env
+ #profile {:dev  :dev
+           :test :test
+           :prod :prod}
+<% if metrics? %>
+ :metrics/prometheus
+ {}<% endif %>
+<% if repl? %>
+ :repl/server
+ {:port #long #or [#env REPL_PORT 7200]
+  :host #or [#env REPL_HOST "127.0.0.1"]}<% endif %> <% if nrepl? %>
+ :nrepl/server
+ {:port #long #or [#env NREPL_PORT 7000]
+  :bind #or [#env NREPL_HOST "127.0.0.1"]}<% endif %>
+ <% if redis? %>
+ :cache/redis
+ {:ttl  3600
+  :conn {:pool {}
+         :spec {:uri #env REDIS_URI}}}<% endif %>
+
+ :server/http
+ {:port    #long #or [#env PORT 3000]
+  :host    #or [#env HTTP_HOST "0.0.0.0"]
+  :handler #ig/ref :handler/ring}
+
+ :handler/ring
+ {:router                #ig/ref :router/core <% if metrics? %>
+  :metrics               #ig/ref :metrics/prometheus <% endif %>
+  :api-path              "/api"
+  :cookie-secret         #or [#env COOKIE_SECRET "<<default-cookie-secret>>"]
+  ;; from ring.middleware.defaults. anti-forgery `false` by default because services may not require it
+  :site-defaults-config  {:params    {:urlencoded true
+                                      :multipart  true
+                                      :nested     true
+                                      :keywordize true}
+                          :cookies   true
+                          :session   {:flash true
+                                      :cookie-name "<<ns-name>>"
+                                      :cookie-attrs {:max-age     86400
+                                                     :http-only   true
+                                                     :same-site   :strict}}
+                          :security  {:anti-forgery   false
+                                      :xss-protection {:enable? true, :mode :block}
+                                      :frame-options  :sameorigin
+                                      :content-type-options :nosniff}
+                          :static    {:resources "public"}
+                          :responses {:not-modified-responses true
+                                      :absolute-redirects     true
+                                      :content-types          true
+                                      :default-charset        "utf-8"}}
+  }
+
+ :reitit.routes/api
+ {:base-path "/api"
+  :env       #ig/ref :system/env <% if metrics? %>
+  :metrics   #ig/ref :metrics/prometheus <% endif %><% if conman? %>
+  :query-fn #ig/ref :db.sql/query-fn<% endif %>
+  }
+
+ :router/routes
+ {:routes #ig/refset :reitit/routes}
+
+ :router/core
+ {:routes #ig/ref :router/routes} <% if quartz? %>
+
+ :cronut/scheduler
+ {:schedule []}<% endif %> <% if selmer? %>
+
+ :templating/selmer
+ {}<% endif %> <% if xtdb? %>
+
+ ;; https://docs.xtdb.com/administration/configuring/
+ :db.xtdb/node
+ #profile {:dev {:xtdb.http-server/server {:port 3100}
+                 :xtdb/tx-log         {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
+                                                  :db-dir      "data/dev/tx-log"
+                                                  :sync?       true}}
+                 :xtdb/document-store {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
+                                                  :db-dir      "data/dev/doc-store"
+                                                  :sync?       true}}
+                 :xtdb/index-store    {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
+                                                  :db-dir      "data/dev/index-store"
+                                                  :sync?       true}}}
+           :test {}
+           :prod {}} <% endif %><% if hikari? %>
+
+ :db.sql/hikari-connection
+ #profile {:dev  {:jdbc-url "jdbc:mysql://127.0.0.1:3306/<<name>>?characterEncoding=utf8"}
+           :test {}
+           :prod {:auto-commit        true
+                  :read-only          false
+                  :connection-timeout 30000
+                  :validation-timeout 5000
+                  :idle-timeout       600000
+                  :max-lifetime       1800000
+                  :minimum-idle       10
+                  :maximum-pool-size  10
+                  :pool-name          "ds-pool"
+                  :username           "root"
+                  :password           "123456"
+                  :jdbc-url           #env JDBC_URL
+                  :driver-class-name  "com.mysql.jdbc.Driver"
+                  :register-mbeans    false}} <% endif %><% if conman? %>
+
+ :db.sql/connection
+ #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<name>>?user=<<name>>&password=<<name>>"}
+           :test {}
+           :prod {:jdbc-url   #env JDBC_URL
+                  :init-size  1
+                  :min-idle   1
+                  :max-idle   8
+                  :max-active 32}}
+
+ :db.sql/query-fn
+ {:conn     #ig/ref :db.sql/connection
+  :options  {}
+  :filename "queries.sql"} <% endif %><% if migratus? %>
+
+ :db.sql/migrations
+ {:store            :database
+  :db               {:datasource #ig/ref :db.sql/connection}
+  :migrate-on-init? true} <% endif %>
+}

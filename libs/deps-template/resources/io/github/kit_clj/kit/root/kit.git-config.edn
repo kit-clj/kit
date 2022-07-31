@@ -1,0 +1,5 @@
+{:name       "~/.ssh/id_rsa"
+ :passphrase ""
+ :options    {"StrictHostKeyChecking" "no"
+              "UserKnownHostsFile"    "/dev/null"}
+ :exclusive  true}
