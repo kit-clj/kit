@@ -2,7 +2,7 @@
   (:require
     [<<ns-name>>.env :as env]
     [ring.middleware.defaults :as defaults]
-    [ring.middleware.session.cookie :as cookie] <% if metrics? %>
+    [ring.middleware.session.cookie :as cookie]<% if metrics? %>
     [iapetos.collector.ring :as prometheus-ring]<% endif %>))
 
 (defn wrap-base
