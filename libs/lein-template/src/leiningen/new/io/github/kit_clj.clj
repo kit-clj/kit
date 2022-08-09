@@ -26,7 +26,7 @@
     (when (:migratus? data)
       (sql/migrations-files data))))
 
-(def versions (-> (io/resource "versions.edn")
+(def versions (-> (io/resource "io/github/kit/kit_clj/versions.edn")
                   (slurp)
                   (read-string)
                   (walk/keywordize-keys)))

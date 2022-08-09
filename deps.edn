@@ -1,5 +1,4 @@
-{:deps    {}
-
+{:deps {io.github.kit-clj/deps-template {:local/root "libs/deps-template"}}
  :aliases {:new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.2.381"}}
                  :exec-fn    clj-new/create
                  :exec-args  {:template kit-clj}}
@@ -7,5 +6,4 @@
                                                          :git/tag "v0.8.1" :git/url "https://github.com/clojure/tools.build.git"}
                           slipset/deps-deploy {:mvn/version "0.2.0"}
                           weavejester/dependency {:mvn/version "0.2.1"}}
-                   :ns-default build}}
- }
+                   :ns-default build}}}

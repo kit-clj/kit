@@ -18,7 +18,7 @@
 (defn resource-input
   "Get resource input stream. Useful for binary resources like images."
   [resource-path]
-  (-> (str "leiningen/new/" (sanitize template-name) "/" resource-path)
+  (-> (str "io/github/kit_clj/kit/root/" (sanitize template-name) "/" resource-path)
       io/resource
       io/input-stream))
 
