@@ -6,7 +6,7 @@
 (def defaults
   {:init       (fn []
                  (log/info "\n-=[<<app>> starting using the development or test profile]=-"))
-   :started    (fn []
+   :start      (fn []
                  (log/info "\n-=[<<app>> started successfully using the development or test profile]=-"))
    :stop       (fn []
                  (log/info "\n-=[<<app>> has shut down successfully]=-"))
