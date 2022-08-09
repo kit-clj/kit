@@ -114,7 +114,41 @@
         (all publish? lib))
       (println "Can't find: " artifact-id))))
 
-(defn install-libs [{publish? :publish :or {publish? false} :as m}]
+(defn- do-libs [action]
   (let [libs (list-files libs-dir)]
     (doseq [lib (topo-sort (build-graph {:libs libs}))]
-      (all publish? lib))))
+      (let [bd (build-data lib)]
+        (action bd)))))
+
+(defn clean-libs
+  "Clean all libs."
+  [_]
+  (do-libs clean))
+
+(defn make-jar-libs
+  "Make jar for all libs."
+  [_]
+  (do-libs make-jar))
+
+(defn install-libs
+  "Install all libs."
+  [_]
+  (do-libs install))
+
+(defn publish-libs
+  "Publish all libs."
+  [_]
+  (do-libs
+   (fn [bd]
+     (deploy (merge {:installer :remote} bd)))))
+
+(defn all
+  "Performs clean build and install of all libs. Optionally publishes."
+  [{publish? :publish :or {publish? false} :as m}]
+  (do-libs
+   (fn [bd]
+     (clean bd)
+     (make-jar bd)
+     (install bd)
+     (when publish?
+       (deploy (merge {:installer :remote} bd))))))
