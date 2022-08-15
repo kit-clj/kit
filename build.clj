@@ -89,7 +89,7 @@
                   :pom-file       src-pom
                   :artifact       jar-file}))
 
-(defn- all [publish? lib]
+(defn- lib-pipeline [publish? lib]
   (let [bd (build-data lib)]
     (clean bd)
     (make-jar bd)
@@ -110,8 +110,8 @@
     (if (contains? dep-mappings lib)
       (if (not-empty (dep/transitive-dependencies graph lib))
         (doseq [lib' (concat (dep/transitive-dependencies graph lib) [lib])]
-          (all (and publish? (= lib' lib)) lib'))
-        (all publish? lib))
+          (lib-pipeline (and publish? (= lib' lib)) lib'))
+        (lib-pipeline publish? lib))
       (println "Can't find: " artifact-id))))
 
 (defn- do-libs [action]
