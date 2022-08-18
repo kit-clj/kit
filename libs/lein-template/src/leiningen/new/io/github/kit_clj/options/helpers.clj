@@ -21,7 +21,7 @@
   (let [path (resource-path->template-path template)]
     (if-let [resource (io/resource path)]
       (if data
-        (templates/render-text (templates/slurp-resource resource) data)
+        (selmer-renderer (templates/slurp-resource resource) data)
         (io/reader resource))
       (throw (ex-info (format "Template resource '%s' not found." path)
                       {})))))
