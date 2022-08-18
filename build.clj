@@ -8,7 +8,7 @@
    [deps-deploy.deps-deploy :as deploy]))
 
 (def libs-dir "libs")
-(def versions (read-string (slurp "./libs/lein-template/resources/versions.edn")))
+(def versions (read-string (slurp "./libs/deps-template/resources/io/github/kit_clj/kit/versions.edn")))
 (def group-id "io.github.kit-clj")
 (def src ["src"])
 (def basis (b/create-basis {:project "deps.edn"}))
