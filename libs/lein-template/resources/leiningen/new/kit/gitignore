@@ -15,3 +15,5 @@ modules/
 
 # clj-kondo
 .clj-kondo/.cache/
+.calva/output-window/
+.lsp/.cache/
