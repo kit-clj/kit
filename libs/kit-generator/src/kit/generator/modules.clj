@@ -19,9 +19,7 @@
   (doseq [{:keys [name url] :as repository} (-> modules :repositories)]
     (git/sync-repository!
       (:root modules)
-      repository
-      (fn [path]
-        (io/update-edn-file (str path File/separator "modules.edn") #(assoc % :module-root (git/repo-root name url)))))))
+      repository)))
 
 (defn set-module-path [module-config base-path]
   (update module-config :path #(str base-path File/separator %)))
@@ -39,7 +37,9 @@
          (jio/file)
          (file-seq)
          (keep #(when (= "modules.edn" (.getName %))
-                  (set-module-paths root (read-string (slurp %)))))
+                  (set-module-paths root (assoc
+                                          (read-string (slurp %))
+                                          :module-root (-> % .getParentFile .getName)))))
          (apply merge)
          (assoc-in ctx [:modules :modules]))))
 
