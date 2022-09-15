@@ -52,8 +52,7 @@
                                 com.xtdb/xtdb-rocksdb           {:mvn/version "1.21.0-beta3"}
                                 com.xtdb/xtdb-http-server       {:mvn/version "1.21.0-beta3"}<%endif%>
                                 }
-                  :extra-paths ["env/dev/clj" "env/dev/resources" "test/clj"]
-                  :main-opts   []}
+                  :extra-paths ["env/dev/clj" "env/dev/resources" "test/clj"]}
            :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "0.9.0"}}
                    :main-opts  ["-m" "nrepl.cmdline" "-i"]}
            :cider {:extra-deps {nrepl/nrepl       {:mvn/version "0.9.0"}

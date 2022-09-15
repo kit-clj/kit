@@ -155,6 +155,6 @@
                                          :tag  "master"
                                          :name "kit"}]
                          :modules      {:html {:path "html"}}}}]
-    (generate ctx :html {:feature-flag :default})
+    (generate ctx :html {:feature-flag :default})))
 
-    ))
+    
