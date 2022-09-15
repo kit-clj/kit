@@ -1,8 +1,9 @@
 (ns leiningen.new.io.github.kit-clj.options.helpers
   (:require
-    [leiningen.new.templates :refer [renderer sanitize]]
+    [leiningen.new.templates :as templates]
     [clojure.java.io :as io]
-    [selmer.parser :as selmer]))
+    [selmer.parser :as selmer]
+    [clojure.string :as string]))
 
 (def template-name "kit")
 
@@ -13,12 +14,22 @@
     options
     {:tag-open \< :tag-close \> :filter-open \< :filter-close \>}))
 
-(def render-text (renderer template-name selmer-renderer))
+(defn resource-path->template-path [resource-path]
+  (str "io/github/kit_clj/" (templates/sanitize template-name) "/" resource-path))
+
+(defn render-text [template & [data]]
+  (let [path (resource-path->template-path template)]
+    (if-let [resource (io/resource path)]
+      (if data
+        (selmer-renderer (templates/slurp-resource resource) data)
+        (io/reader resource))
+      (throw (ex-info (format "Template resource '%s' not found." path)
+                      {})))))
 
 (defn resource-input
   "Get resource input stream. Useful for binary resources like images."
   [resource-path]
-  (-> (str "leiningen/new/" (sanitize template-name) "/" resource-path)
+  (-> (resource-path->template-path resource-path)
       io/resource
       io/input-stream))
 
