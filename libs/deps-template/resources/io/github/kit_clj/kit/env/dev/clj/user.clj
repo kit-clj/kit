@@ -41,6 +41,19 @@
 
 (def refresh repl/refresh)
 
+<% if sql? %>
+(defn reset-db []
+  (migratus.core/reset (:db.sql/migrations state/system)))
+
+(defn rollback []
+  (migratus.core/rollback (:db.sql/migrations state/system)))
+
+(defn migrate []
+  (migratus.core/migrate (:db.sql/migrations state/system)))
+
+(def query-fn (:db.sql/query-fn state/system))
+<% endif %>
+
 (comment
   (go)
   (reset))

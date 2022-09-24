@@ -41,6 +41,8 @@
 
      :xtdb?                 (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
      ;; SQL data coercion
+     :sql?                  (or full? 
+                                (helpers/option? "+sql" options))
      :postgres?             (or full?
                                 (helpers/option? "+sql" options)
                                 (helpers/option? "+postgres" options))
