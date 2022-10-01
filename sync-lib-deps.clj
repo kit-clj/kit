@@ -2,6 +2,7 @@
 
 (require '[rewrite-clj.zip :as z]
          '[clojure.java.io :as io]
+         '[clojure.edn :as edn]
          '[babashka.fs :as fs])
 
 (def enabled-libs
@@ -19,10 +20,14 @@
    "kit-sql"
    "kit-sql-conman"
    "kit-undertow"
-   "kit-xtdb"])
+   "kit-xtdb"
+   "lein-template"])
+
+(def versions (edn/read-string (slurp "./libs/deps-template/resources/io/github/kit_clj/kit/versions.edn")))
 
 (def dependencies
-  (:deps (edn/read-string (slurp "bb.edn"))))
+  (merge (:deps (edn/read-string (slurp "bb.edn")))
+         {'io.github.kit-clj/deps-template {:mvn/version (get versions "deps-template")}}))
 
 (defn deps-token?
   [zloc]
