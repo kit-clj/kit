@@ -1,0 +1,59 @@
+{:deps
+ {;; kit-core
+  aero/aero                              {:mvn/version "1.1.6"}
+  integrant/integrant                    {:mvn/version "0.8.0"}
+  org.clojure/tools.logging              {:mvn/version "1.2.4"}
+  ch.qos.logback/logback-classic         {:mvn/version "1.2.11"}
+  com.lambdaisland/classpath             {:mvn/version "0.0.27"}
+  ;; kit-hato
+  hato/hato                              {:mvn/version "0.8.2"}
+  ;; kit-http-kit
+  http-kit/http-kit                      {:mvn/version "2.5.3"}
+  ;; kit-metrics
+  clj-commons/iapetos                    {:mvn/version "0.1.12"}
+  io.prometheus/simpleclient             {:mvn/version "0.15.0"}
+  io.prometheus/simpleclient_common      {:mvn/version "0.15.0"}
+  io.prometheus/simpleclient_hotspot     {:mvn/version "0.15.0"}
+  io.prometheus/simpleclient_httpserver  {:mvn/version "0.15.0"}
+  io.prometheus/simpleclient_pushgateway {:mvn/version "0.15.0"}
+  ;; kit-mysql
+  mysql/mysql-connector-java             {:mvn/version "8.0.29"}
+  ;; kit-nrepl
+  nrepl/nrepl                            {:mvn/version "1.0.0"}
+  ;; kit-postgres
+  org.postgresql/postgresql              {:mvn/version "42.3.4"}
+  cheshire/cheshire                      {:mvn/version "5.10.2"}
+  ;; kit-quartz
+  com.troy-west/cronut                   {:mvn/version "0.2.6"}
+  io.github.kit-clj/kit-core             {:mvn/version "1.0.1"}
+  ;; kit-redis
+  org.clojure/core.cache                 {:mvn/version "1.0.225"}
+  com.taoensso/carmine                   {:mvn/version "3.1.0"}
+  ;; kit-repl
+  ;; kit-selmer
+  selmer/selmer                          {:mvn/version "1.12.50"}
+  ;; kit-sql
+  io.github.kit-clj/kit-sql-conman       {:mvn/version "1.0.2"}
+  io.github.kit-clj/kit-sql-migratus     {:mvn/version "1.0.0"}
+  ;; kit-sql-conman
+  conman/conman                          {:mvn/version "0.9.5"}
+  ;; kit-sql-hikari
+  com.github.seancorfield/next.jdbc      {:mvn/version "1.2.780"}
+  hikari-cp/hikari-cp                    {:mvn/version "2.14.0"}
+  ;; kit-sql-migratus
+  migratus/migratus                      {:mvn/version "1.3.6"}
+  ;; kit-undertow
+  luminus/ring-undertow-adapter          {:mvn/version "1.2.6"}
+  ;; kit-xtdb
+  com.xtdb/xtdb-core                     {:mvn/version "1.21.0-beta3"}
+  ;; UNSTABLE:
+  ;; kit-generator
+  org.clojure/clojure                    {:mvn/version "1.11.1"}
+  clj-jgit/clj-jgit                      {:mvn/version "1.0.2"}
+  borkdude/rewrite-edn                   {:mvn/version "0.2.0"}
+  enlive/enlive                          {:mvn/version "1.1.6"}
+  rewrite-clj/rewrite-clj                {:mvn/version "1.0.767-alpha"}
+  mvxcvi/cljstyle                        {:mvn/version "0.15.0"}
+  cljfmt/cljfmt                          {:mvn/version "0.8.0"}
+  clj-fuzzy/clj-fuzzy                    {:mvn/version "0.4.1"}
+  clojure-deep-merge/clojure-deep-merge  {:mvn/version "0.1.2"}}}
