@@ -24,7 +24,7 @@
   ;; kit-mysql
   mysql/mysql-connector-java             {:mvn/version "8.0.29"}
   ;; kit-nrepl
-  nrepl/nrepl                            {:mvn/version "0.9.0"}
+  nrepl/nrepl                            {:mvn/version "1.0.0"}
   ;; kit-postgres
   org.postgresql/postgresql              {:mvn/version "42.3.4"}
   cheshire/cheshire                      {:mvn/version "5.10.2"}
@@ -41,7 +41,7 @@
   io.github.kit-clj/kit-sql-conman       {:mvn/version "1.0.2"}
   io.github.kit-clj/kit-sql-migratus     {:mvn/version "1.0.0"}
   ;; kit-sql-conman
-  conman/conman                          {:mvn/version "0.9.4"}
+  conman/conman                          {:mvn/version "0.9.5"}
   ;; kit-sql-hikari
   com.github.seancorfield/next.jdbc      {:mvn/version "1.2.780"}
   hikari-cp/hikari-cp                    {:mvn/version "2.14.0"}

@@ -6,6 +6,8 @@
            :build {:deps {io.github.clojure/tools.build {:git/sha "7d40500"
                                                          :git/tag "v0.8.1" :git/url "https://github.com/clojure/tools.build.git"}
                           slipset/deps-deploy {:mvn/version "0.2.0"}
-                          weavejester/dependency {:mvn/version "0.2.1"}}
-                   :ns-default build}}
- }
+                          weavejester/dependency {:mvn/version "0.2.1"}
+                          rewrite-clj/rewrite-clj {:mvn/version "1.1.45"}
+                          babashka/fs {:mvn/version "0.1.11"}}
+                   :extra-paths ["build"]
+                   :ns-default build}}}
