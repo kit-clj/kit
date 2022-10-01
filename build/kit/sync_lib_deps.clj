@@ -26,7 +26,7 @@
 (def versions (edn/read-string (slurp "./libs/deps-template/resources/io/github/kit_clj/kit/versions.edn")))
 
 (def dependencies
-  (merge (:deps (edn/read-string (slurp "bb.edn")))
+  (merge (:deps (edn/read-string (slurp "build/deps.edn")))
          {'io.github.kit-clj/deps-template {:mvn/version (get versions "deps-template")}}))
 
 (defn deps-token?
