@@ -2,7 +2,6 @@
   (:require
    [clojure.tools.build.api :as b]
    [clojure.java.io :as jio]
-   [clojure.java.shell :refer [sh]]
    [clojure.edn :as edn]
    [clojure.pprint :refer [pprint]]
    [weavejester.dependency :as dep]
