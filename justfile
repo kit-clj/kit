@@ -22,4 +22,4 @@ antq:
 
 # writes dependencies from bb.edn to each lib
 sync-deps:
-  bb sync-lib-deps.clj
+  bb build/kit/sync_lib_deps.clj

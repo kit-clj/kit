@@ -2,10 +2,12 @@
   (:require
    [clojure.tools.build.api :as b]
    [clojure.java.io :as jio]
+   [clojure.java.shell :refer [sh]]
    [clojure.edn :as edn]
    [clojure.pprint :refer [pprint]]
    [weavejester.dependency :as dep]
-   [deps-deploy.deps-deploy :as deploy]))
+   [deps-deploy.deps-deploy :as deploy]
+   [kit.sync-lib-deps :as sync-lib-deps]))
 
 (def libs-dir "libs")
 (def versions (read-string (slurp "./libs/deps-template/resources/io/github/kit_clj/kit/versions.edn")))
@@ -19,9 +21,17 @@
   (println (str "Cleaning " target-dir))
   (b/delete {:path target-dir}))
 
+(defn sync-lib-deps [{:keys [lib] :as m}]
+  (let [result (sync-lib-deps/sync-lib-deps :libs [(str lib)])]
+    (when (seq result)
+      (throw (ex-info (format "Synced deps.edn for %s. Remember to commit these changes before publishing"
+                              lib)
+                      {:lib lib})))))
+
 (defn make-jar
   "Create the jar from a source pom and source files"
   [{:keys [class-dir lib version basis src jar-file] :as m}]
+  (sync-lib-deps m)
   (pprint (dissoc m :basis))
   (b/write-pom {:class-dir class-dir
                 :lib       lib
