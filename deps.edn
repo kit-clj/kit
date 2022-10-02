@@ -16,6 +16,8 @@
            :test ;; added by neil
            {:extra-paths ["test"]
             :extra-deps {io.github.cognitect-labs/test-runner
-                          {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}
+                          {:git/tag "v0.5.0" :git/sha "b3fd0d2"}
+                         babashka/fs {:mvn/version "0.1.11"}
+                         babashka/process {:mvn/version "0.2.10"}}
             :main-opts ["-m" "cognitect.test-runner"]
             :exec-fn cognitect.test-runner.api/test}}}
