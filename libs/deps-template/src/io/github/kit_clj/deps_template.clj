@@ -23,7 +23,7 @@
 (def template-files-deny-list
   ["versions.edn" "template.edn"])
 
-(defn selmer-opts [{:keys [template-dir] :as data}]
+(defn selmer-opts [{:keys [template-dir default-cookie-secret] :as data}]
   (let [full-name (:name data)
         [_ name] (str/split full-name #"/")
         versions (edn/read-string (slurp (fs/file template-dir "versions.edn")))]
@@ -34,7 +34,7 @@
                     :ns-name (str (@#'deps-new-impl/->ns full-name))
                     :name name
                     :sanitized (@#'deps-new-impl/->file full-name)
-                    :default-cookie-secret (rand-str 16)})
+                    :default-cookie-secret (or default-cookie-secret (rand-str 16))})
           (merge $ (update-keys $ #(edn/read-string (str % "?")))))))
 
 (defn rename-path [file-path]

@@ -37,8 +37,9 @@
      :name                  (project-name name)
      :ns-name               (sanitize-ns name)
      :sanitized             (name-to-path name)
-     :default-cookie-secret (rand-str 16)
-
+     :default-cookie-secret (if (helpers/option? "+override-default-cookie-secret" options)
+                              "test-secret"
+                              (rand-str 16))
      :xtdb?                 (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
      ;; SQL data coercion
      :sql?                  (or full? 
@@ -90,7 +91,9 @@
     "+postgres"
 
     "+nrepl"
-    "+socket-repl"})
+    "+socket-repl"
+
+    "+override-default-cookie-secret"})
 
 (defn check-available
   [options]
