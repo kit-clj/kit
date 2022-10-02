@@ -9,5 +9,6 @@ jobs:
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@9.5
         with:
+          cli: latest
           bb: latest
       - run: bb run test
