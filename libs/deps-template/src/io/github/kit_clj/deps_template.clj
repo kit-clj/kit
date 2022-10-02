@@ -20,8 +20,11 @@
        (take n)
        (apply str)))
 
-(def template-files-deny-list
-  ["versions.edn" "template.edn"])
+(defn template-files-deny-list [{:keys [migratus conman] :as data}]
+  (->> ["versions.edn" "template.edn"
+        (when-not migratus "resources/migrations/placeholder.txt")
+        (when-not conman "resources/queries.sql")]
+       (remove nil?)))
 
 (defn selmer-opts [{:keys [template-dir default-cookie-secret] :as data}]
   (let [full-name (:name data)
@@ -54,7 +57,7 @@
   (->> (file-seq (fs/file template-dir))
        (filter #(and (.isFile %) (not (.isHidden %))))
        (map #(fs/relativize template-dir %))
-       (filter #(not (contains? (set template-files-deny-list) (str %))))
+       (filter #(not (contains? (set (template-files-deny-list data)) (str %))))
        (map (fn [f]
               {:src-path (str f)
                :dest-path (rename-path (str f))
