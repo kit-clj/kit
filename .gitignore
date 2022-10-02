@@ -17,3 +17,5 @@ pom.xml.asc
 .nrepl-port
 .lsp
 .clj-kondo/.cache/
+/clj-new-app
+/deps-new-app
