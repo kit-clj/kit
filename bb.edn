@@ -15,4 +15,10 @@
          antq (clj
                 "-Sdeps '{:deps {com.github.liquidz/antq {:mvn/version \"RELEASE\"}}}'"
                 "-M" "-m" "antq.core" "-d" "build")
-         sync-deps ((requiring-resolve 'kit.sync-lib-deps/-main))}}
+         sync-deps ((requiring-resolve 'kit.sync-lib-deps/-main))
+         ci {:doc "Run all CI tasks locally"
+             :requires ([taoensso.timbre :as log])
+             :task (do
+                     (log/info "bb run test")
+                     (run 'test))}
+         test (clj "-M:test")}}
