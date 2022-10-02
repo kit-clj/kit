@@ -3,10 +3,10 @@
 
 (def defaults
   {:init       (fn []
-                 (log/info "\n-=[<<app>> starting]=-"))
+                 (log/info "\n-=[<<name>> starting]=-"))
    :start      (fn []
-                 (log/info "\n-=[<<app>> started successfully]=-"))
+                 (log/info "\n-=[<<name>> started successfully]=-"))
    :stop       (fn []
-                 (log/info "\n-=[<<app>> has shut down successfully]=-"))
+                 (log/info "\n-=[<<name>> has shut down successfully]=-"))
    :middleware (fn [handler _] handler)
    :opts       {:profile :prod}})
