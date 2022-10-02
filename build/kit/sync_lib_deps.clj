@@ -1,8 +1,9 @@
-#!/usr/bin/env bb
-
-(require '[rewrite-clj.zip :as z]
-         '[clojure.java.io :as io]
-         '[babashka.fs :as fs])
+(ns kit.sync-lib-deps
+  (:require [rewrite-clj.zip :as z]
+            [clojure.java.io :as io]
+            [clojure.edn :as edn]
+            [babashka.fs :as fs]
+            [clojure.set :as set]))
 
 (def enabled-libs
   ["kit-core"
@@ -19,10 +20,14 @@
    "kit-sql"
    "kit-sql-conman"
    "kit-undertow"
-   "kit-xtdb"])
+   "kit-xtdb"
+   "lein-template"])
+
+(def versions (edn/read-string (slurp "./libs/deps-template/resources/io/github/kit_clj/kit/versions.edn")))
 
 (def dependencies
-  (:deps (edn/read-string (slurp "bb.edn"))))
+  (merge (:deps (edn/read-string (slurp "build/deps.edn")))
+         {'io.github.kit-clj/deps-template {:mvn/version (get versions "deps-template")}}))
 
 (defn deps-token?
   [zloc]
@@ -59,16 +64,30 @@
             (transform-deps (z/next zloc) dependencies)
             (recur zloc)))))))
 
-(doseq [lib  enabled-libs
-          path (fs/glob (str "libs/" lib) "deps.edn")
-          :let [f (io/file (str path))]]
-    (println (str path))
-    (when-not (.exists (io/file f))
-      (println "File does not exist" f)
-      (System/exit 1))
-    (let [updated (str (replace-dependencies (slurp f) dependencies))]
-      #_(println updated)
-      (spit f updated)))
+(defn sync-lib-deps [& {:as opts}]
+  (->> (for [lib  (if (seq (:libs opts))
+                    (set/intersection (set enabled-libs) (set (:libs opts)))
+                    enabled-libs)
+             path (fs/glob (str "libs/" lib) "deps.edn")
+             :let [f (io/file (str path))]]
+         (do
+           (when-not (.exists (io/file f))
+             (println "File does not exist" f)
+             (System/exit 1))
+           (let [original (slurp f)
+                 updated (str (replace-dependencies original dependencies))]
+             (when (not= original updated)
+               (println (str path))
+               (spit f updated)
+               (str path)))))
+       (remove nil?)
+       doall))
+
+(defn -main [& _]
+  (sync-lib-deps))
+
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
 
 (comment
   (def test-code
