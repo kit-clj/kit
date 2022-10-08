@@ -19,6 +19,12 @@
          ci {:doc "Run all CI tasks locally"
              :requires ([taoensso.timbre :as log])
              :task (do
+                     (log/info "bb run publish-local deps-template")
+                     (binding [*command-line-args* ["deps-template"]]
+                       (run 'publish-local))
+                     (log/info "bb run publish-local lein-template")
+                     (binding [*command-line-args* ["lein-template"]]
+                       (run 'publish-local))
                      (log/info "bb run test")
                      (run 'test))}
          test (clj "-M:test")}}
