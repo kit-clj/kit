@@ -20,13 +20,14 @@
        (take n)
        (apply str)))
 
-(defn template-files-deny-list [{:keys [migratus conman] :as _data}]
-  (->> ["versions.edn" "template.edn"
+(defn- template-files-deny-list [{:keys [migratus conman] :as _data}]
+  (->> ["versions.edn"
+        "template.edn"
         (when-not migratus "resources/migrations/placeholder.txt")
         (when-not conman "resources/queries.sql")]
        (remove nil?)))
 
-(defn selmer-opts [{:keys [template-dir default-cookie-secret] :as data}]
+(defn- selmer-opts [{:keys [template-dir default-cookie-secret] :as data}]
   (let [full-name (:name data)
         [_ name] (str/split full-name #"/")
         versions (edn/read-string (slurp (fs/file template-dir "versions.edn")))]
@@ -40,7 +41,7 @@
                     :default-cookie-secret (or default-cookie-secret (rand-str 16))})
           (merge $ (update-keys $ #(edn/read-string (str % "?")))))))
 
-(defn rename-path [file-path]
+(defn- rename-path [file-path]
   (or (let [[[_ prefix suffix]] (re-seq #"^((?:src|test)/clj)/(.+)$" file-path)]
         (when (and prefix suffix)
           (str prefix "/{{name/file}}/" suffix)))
@@ -51,9 +52,7 @@
         (when m ".gitignore"))
       file-path))
 
-(comment (rename-path "test/clj/foo.clj"))
-
-(defn template-files [{:keys [template-dir] :as data}]
+(defn- template-files [{:keys [template-dir] :as data}]
   (->> (file-seq (fs/file template-dir))
        (filter #(and (.isFile %) (not (.isHidden %))))
        (map #(fs/relativize template-dir %))
@@ -66,10 +65,6 @@
 
 (defn data-fn [data]
   (assoc data ::template-files (template-files data)))
-
-(comment
-  (re-seq #"^src/clj/(.+)$" "src/clj/web/handler.clj"))
-
 
 (defn template-fn [template {:keys [template-dir ::template-files]}]
   (let [template-files' (->> template-files
