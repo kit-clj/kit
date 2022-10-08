@@ -20,7 +20,7 @@
        (take n)
        (apply str)))
 
-(defn template-files-deny-list [{:keys [migratus conman] :as data}]
+(defn template-files-deny-list [{:keys [migratus conman] :as _data}]
   (->> ["versions.edn" "template.edn"
         (when-not migratus "resources/migrations/placeholder.txt")
         (when-not conman "resources/queries.sql")]
