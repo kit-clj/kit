@@ -11,4 +11,6 @@ jobs:
         with:
           cli: latest
           bb: latest
+      - run: bb run publish-local deps-template
+      - run: bb run publish-local lein-template
       - run: bb run test
