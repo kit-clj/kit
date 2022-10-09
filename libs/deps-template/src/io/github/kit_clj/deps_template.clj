@@ -5,20 +5,8 @@
             [babashka.fs :as fs]
             [selmer.parser :as selmer]
             [clojure.edn :as edn]
-            [org.corfield.new.impl :as deps-new-impl]))
-
-(defn- render-selmer
-  [text options]
-  (selmer/render
-    (str "<% safe %>" text "<% endsafe %>")
-    options
-    {:tag-open \< :tag-close \> :filter-open \< :filter-close \>}))
-
-(defn- rand-str
-  [n]
-  (->> (repeatedly #(char (+ (rand 26) 65)))
-       (take n)
-       (apply str)))
+            [org.corfield.new.impl :as deps-new-impl]
+            [io.github.kit-clj.deps-template.helpers :as helpers]))
 
 (defn- template-files-deny-list [{:keys [migratus conman] :as _data}]
   (->> ["versions.edn"
@@ -38,7 +26,7 @@
                     :ns-name (str (@#'deps-new-impl/->ns full-name))
                     :name name
                     :sanitized (@#'deps-new-impl/->file full-name)
-                    :default-cookie-secret (or default-cookie-secret (rand-str 16))})
+                    :default-cookie-secret (or default-cookie-secret (helpers/generate-cookie-secret))})
           (merge $ (update-keys $ #(edn/read-string (str % "?")))))))
 
 (defn- rename-path [file-path]
@@ -60,8 +48,8 @@
        (map (fn [f]
               {:src-path (str f)
                :dest-path (rename-path (str f))
-               :parsed (render-selmer (slurp (fs/file template-dir f))
-                                      (selmer-opts data))}))))
+               :parsed (helpers/render-selmer (slurp (fs/file template-dir f))
+                                              (selmer-opts data))}))))
 
 (defn data-fn [data]
   (assoc data ::template-files (template-files data)))

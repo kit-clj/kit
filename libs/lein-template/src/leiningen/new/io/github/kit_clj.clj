@@ -5,15 +5,10 @@
     [leiningen.new.io.github.kit-clj.options.base :as base]
     [leiningen.new.io.github.kit-clj.options.helpers :as helpers]
     [leiningen.new.io.github.kit-clj.options.sql :as sql]
+    [io.github.kit-clj.deps-template.helpers :refer [generate-cookie-secret]]
     [clojure.java.io :as io]
     [clojure.set :as set]
     [clojure.walk :as walk]))
-
-(defn rand-str
-  [n]
-  (->> (repeatedly #(char (+ (rand 26) 65)))
-       (take n)
-       (apply str)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Files & Data for Template
@@ -39,7 +34,7 @@
      :sanitized             (name-to-path name)
      :default-cookie-secret (if (helpers/option? "+override-default-cookie-secret" options)
                               "test-secret"
-                              (rand-str 16))
+                              (generate-cookie-secret))
      :xtdb?                 (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
      ;; SQL data coercion
      :sql?                  (or full? 
