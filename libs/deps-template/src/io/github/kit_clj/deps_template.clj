@@ -15,6 +15,20 @@
         (when-not conman "resources/queries.sql")]
        (remove nil?)))
 
+(defn- ->ns
+  "Given a string or symbol, presumably representing a
+  file path, return a string that represents the
+  equivalent namespace."
+  [f]
+  (-> f (str) (str/replace "/" ".") (str/replace "_" "-")))
+
+(defn- ->file
+  "Given a string or symbol, presumably representing a
+  namespace, return a string that represents the
+  equivalent file system path."
+  [n]
+  (-> n (str) (str/replace "." "/") (str/replace "-" "_")))
+
 (defn- selmer-opts [{:keys [template-dir default-cookie-secret] :as data}]
   (let [full-name (:name data)
         [_ name] (str/split full-name #"/")
@@ -23,9 +37,9 @@
           (merge $ {:versions versions
                     :full-name full-name
                     :app name
-                    :ns-name (str (@#'deps-new-impl/->ns full-name))
+                    :ns-name (str (->ns full-name))
                     :name name
-                    :sanitized (@#'deps-new-impl/->file full-name)
+                    :sanitized (->file full-name)
                     :default-cookie-secret (or default-cookie-secret (helpers/generate-cookie-secret))})
           (merge $ (update-keys $ #(edn/read-string (str % "?")))))))
 
