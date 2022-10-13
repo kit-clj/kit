@@ -1,4 +1,4 @@
-{"kit-core"         "1.0.1"
+{"kit-core"         "1.0.2"
  "kit-http-kit"     "1.0.1"
  "kit-xtdb"         "1.0.1"
  "kit-generator"    "0.1.6"
@@ -16,5 +16,5 @@
  "kit-sql-conman"   "1.0.3"
  "kit-sql-hikari"   "1.0.1"
  "kit-undertow"     "1.0.2"
- "lein-template"    "0.1.30"
- "deps-template"    "0.1.30"}
+ "lein-template"    "0.1.31"
+ "deps-template"    "0.1.31"}
