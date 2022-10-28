@@ -77,9 +77,8 @@
            (let [original (slurp f)
                  updated (str (replace-dependencies original dependencies))]
              (when (not= original updated)
-               (println (str path))
-               (spit f updated)
-               (str path)))))
+               (spit f updated))
+             (str path))))
        (remove nil?)
        doall))
 

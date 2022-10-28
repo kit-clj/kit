@@ -2,8 +2,10 @@
   (:require
    [clojure.tools.build.api :as b]
    [clojure.java.io :as jio]
+   [clojure.java.shell :refer [sh]]
    [clojure.edn :as edn]
    [clojure.pprint :refer [pprint]]
+   [clojure.string :as str]
    [weavejester.dependency :as dep]
    [deps-deploy.deps-deploy :as deploy]
    [kit.sync-lib-deps :as sync-lib-deps]))
@@ -20,17 +22,35 @@
   (println (str "Cleaning " target-dir))
   (b/delete {:path target-dir}))
 
-(defn sync-lib-deps [{:keys [lib] :as m}]
-  (let [result (sync-lib-deps/sync-lib-deps :libs [(str lib)])]
-    (when (seq result)
-      (throw (ex-info (format "Synced deps.edn for %s. Remember to commit these changes before publishing"
-                              lib)
-                      {:lib lib})))))
+(defn- parse-git-status [line]
+  (let [[[_ status path]] (re-seq #"^(.{2}) (.+)$" line)]
+    {:status status
+     :path path}))
+
+(defn- git-status []
+  (let [{:keys [out err]} (sh "git" "status" "--porcelain=v1")]
+    (if-not (str/blank? err)
+      {:err err}
+      {:statuses (if (str/blank? out)
+                   '()
+                   (map parse-git-status (str/split-lines out)))})))
+
+(defn- git-clean-working-directory? [git-status-result]
+  (if (:err git-status-result)
+    (do
+      (println (:err git-status-result))
+      (System/exit 1))
+    (some->> (:statuses git-status-result)
+             (remove #(re-seq #"^\?" (:status %)))
+             empty?)))
+
+(defn- assert-clean-working-directory []
+  (when-not (git-clean-working-directory? (git-status))
+    (throw (ex-info "All changes must be committed before publishing." {}))))
 
 (defn make-jar
   "Create the jar from a source pom and source files"
   [{:keys [class-dir lib version basis src jar-file] :as m}]
-  (sync-lib-deps m)
   (pprint (dissoc m :basis))
   (b/write-pom {:class-dir class-dir
                 :lib       lib
@@ -98,13 +118,20 @@
                   :pom-file       src-pom
                   :artifact       jar-file}))
 
-(defn- lib-pipeline [publish? lib]
-  (let [bd (build-data lib)]
-    (clean bd)
-    (make-jar bd)
-    (install bd)
-    (when publish?
-      (deploy (merge {:installer :remote} bd)))))
+(defn- sync-lib-deps [{:keys [lib] :as m}]
+  (println "Syncing lib deps...")
+  (doseq [path (sync-lib-deps/sync-lib-deps :libs [(str (name lib))])]
+    (println path))
+  (println))
+
+(defn- lib-pipeline [publish? bd]
+  (sync-lib-deps bd)
+  (assert-clean-working-directory)
+  (clean bd)
+  (make-jar bd)
+  (install bd)
+  (when publish?
+    (deploy (merge {:installer :remote} bd))))
 
 (defn list-files [libs-dir]
   (->> (jio/file libs-dir)
@@ -118,9 +145,11 @@
         lib (some->> artifact-id name (symbol group-id))]
     (if (contains? dep-mappings lib)
       (if (not-empty (dep/transitive-dependencies graph lib))
-        (doseq [lib' (concat (dep/transitive-dependencies graph lib) [lib])]
-          (lib-pipeline (and publish? (= lib' lib)) lib'))
-        (lib-pipeline publish? lib))
+        (doseq [lib' (concat (dep/transitive-dependencies graph lib) [lib])
+                :let [bd (build-data lib')]]
+          (lib-pipeline (and publish? (= lib' lib)) bd))
+        (let [bd (build-data lib)]
+          (lib-pipeline publish? bd)))
       (println "Can't find: " artifact-id))))
 
 (defn- do-libs [action]
@@ -154,10 +183,4 @@
 (defn all
   "Performs clean build and install of all libs. Optionally publishes."
   [{publish? :publish :or {publish? false} :as m}]
-  (do-libs
-   (fn [bd]
-     (clean bd)
-     (make-jar bd)
-     (install bd)
-     (when publish?
-       (deploy (merge {:installer :remote} bd))))))
+  (do-libs #(lib-pipeline publish? %)))
