@@ -46,7 +46,7 @@
 
 (defn- assert-clean-working-directory []
   (when-not (git-clean-working-directory? (git-status))
-    (throw (ex-info "All changes must be committed before publishing." {}))))
+    (throw (ex-info "All changes must be committed before building." {}))))
 
 (defn make-jar
   "Create the jar from a source pom and source files"
