@@ -15,6 +15,6 @@
  "kit-sql-migratus" "1.0.1"
  "kit-sql-conman"   "1.0.3"
  "kit-sql-hikari"   "1.0.1"
- "kit-undertow"     "1.0.2"
- "lein-template"    "0.1.32"
- "deps-template"    "0.1.31"}
+ "kit-undertow"     "1.0.3"
+ "lein-template"    "0.1.33"
+ "deps-template"    "0.1.33"}
