@@ -1,7 +1,6 @@
 (ns build
   (:require [clojure.string :as string]
-            [clojure.tools.build.api :as b]
-            [deps-deploy.deps-deploy :as deploy]))
+            [clojure.tools.build.api :as b]))
 
 (def lib '<<full-name>>)
 (def main-cls (string/join "." (filter some? [(namespace lib) (name lib) "core"])))
