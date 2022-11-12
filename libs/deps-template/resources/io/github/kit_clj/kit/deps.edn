@@ -11,6 +11,9 @@
            ring/ring-core                  {:mvn/version "1.9.5"}
            ring/ring-defaults              {:mvn/version "0.3.3"}
 
+           ;; Logging
+           ch.qos.logback/logback-classic  {:mvn/version "1.4.4"}
+           
            ;; Data coercion
            luminus-transit/luminus-transit {:mvn/version "0.1.5"
                                             :exclusions [com.cognitect/transit-clj]}

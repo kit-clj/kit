@@ -16,5 +16,5 @@
  "kit-sql-conman"   "1.0.3"
  "kit-sql-hikari"   "1.0.1"
  "kit-undertow"     "1.0.3"
- "lein-template"    "0.1.33"
- "deps-template"    "0.1.33"}
+ "lein-template"    "0.1.34"
+ "deps-template"    "0.1.34"}

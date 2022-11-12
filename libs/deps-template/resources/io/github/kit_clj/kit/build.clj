@@ -24,13 +24,13 @@
                 :version version
                 :basis basis
                 :src-dirs ["src/clj"]})
-  (b/copy-dir {:src-dirs ["src/clj" "resources" "env/prod/clj"]
+  (b/copy-dir {:src-dirs ["src/clj" "resources" "env/prod/resources" "env/prod/clj"]
                :target-dir class-dir}))
 
 (defn uber [_]
   (println "Compiling Clojure...")
   (b/compile-clj {:basis basis
-                  :src-dirs ["src/clj" "env/prod/clj"]
+                  :src-dirs ["src/clj" "resources" "env/prod/resources" "env/prod/clj"]
                   :class-dir class-dir})
   (println "Making uberjar...")
   (b/uber {:class-dir class-dir
