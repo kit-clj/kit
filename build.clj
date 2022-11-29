@@ -126,7 +126,9 @@
 
 (defn- lib-pipeline [publish? bd]
   (sync-lib-deps bd)
-  (assert-clean-working-directory)
+  ;; Only check when publishing if files are committed
+  (when publish?
+    (assert-clean-working-directory))
   (clean bd)
   (make-jar bd)
   (install bd)

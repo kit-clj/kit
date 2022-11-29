@@ -54,6 +54,7 @@ To create a new Kit application:
 | io.github.kit-clj/kit-xtdb         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-xtdb.svg)](https://clojars.org/io.github.kit-clj/kit-xtdb)                 |
 | io.github.kit-clj/kit-generator    | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-generator.svg)](https://clojars.org/io.github.kit-clj/kit-generator)       |
 | io.github.kit-clj/lein-template    | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/lein-template.svg)](https://clojars.org/io.github.kit-clj/lein-template)       |
+| io.github.kit-clj/deps-template    | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/lein-template.svg)](https://clojars.org/io.github.kit-clj/deps-template)       |
 
 ### Profiles
 
