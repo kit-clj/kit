@@ -11,10 +11,10 @@
  "kit-redis"        "1.0.3"
  "kit-repl"         "1.0.1"
  "kit-selmer"       "1.0.2"
- "kit-sql"          "1.1.2"
  "kit-sql-migratus" "1.0.2"
  "kit-sql-conman"   "1.0.4"
  "kit-sql-hikari"   "1.0.2"
+ "kit-sql"          "1.1.2"
  "kit-undertow"     "1.0.4"
  "lein-template"    "0.1.37"
  "deps-template"    "0.1.37"}
