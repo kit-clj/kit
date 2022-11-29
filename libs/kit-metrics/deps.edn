@@ -1,8 +1,8 @@
 {:paths   ["src"]
  :deps    {org.clojure/tools.logging              {:mvn/version "1.2.4"}
-           clj-commons/iapetos                    {:mvn/version "0.1.12"}
-           io.prometheus/simpleclient             {:mvn/version "0.15.0"}
-           io.prometheus/simpleclient_common      {:mvn/version "0.15.0"}
-           io.prometheus/simpleclient_hotspot     {:mvn/version "0.15.0"}
-           io.prometheus/simpleclient_httpserver  {:mvn/version "0.15.0"}
-           io.prometheus/simpleclient_pushgateway {:mvn/version "0.15.0"}}}
+           clj-commons/iapetos                    {:mvn/version "0.1.13"}
+           io.prometheus/simpleclient             {:mvn/version "0.16.0"}
+           io.prometheus/simpleclient_common      {:mvn/version "0.16.0"}
+           io.prometheus/simpleclient_hotspot     {:mvn/version "0.16.0"}
+           io.prometheus/simpleclient_httpserver  {:mvn/version "0.16.0"}
+           io.prometheus/simpleclient_pushgateway {:mvn/version "0.16.0"}}}

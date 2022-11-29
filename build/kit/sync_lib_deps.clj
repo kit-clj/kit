@@ -19,6 +19,9 @@
    "kit-selmer"
    "kit-sql"
    "kit-sql-conman"
+   "kit-sql-hikari"
+   "kit-sql-migratus"
+   "kit-http-kit"
    "kit-undertow"
    "kit-xtdb"
    "lein-template"])
