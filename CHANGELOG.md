@@ -3,6 +3,10 @@
 <details>
 <summary>kit-core</summary>
 
+### `io.github.kit-clj/kit-core {:mvn/version "1.0.3"}`
+
+- Change: Bump dependencies 
+
 ### `io.github.kit-clj/kit-core {:mvn/version "1.0.1"}`
 
 - Change: Bump dependencies
@@ -17,6 +21,10 @@
 <details>
 <summary>kit-hato</summary>
 
+### `io.github.kit-clj/kit-hato {:mvn/version "1.0.1"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-hato {:mvn/version "1.0.0"}`
 
 - Initial release
@@ -26,6 +34,10 @@
 
 <details>
 <summary>kit-metrics</summary>
+
+### `io.github.kit-clj/kit-metrics {:mvn/version "1.0.3"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-metrics {:mvn/version "1.0.2"}`
 
@@ -45,6 +57,10 @@
 <details>
 <summary>kit-quartz</summary>
 
+### `io.github.kit-clj/kit-quartz {:mvn/version "1.0.2"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-quartz {:mvn/version "1.0.1"}`
 
 - bump dependencies
@@ -58,6 +74,10 @@
 
 <details>
 <summary>kit-redis</summary>
+
+### `io.github.kit-clj/kit-redis {:mvn/version "1.0.#"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-redis {:mvn/version "1.0.2"}`
 
@@ -102,6 +122,10 @@
 <details>
 <summary>kit-sql</summary>
 
+### `io.github.kit-clj/kit-sql {:mvn/version "1.1.2"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-sql {:mvn/version "1.1.1"}`
 
 - bump dependencies
@@ -119,6 +143,10 @@
 
 <details>
 <summary>kit-sql-conman</summary>
+
+### `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.4"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.2"}`
 
@@ -140,6 +168,10 @@
 
 ### `io.github.kit-clj/kit-sql-hikari {:mvn/version "1.0.1"}`
 
+- Change: Bump dependencies
+
+### `io.github.kit-clj/kit-sql-hikari {:mvn/version "1.0.1"}`
+
 - Initial release
 
 </details>
@@ -148,6 +180,10 @@
 
 <details>
 <summary>kit-sql-migratus</summary>
+
+### `io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.1"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.0"}`
 
@@ -158,6 +194,10 @@
 
 <details>
 <summary>kit-postgres</summary>
+
+### `io.github.kit-clj/kit-postgres {:mvn/version "1.0.2"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-postgres {:mvn/version "1.0.1"}`
 
@@ -173,6 +213,10 @@
 <details>
 <summary>kit-mysql</summary>
 
+### `io.github.kit-clj/kit-mysql {:mvn/version "1.0.2"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-mysql {:mvn/version "1.0.1"}`
 
 - bump dependencies
@@ -186,6 +230,10 @@
 
 <details>
 <summary>kit-undertow</summary>
+
+### `io.github.kit-clj/kit-undertow {:mvn/version "1.0.4"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-undertow {:mvn/version "1.0.2"}`
 
@@ -205,6 +253,10 @@
 <details>
 <summary>kit-http-kit</summary>
 
+### `io.github.kit-clj/kit-http-kit {:mvn/version "1.0.2"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-http-kit {:mvn/version "1.0.1"}`
 
 - Change: Bump dependencies
@@ -218,6 +270,10 @@
 
 <details>
 <summary>kit-xtdb</summary>
+
+### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.@"}`
+
+- Bump dependencies
 
 ### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.1"}`
 
@@ -233,6 +289,10 @@
 <details>
 <summary>kit-selmer</summary>
 
+### `io.github.kit-clj/kit-selmer {:mvn/version "1.0.2"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-selmer {:mvn/version "1.0.1"}`
 
 - Change: Bump dependencies
@@ -246,6 +306,10 @@
 
 <details>
 <summary>lein-template</summary>
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.37"}`
+
+- bump various dependencies
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.23"}`
 
@@ -356,6 +420,10 @@
 
 <details>
 <summary>kit-generator</summary>
+
+### `io.github.kit-clj/kit-generator {:mvn/version "0.1.7"}`
+
+- Change: bump dependencies
 
 ### `io.github.kit-clj/kit-generator {:mvn/version "0.1.5"}`
 
