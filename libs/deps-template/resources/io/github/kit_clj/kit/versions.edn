@@ -12,7 +12,7 @@
  "kit-repl"         "1.0.1"
  "kit-selmer"       "1.0.2"
  "kit-sql-migratus" "1.0.2"
- "kit-sql-conman"   "1.0.4"
+ "kit-sql-conman"   "1.0.5"
  "kit-sql-hikari"   "1.0.2"
  "kit-sql"          "1.1.2"
  "kit-undertow"     "1.0.4"
