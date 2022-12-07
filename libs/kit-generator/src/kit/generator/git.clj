@@ -32,10 +32,10 @@
             (git/git-pull repo))
           (catch FileNotFoundException _e
             (git/git-clone url :dir                path
-                               :remote-name        "origin"
-                               :branch-name        (or tag "master")
-                               :bare               false
-                               :clone-all-branches false)))
+                               :remote             "origin"
+                               :branch             (or tag "master")
+                               :bare?              false
+                               :clone-all?         false)))
         (when callback (callback path))))
     (catch Exception e
       (println "failed to clone module:" url "\ncause:" (.getMessage e))
