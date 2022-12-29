@@ -307,6 +307,11 @@
 <details>
 <summary>lein-template</summary>
 
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.38"}`
+
+- fix unused templating element [PR 86](https://github.com/kit-clj/kit/pull/86). Thanks [@dspearson](https://github.com/dspearson)
+- improve CIDER REPL support [PR 84](https://github.com/kit-clj/kit/pull/84) [PR 85](https://github.com/kit-clj/kit/pull/85). Thanks [@dspearson](https://github.com/dspearson)
+
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.37"}`
 
 - bump various dependencies
