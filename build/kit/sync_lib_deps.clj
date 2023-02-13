@@ -19,6 +19,9 @@
    "kit-selmer"
    "kit-sql"
    "kit-sql-conman"
+   "kit-sql-hikari"
+   "kit-sql-migratus"
+   "kit-http-kit"
    "kit-undertow"
    "kit-xtdb"
    "lein-template"])
@@ -77,9 +80,8 @@
            (let [original (slurp f)
                  updated (str (replace-dependencies original dependencies))]
              (when (not= original updated)
-               (println (str path))
-               (spit f updated)
-               (str path)))))
+               (spit f updated))
+             (str path))))
        (remove nil?)
        doall))
 

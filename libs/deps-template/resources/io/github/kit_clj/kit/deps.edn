@@ -11,6 +11,9 @@
            ring/ring-core                  {:mvn/version "1.9.5"}
            ring/ring-defaults              {:mvn/version "0.3.3"}
 
+           ;; Logging
+           ch.qos.logback/logback-classic  {:mvn/version "1.4.4"}
+           
            ;; Data coercion
            luminus-transit/luminus-transit {:mvn/version "0.1.5"
                                             :exclusions [com.cognitect/transit-clj]}
@@ -34,9 +37,7 @@
            io.github.kit-clj/kit-nrepl {:mvn/version "<<versions.kit-nrepl>>"}<% endif %>
            }
  :aliases {:build {:deps {io.github.clojure/tools.build {:git/sha "e3e3532"
-                                                         :git/tag "v0.8.0" :git/url "https://github.com/clojure/tools.build.git"}
-                          slipset/deps-deploy {:mvn/version "0.2.0"}
-                          weavejester/dependency {:mvn/version "0.2.1"}}
+                                                         :git/tag "v0.8.0" :git/url "https://github.com/clojure/tools.build.git"}}
                    :ns-default build}
 
 
@@ -70,7 +71,7 @@
                                 io.github.kit-clj/kit-generator      {:mvn/version "<<versions.kit-generator>>"}
                                 org.clojure/tools.namespace          {:mvn/version "1.2.0"}
                                 com.lambdaisland/classpath           {:mvn/version "0.0.27"}}
-                  :exect-fn    cognitect.test-runner.api/test
+                  :exec-fn      cognitect.test-runner.api/test
                   :extra-paths ["env/dev/clj" "env/dev/resources" "env/test/resources" "test/clj"]
                   :main-opts   ["-e" "(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)"
                                 "-m" "cognitect.test-runner"]}}

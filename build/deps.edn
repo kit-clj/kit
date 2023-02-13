@@ -3,49 +3,49 @@
   aero/aero                              {:mvn/version "1.1.6"}
   integrant/integrant                    {:mvn/version "0.8.0"}
   org.clojure/tools.logging              {:mvn/version "1.2.4"}
-  ch.qos.logback/logback-classic         {:mvn/version "1.2.11"}
-  com.lambdaisland/classpath             {:mvn/version "0.0.27"}
+  ch.qos.logback/logback-classic         {:mvn/version "1.4.5"}
+  com.lambdaisland/classpath             {:mvn/version "0.4.44"}
   ;; kit-hato
-  hato/hato                              {:mvn/version "0.8.2"}
+  hato/hato                              {:mvn/version "0.9.0"}
   ;; kit-http-kit
-  http-kit/http-kit                      {:mvn/version "2.5.3"}
+  http-kit/http-kit                      {:mvn/version "2.6.0"}
   ;; kit-metrics
-  clj-commons/iapetos                    {:mvn/version "0.1.12"}
-  io.prometheus/simpleclient             {:mvn/version "0.15.0"}
-  io.prometheus/simpleclient_common      {:mvn/version "0.15.0"}
-  io.prometheus/simpleclient_hotspot     {:mvn/version "0.15.0"}
-  io.prometheus/simpleclient_httpserver  {:mvn/version "0.15.0"}
-  io.prometheus/simpleclient_pushgateway {:mvn/version "0.15.0"}
+  clj-commons/iapetos                    {:mvn/version "0.1.13"}
+  io.prometheus/simpleclient             {:mvn/version "0.16.0"}
+  io.prometheus/simpleclient_common      {:mvn/version "0.16.0"}
+  io.prometheus/simpleclient_hotspot     {:mvn/version "0.16.0"}
+  io.prometheus/simpleclient_httpserver  {:mvn/version "0.16.0"}
+  io.prometheus/simpleclient_pushgateway {:mvn/version "0.16.0"}
   ;; kit-mysql
-  mysql/mysql-connector-java             {:mvn/version "8.0.29"}
+  mysql/mysql-connector-java             {:mvn/version "8.0.30"}
   ;; kit-nrepl
   nrepl/nrepl                            {:mvn/version "1.0.0"}
   ;; kit-postgres
-  org.postgresql/postgresql              {:mvn/version "42.3.4"}
-  cheshire/cheshire                      {:mvn/version "5.10.2"}
+  org.postgresql/postgresql              {:mvn/version "42.5.1"}
+  cheshire/cheshire                      {:mvn/version "5.11.0"}
   ;; kit-quartz
   com.troy-west/cronut                   {:mvn/version "0.2.6"}
-  io.github.kit-clj/kit-core             {:mvn/version "1.0.1"}
+  io.github.kit-clj/kit-core             {:mvn/version "1.0.3"}
   ;; kit-redis
   org.clojure/core.cache                 {:mvn/version "1.0.225"}
   com.taoensso/carmine                   {:mvn/version "3.1.0"}
   ;; kit-repl
   ;; kit-selmer
-  selmer/selmer                          {:mvn/version "1.12.50"}
+  selmer/selmer                          {:mvn/version "1.12.55"}
   ;; kit-sql
-  io.github.kit-clj/kit-sql-conman       {:mvn/version "1.0.2"}
-  io.github.kit-clj/kit-sql-migratus     {:mvn/version "1.0.0"}
+  io.github.kit-clj/kit-sql-conman       {:mvn/version "1.0.4"}
+  io.github.kit-clj/kit-sql-migratus     {:mvn/version "1.0.2"}
   ;; kit-sql-conman
   conman/conman                          {:mvn/version "0.9.5"}
   ;; kit-sql-hikari
-  com.github.seancorfield/next.jdbc      {:mvn/version "1.2.780"}
-  hikari-cp/hikari-cp                    {:mvn/version "2.14.0"}
+  com.github.seancorfield/next.jdbc      {:mvn/version "1.3.847"}
+  hikari-cp/hikari-cp                    {:mvn/version "3.0.0"}
   ;; kit-sql-migratus
-  migratus/migratus                      {:mvn/version "1.3.6"}
+  migratus/migratus                      {:mvn/version "1.4.5"}
   ;; kit-undertow
-  luminus/ring-undertow-adapter          {:mvn/version "1.2.6"}
+  luminus/ring-undertow-adapter          {:mvn/version "1.3.0"}
   ;; kit-xtdb
-  com.xtdb/xtdb-core                     {:mvn/version "1.21.0-beta3"}
+  com.xtdb/xtdb-core                     {:mvn/version "1.22.1"}
   ;; UNSTABLE:
   ;; kit-generator
   org.clojure/clojure                    {:mvn/version "1.11.1"}

@@ -11,7 +11,7 @@
                    (apply clojure args)))
          publish-local (clj "-T:build install-lib" :artifact-id lib)
          publish (clj "-T:build install-lib" :artifact-id lib :publish true)
-         publish-all-local (clj "-T:build install-libs" :publish false)
+         publish-all-local (clj "-T:build all" :publish false)
          antq (clj
                 "-Sdeps '{:deps {com.github.liquidz/antq {:mvn/version \"RELEASE\"}}}'"
                 "-M" "-m" "antq.core" "-d" "build")

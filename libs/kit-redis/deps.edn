@@ -2,4 +2,4 @@
  :deps  {integrant/integrant        {:mvn/version "0.8.0"}
          org.clojure/core.cache     {:mvn/version "1.0.225"}
          com.taoensso/carmine       {:mvn/version "3.1.0"}
-         io.github.kit-clj/kit-core {:mvn/version "1.0.1"}}}
+         io.github.kit-clj/kit-core {:mvn/version "1.0.3"}}}
