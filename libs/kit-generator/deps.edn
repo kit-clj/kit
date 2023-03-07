@@ -4,10 +4,10 @@
          selmer/selmer                         {:mvn/version "1.12.55"}
          clj-jgit/clj-jgit                     {:mvn/version "1.0.2"}
          org.clojure/tools.logging             {:mvn/version "1.2.4"}
-         borkdude/rewrite-edn                  {:mvn/version "0.2.0"}
+         borkdude/rewrite-edn                  {:mvn/version "0.4.6"}
          enlive/enlive                         {:mvn/version "1.1.6"}
-         rewrite-clj/rewrite-clj               {:mvn/version "1.0.767-alpha"}
+         rewrite-clj/rewrite-clj               {:mvn/version "1.1.46"}
          mvxcvi/cljstyle                       {:mvn/version "0.15.0"}
-         cljfmt/cljfmt                         {:mvn/version "0.8.0"}
+         cljfmt/cljfmt                         {:mvn/version "0.9.2"}
          clj-fuzzy/clj-fuzzy                   {:mvn/version "0.4.1"}
          clojure-deep-merge/clojure-deep-merge {:mvn/version "0.1.2"}}}
