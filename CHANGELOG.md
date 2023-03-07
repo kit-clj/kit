@@ -75,7 +75,11 @@
 <details>
 <summary>kit-redis</summary>
 
-### `io.github.kit-clj/kit-redis {:mvn/version "1.0.#"}`
+### `io.github.kit-clj/kit-redis {:mvn/version "1.0.4"}`
+
+- Change: Bump dependencies
+
+### `io.github.kit-clj/kit-redis {:mvn/version "1.0.3"}`
 
 - Change: Bump dependencies
 
@@ -122,6 +126,10 @@
 <details>
 <summary>kit-sql</summary>
 
+### `io.github.kit-clj/kit-sql {:mvn/version "1.1.3"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-sql {:mvn/version "1.1.2"}`
 
 - Change: Bump dependencies
@@ -143,6 +151,10 @@
 
 <details>
 <summary>kit-sql-conman</summary>
+
+### `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.6"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-sql-conman {:mvn/version "1.0.4"}`
 
@@ -166,6 +178,10 @@
 <details>
 <summary>kit-sql-hikari</summary>
 
+### `io.github.kit-clj/kit-sql-hikari {:mvn/version "1.0.3"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-sql-hikari {:mvn/version "1.0.1"}`
 
 - Change: Bump dependencies
@@ -181,6 +197,14 @@
 <details>
 <summary>kit-sql-migratus</summary>
 
+### `io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.3"}`
+
+- Change: Bump dependencies
+
+### `io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.2"}`
+
+- Change: Bump dependencies
+
 ### `io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.1"}`
 
 - Change: Bump dependencies
@@ -194,6 +218,10 @@
 
 <details>
 <summary>kit-postgres</summary>
+
+### `io.github.kit-clj/kit-postgres {:mvn/version "1.0.3"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-postgres {:mvn/version "1.0.2"}`
 
@@ -212,6 +240,10 @@
 
 <details>
 <summary>kit-mysql</summary>
+
+### `io.github.kit-clj/kit-mysql {:mvn/version "1.0.3"}`
+
+- Change: Bump dependencies
 
 ### `io.github.kit-clj/kit-mysql {:mvn/version "1.0.2"}`
 
@@ -271,7 +303,11 @@
 <details>
 <summary>kit-xtdb</summary>
 
-### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.@"}`
+### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.4"}`
+
+- Bump dependencies
+
+### `io.github.kit-clj/kit-xtdb {:mvn/version "1.0.3"}`
 
 - Bump dependencies
 
@@ -306,6 +342,11 @@
 
 <details>
 <summary>lein-template</summary>
+
+### `io.github.kit-clj/lein-template {:mvn/version "0.1.38"}`
+
+- support deps-new [PR 72](https://github.com/kit-clj/kit/pull/72). Thanks [@rads](https://github.com/rads)
+- bump dependencies
 
 ### `io.github.kit-clj/lein-template {:mvn/version "0.1.38"}`
 
@@ -425,6 +466,10 @@
 
 <details>
 <summary>kit-generator</summary>
+
+### `io.github.kit-clj/kit-generator {:mvn/version "0.1.8"}`
+
+- Change: bump dependencies
 
 ### `io.github.kit-clj/kit-generator {:mvn/version "0.1.7"}`
 
