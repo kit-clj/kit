@@ -18,4 +18,7 @@
                     :task (clojure {:dir "."} "-T:build all")}
 
          format    {:doc  "Formats codebase"
-                    :task (shell {:dir "src"} "cljstyle fix")}}}
+                    :task (try
+                            (shell {:dir "src"} "cljstyle fix")
+                            (catch Exception _
+                              (clojure {:dir "src"} "-M:dev -m cljstyle.main fix")))}}}
