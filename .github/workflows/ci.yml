@@ -1,0 +1,14 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  bb-run-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@9.5
+        with:
+          cli: latest
+          bb: latest
+      - run: bb ci

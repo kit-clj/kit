@@ -1,0 +1,4 @@
+{:description "FIXME: my new kit project"
+  :root "_"
+  :data-fn io.github.kit-clj.deps-template/data-fn
+  :template-fn io.github.kit-clj.deps-template/template-fn}

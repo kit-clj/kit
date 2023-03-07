@@ -2,17 +2,9 @@
   (:require
     [leiningen.new.templates :as templates]
     [clojure.java.io :as io]
-    [selmer.parser :as selmer]
-    [clojure.string :as string]))
+    [io.github.kit-clj.deps-template.helpers :refer [render-selmer]]))
 
 (def template-name "kit")
-
-(defn selmer-renderer
-  [text options]
-  (selmer/render
-    (str "<% safe %>" text "<% endsafe %>")
-    options
-    {:tag-open \< :tag-close \> :filter-open \< :filter-close \>}))
 
 (defn resource-path->template-path [resource-path]
   (str "io/github/kit_clj/" (templates/sanitize template-name) "/" resource-path))
@@ -21,7 +13,7 @@
   (let [path (resource-path->template-path template)]
     (if-let [resource (io/resource path)]
       (if data
-        (selmer-renderer (templates/slurp-resource resource) data)
+        (render-selmer (templates/slurp-resource resource) data)
         (io/reader resource))
       (throw (ex-info (format "Template resource '%s' not found." path)
                       {})))))
