@@ -19,9 +19,10 @@
   (ig-utils/resume-handler key opts old-opts old-impl))
 
 (defmethod ig/init-key :db.sql/query-fn
-  [_ {:keys [conn options filename]
+  [_ {:keys [conn options filename filenames]
       :or   {options {}}}]
-  (let [queries (conman/bind-connection-map conn options filename)]
+  (let [filenames (or filenames [filename])
+        queries (apply conman/bind-connection-map conn options filenames)]
     (fn
       ([query params]
        (conman/query queries query params))
