@@ -17,6 +17,8 @@
 * `ring/ring-defaults` 0.3.3 -> 0.3.4
 * `ring/ring-devel` 1.9.5 -> 1.10.0
 
+* `integrant/integrant` 0.8.0 -> 0.8.1
+
 <details>
 <summary>kit-core</summary>
 
