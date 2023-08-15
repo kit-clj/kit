@@ -9,13 +9,13 @@
            ;; Ring
            metosin/ring-http-response      {:mvn/version "0.9.3"}
            ring/ring-core                  {:mvn/version "1.10.0"}
-           ring/ring-defaults              {:mvn/version "0.3.3"}
+           ring/ring-defaults              {:mvn/version "0.3.4"}
 
            ;; Logging
-           ch.qos.logback/logback-classic  {:mvn/version "1.4.4"}
+           ch.qos.logback/logback-classic  {:mvn/version "1.4.11"}
            
            ;; Data coercion
-           luminus-transit/luminus-transit {:mvn/version "0.1.5"
+           luminus-transit/luminus-transit {:mvn/version "0.1.6"
                                             :exclusions [com.cognitect/transit-clj]}
            metosin/muuntaja                {:mvn/version "0.6.8"}
 
@@ -36,37 +36,37 @@
            io.github.kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %><% if nrepl? %>
            io.github.kit-clj/kit-nrepl {:mvn/version "<<versions.kit-nrepl>>"}<% endif %>
            }
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/sha "e3e3532"
-                                                         :git/tag "v0.8.0" :git/url "https://github.com/clojure/tools.build.git"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/sha "24f2894"
+                                                         :git/tag "v0.9.5" :git/url "https://github.com/clojure/tools.build.git"}}
                    :ns-default build}
 
 
-           :dev  {:extra-deps  {com.lambdaisland/classpath      {:mvn/version "0.0.27"}
+           :dev  {:extra-deps  {com.lambdaisland/classpath      {:mvn/version "0.4.44"}
                                 criterium/criterium             {:mvn/version "0.4.6"}
                                 expound/expound                 {:mvn/version "0.9.0"}
-                                integrant/repl                  {:mvn/version "0.3.2"}
+                                integrant/repl                  {:mvn/version "0.3.3"}
                                 mvxcvi/cljstyle                 {:mvn/version "0.15.0"}
                                 pjstadig/humane-test-output     {:mvn/version "0.11.0"}
-                                ring/ring-devel                 {:mvn/version "1.9.5"}
+                                ring/ring-devel                 {:mvn/version "1.10.0"}
                                 ring/ring-mock                  {:mvn/version "0.4.0"}
                                 io.github.kit-clj/kit-generator {:mvn/version "<<versions.kit-generator>>"}
-                                org.clojure/tools.namespace     {:mvn/version "1.2.0"}<% if xtdb? %>
+                                org.clojure/tools.namespace     {:mvn/version "1.4.4"}<% if xtdb? %>
                                 com.xtdb/xtdb-rocksdb           {:mvn/version "1.21.0-beta3"}
                                 com.xtdb/xtdb-http-server       {:mvn/version "1.21.0-beta3"}<%endif%>
                                 }
                   :extra-paths ["env/dev/clj" "env/dev/resources" "test/clj"]}
-           :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "0.9.0"}}
+           :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "1.0.0"}}
                    :main-opts  ["-m" "nrepl.cmdline" "-i"]}
            :cider {:extra-deps {nrepl/nrepl       {:mvn/version "0.9.0"}
-                                cider/cider-nrepl {:mvn/version "0.28.3"}}
+                                cider/cider-nrepl {:mvn/version "0.35.3"}}
                    :main-opts  ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]" "-i"]}
 
            :test {:extra-deps  {criterium/criterium                  {:mvn/version "0.4.6"}
                                 expound/expound                      {:mvn/version "0.9.0"}
-                                integrant/repl                       {:mvn/version "0.3.2"}
+                                integrant/repl                       {:mvn/version "0.3.3"}
                                 io.github.cognitect-labs/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                                                      :git/tag "v0.5.0"
-                                                                      :git/sha "b3fd0d2"}
+                                                                      :git/tag "v0.5.1"
+                                                                      :git/sha "dfb30dd"}
                                 pjstadig/humane-test-output          {:mvn/version "0.11.0"}
                                 ring/ring-devel                      {:mvn/version "1.9.5"}
                                 ring/ring-mock                       {:mvn/version "0.4.0"}

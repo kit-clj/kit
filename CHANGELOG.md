@@ -1,5 +1,22 @@
 # Change Log
 
+### `io.github.kit-clj/deps-template {:mvn/version "1.0.4"}`
+<details>
+<summary>version bumps</summary>
+
+* `*failjure/failjure` 2.2.0 -> 2.3.0
+* `ch.qos.logback/logback-classic` 1.4.4 -> 1.4.11
+* `cider/cider-nrepl` 0.28.3 -> 0.35.0
+* `com.lambdaisland/classpath` 0.0.27 -> 0.4.44
+* `integrant/repl` 0.3.2 -> 0.3.3
+* `io.github.clojure/tools.build` v0.8.0 -> v0.9.5
+* `io.github.cognitect-labs/test-runner` v0.5.0 -> v0.5.1
+* `luminus-transit/luminus-transit` 0.1.5 -> 0.1.6
+* `nrepl/nrepl` 0.9.0 -> 1.0.0
+* `org.clojure/tools.namespace` 1.2.0 -> 1.4.4
+* `ring/ring-defaults` 0.3.3 -> 0.3.4
+* `ring/ring-devel` 1.9.5 -> 1.10.0
+
 <details>
 <summary>kit-core</summary>
 

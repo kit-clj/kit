@@ -1,5 +1,5 @@
 {:paths ["src"]
- :deps  {integrant/integrant        {:mvn/version "0.8.0"}
+ :deps  {integrant/integrant        {:mvn/version "0.8.1"}
          org.clojure/core.cache     {:mvn/version "1.0.225"}
          com.taoensso/carmine       {:mvn/version "3.2.0"}
-         io.github.kit-clj/kit-core {:mvn/version "1.0.3"}}}
+         io.github.kit-clj/kit-core {:mvn/version "1.0.4"}}}

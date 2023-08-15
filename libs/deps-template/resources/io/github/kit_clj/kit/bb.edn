@@ -1,5 +1,5 @@
 {:min-bb-version "0.8.156"
- :deps  {failjure/failjure {:mvn/version "2.2.0"}}
+ :deps  {failjure/failjure {:mvn/version "2.3.0"}}
  :tasks {:requires ([babashka.fs :as fs]
                     [babashka.tasks :refer [shell]])
 
