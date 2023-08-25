@@ -18,7 +18,7 @@
   JSON. PGObject type defaults to `jsonb` but can be changed via
   metadata key `:pgtype`"
   [x]
-  (let [pgtype (or (:pgtype (meta x) "jsonb"))]
+  (let [pgtype (:pgtype (meta x) "jsonb")]
     (doto (PGobject.)
       (.setType pgtype)
       (.setValue (->json x)))))
