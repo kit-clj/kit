@@ -12,6 +12,7 @@
   [{:keys [migratus conman] :as _data}]
   (->> ["versions.edn"
         "template.edn"
+        ".dir-locals.el"
         (when-not migratus "resources/migrations/placeholder.txt")
         (when-not conman "resources/queries.sql")]
        (remove nil?)))
@@ -44,27 +45,41 @@
                     :default-cookie-secret default-cookie-secret'})
           (merge $ (update-keys $ #(edn/read-string (str % "?")))))))
 
+
+(defn adapt-separator [pattern]
+  (let [separator (java.io.File/separator)
+        escaped-separator (if (= "\\" separator) "\\\\" separator)]
+    (clojure.string/replace pattern "/" escaped-separator)))
+
+(defn windows-to-unix-slash [s]
+  (clojure.string/replace s "\\" "/"))
+
+
+
 (defn- match-namespaced-file [file-path]
   "If a file needs to include the namespace in its path, return a map with the
   prefix and suffix."
-  (or (let [[[_ prefix suffix]] (re-seq #"^((?:src|test)/clj)/(.+)$" file-path)]
-        (when (and prefix suffix)
-          {:prefix prefix :suffix suffix}))
-      (let [[[_ prefix suffix]] (re-seq #"^(env/(?:dev|prod)/clj)/((?:dev_middleware|env)\.clj)$" file-path)]
-        (when (and prefix suffix)
-          {:prefix prefix :suffix suffix}))))
+  (let [pattern1 (adapt-separator #"^((?:src|test)/clj)/(.+)$")
+        pattern2 (adapt-separator #"^(env/(?:dev|prod)/clj)/((?:dev_middleware|env)\.clj)$")]
+    (or (let [[[_ prefix suffix]] (re-seq (re-pattern pattern1) file-path)]
+          (when (and prefix suffix)
+            {:prefix prefix :suffix suffix}))
+        (let [[[_ prefix suffix]] (re-seq (re-pattern pattern2) file-path)]
+          (when (and prefix suffix)
+            {:prefix prefix :suffix suffix})))))
 
-(defn- dest-path
+(defn dest-path
   "Returns the destination path of a file in the output template.
 
   This can be used to rename files when they don't map directly to the template
   files in the resource path."
   [file-path]
-  (or (when-let [{:keys [prefix suffix]} (match-namespaced-file file-path)]
-        (str prefix "/{{name/file}}/" suffix))
-      (let [[m] (re-seq #"^gitignore$" file-path)]
-        (when m ".gitignore"))
-      file-path))
+  (let [separator (java.io.File/separator)]
+    (or (when-let [{:keys [prefix suffix]} (match-namespaced-file file-path)]
+          (str prefix separator "{{name/file}}" separator suffix))
+        (let [[m] (re-seq #"^gitignore$" file-path)]
+          (when m ".gitignore"))
+        file-path)))
 
 (defn- render-templates
   "Returns a sequence containing a map for each rendered Selmer template file."
@@ -72,7 +87,7 @@
   (->> (file-seq (fs/file template-dir))
        (filter #(and (.isFile %) (not (.isHidden %))))
        (map #(fs/relativize template-dir %))
-       (filter #(not (contains? (set (excluded-template-files data)) (str %))))
+       (filter #(not (contains? (set (excluded-template-files data)) (windows-to-unix-slash (str %)))))
        (map (fn [f]
               {:src-path (str f)
                :dest-path (dest-path (str f))

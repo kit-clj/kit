@@ -4,6 +4,23 @@
             [babashka.fs :as fs]
             [babashka.process :as p]))
 
+
+(defn powershell-diff-folders [folder1 folder2]
+  (let [cmd ["powershell.exe"
+             "-Command"
+             (str "Compare-Object (Get-ChildItem -Recurse " folder1 ") (Get-ChildItem -Recurse " folder2 ")")]
+        {:keys [out err exit]} @(p/process cmd {:out :string :err :string})]
+    (if (zero? exit)
+      out
+      (str "Error: " err))))
+
+(defn shell-diff-folders [folder1 folder2]
+  (let [{:keys [out]} (p/check (p/sh ["diff" "--recursive" "--brief"
+                                      folder1 folder2]))
+        diff (some-> out str/trim not-empty str/split-lines)]
+    diff))
+
+
 (deftest deps-new-and-clj-new-parity-test
   (let [clj-new-path (doto (fs/create-temp-dir {:prefix "clj-new-app"})
                        (fs/delete-on-exit))
@@ -28,7 +45,7 @@
         pre-start-fn #(apply println "+" (:cmd %))]
     (p/check (p/sh clj-new-command {:pre-start-fn pre-start-fn}))
     (p/check (p/sh deps-new-command {:pre-start-fn pre-start-fn}))
-    (let [{:keys [out]} (p/check (p/sh ["diff" "--recursive" "--brief"
-                                        (str clj-new-path) (str deps-new-path)]))
-          diff (some-> out str/trim not-empty str/split-lines)]
-      (is (empty? diff)))))
+    (let [ res (if (fs/windows?)
+                 (powershell-diff-folders (str clj-new-path)  (str deps-new-path))
+                 (shell-diff-folders (str clj-new-path)  (str deps-new-path)))]
+      (is (empty? res)))))
