@@ -21,6 +21,7 @@
   ;; kit-nrepl
   nrepl/nrepl                            {:mvn/version "1.0.0"}
   ;; kit-postgres
+  io.github.kit-clj/kit-postgres         {:mvn/version "1.0.6"}
   org.postgresql/postgresql              {:mvn/version "42.6.0"}
   cheshire/cheshire                      {:mvn/version "5.11.0"}
   ;; kit-quartz
