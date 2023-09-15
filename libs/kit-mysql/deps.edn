@@ -1,2 +1,2 @@
 {:paths   ["src"]
- :deps    {com.mysql/mysql-connector-j {:mvn/version ""8.1.0""}}}
+ :deps    {com.mysql/mysql-connector-j {:mvn/version "8.1.0"}}}
