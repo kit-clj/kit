@@ -12,7 +12,7 @@
     [kit.edge.db.sql.conman]<% endif %><% if migratus? %>
     [kit.edge.db.sql.migratus]<% endif %><% if postgres? %>
     [kit.edge.db.postgres]<% endif %><% if mysql? %>
-    [kit.edge.db.sql.mysql]<% endif %><% if hato? %>
+    [kit.edge.db.mysql]<% endif %><% if hato? %>
     [kit.edge.http.hato]<% endif %> <% if quartz? %>
     [kit.edge.scheduling.quartz]<% endif %> <% if selmer? %>
     [kit.edge.templating.selmer]<% endif %> <% if metrics? %>

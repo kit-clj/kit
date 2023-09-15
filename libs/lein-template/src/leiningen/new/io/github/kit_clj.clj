@@ -42,13 +42,19 @@
      :postgres?             (or full?
                                 (helpers/option? "+sql" options)
                                 (helpers/option? "+postgres" options))
-     :mysql?                (helpers/option? "+mysql" options)
+     :mysql?                (or full?
+                                (helpers/option? "+sql" options)
+                                (helpers/option? "+mysql" options))
      ;; SQL libs
      :conman?               (or full?
                                 (helpers/option? "+sql" options)
+                                (helpers/option? "+mysql" options)
+                                (helpers/option? "+postgres" options)
                                 (helpers/option? "+conman" options))
      :migratus?             (or full?
                                 (helpers/option? "+sql" options)
+                                (helpers/option? "+mysql" options)
+                                (helpers/option? "+postgres" options)
                                 (helpers/option? "+migratus" options))
      :hikari?               (helpers/option? "+hikari" options)
 
