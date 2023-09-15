@@ -17,7 +17,7 @@
   io.prometheus/simpleclient_httpserver  {:mvn/version "0.16.0"}
   io.prometheus/simpleclient_pushgateway {:mvn/version "0.16.0"}
   ;; kit-mysql
-  com.mysql/mysql-connector-j            {:mvn/version "8.0.33"}
+  com.mysql/mysql-connector-j            {:mvn/version "8.1.0"}
   ;; kit-nrepl
   nrepl/nrepl                            {:mvn/version "1.0.0"}
   ;; kit-postgres
