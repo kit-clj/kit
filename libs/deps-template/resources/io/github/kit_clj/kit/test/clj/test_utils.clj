@@ -12,4 +12,5 @@
   (fn [f]
     (when (nil? (system-state))
       (core/start-app {:opts {:profile :test}}))
-    (f)))
+    (f)
+    (core/stop-app)))
