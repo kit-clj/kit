@@ -46,4 +46,4 @@
   [_ {:keys [base-path]
       :or   {base-path ""}
       :as   opts}]
-  [base-path route-data (api-routes opts)])
+  [base-path (merge opts route-data) (api-routes opts)])
