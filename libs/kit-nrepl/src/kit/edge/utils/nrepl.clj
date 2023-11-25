@@ -3,14 +3,17 @@
     [clojure.tools.logging :as log]
     [integrant.core :as ig]
     [kit.ig-utils :as ig-utils]
+    [nrepl.cmdline]
     [nrepl.server :as nrepl]))
 
 (defmethod ig/init-key :nrepl/server
-  [_ {:keys [port bind ack-port] :as config}]
+  [_ {:keys [port bind ack-port create-nrepl-port-file?] :as config}]
   (try
     (let [server (nrepl/start-server :port port
                                      :bind bind
                                      :ack-port ack-port)]
+      (when create-nrepl-port-file?
+        (nrepl.cmdline/save-port-file server {}))
       (log/info "nREPL server started on port:" port)
       (assoc config ::server server))
     (catch Exception e
