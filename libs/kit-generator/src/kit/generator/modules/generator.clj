@@ -35,9 +35,9 @@
 (defn write-binary [bytes target-path]
   (jio/copy bytes (jio/file target-path)))
 
-(defn write-asset [asset path]
+(defn write-asset [asset path force?]
   (jio/make-parents path)
-  (if (.exists (jio/file path))
+  (if (and (.exists (jio/file path)) (not force?))
     (println "asset already exists:" path)
     ((if (string? asset) write-string write-binary) asset path)))
 
@@ -53,12 +53,13 @@
       (string? asset)
       (.mkdir (jio/file (renderer/render-template ctx asset)))
       ;; otherwise asset should be a tuple of [source target] path strings
-      (and (sequential? asset) (= 2 (count asset)))
-      (let [[asset-path target-path] asset]
+      (and (sequential? asset) (contains? #{2 3} (count asset)))
+      (let [[asset-path target-path force?] asset]
         (write-asset
           (->> (read-asset (concat-path module-path asset-path))
                (renderer/render-asset ctx))
-          (renderer/render-template ctx target-path)))
+          (renderer/render-template ctx target-path)
+          force?))
       :else
       (println "unrecognized asset type:" asset))))
 
