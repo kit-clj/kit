@@ -24,6 +24,12 @@
     (modules/list-modules ctx))
   :done)
 
+(declare install-module)
+(defn install-dependency [module-key]
+  (if (vector? module-key)
+    (apply install-module module-key)
+    (install-module module-key)))
+
 (defn install-module
   ([module-key]
    (install-module module-key {:feature-flag :default}))
@@ -33,7 +39,7 @@
        (let [module-config (generator/read-module-config ctx modules module-key)]
          (println module-key "requires following modules:" (get-in module-config [feature-flag :requires]))
          (doseq [module-key (get-in module-config [feature-flag :requires])]
-           (install-module module-key))
+           (install-dependency module-key))
          (generator/generate ctx module-key opts))
        (println "no module found with name:" module-key))
      :done)))
