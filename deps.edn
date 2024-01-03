@@ -4,8 +4,7 @@
                  :exec-args  {:template kit-clj}}
            :deps-new {:extra-deps {io.github.seancorfield/deps-new {:git/tag "v0.5.0" :git/sha "48bf01e"}}
                       :exec-fn    org.corfield.new/create}
-           :build {:deps {io.github.clojure/tools.build {:git/sha "76b78fe"
-                                                         :git/tag "v0.9.4" :git/url "https://github.com/clojure/tools.build.git"}
+           :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
                           slipset/deps-deploy {:mvn/version "0.2.0"}
                           weavejester/dependency {:mvn/version "0.2.1"}
                           rewrite-clj/rewrite-clj {:mvn/version "1.1.46"}

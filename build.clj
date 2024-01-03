@@ -55,7 +55,10 @@
   (b/write-pom {:class-dir class-dir
                 :lib       lib
                 :version   version
-                :src-pom   "pom.xml"
+                :pom-data  [[:licenses
+                             [:license
+                              [:name "MIT License"]
+                              [:url "https://opensource.org/license/mit"]]]]
                 :basis     basis
                 :src-dirs  src})
   (b/copy-dir {:src-dirs   src
