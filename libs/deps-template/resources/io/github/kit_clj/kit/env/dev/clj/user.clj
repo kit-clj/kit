@@ -51,7 +51,7 @@
 (defn migrate []
   (migratus.core/migrate (:db.sql/migrations state/system)))
 
-(def query-fn (ig/resolve-key :db.sql/query-fn (:db.sql/query-fn state/system)))
+(def query-fn (:db.sql/query-fn state/system))
 <% endif %>
 
 (comment
