@@ -26,7 +26,7 @@
   cheshire/cheshire                      {:mvn/version "5.11.0"}
   ;; kit-quartz
   com.troy-west/cronut                   {:mvn/version "0.2.6"}
-  io.github.kit-clj/kit-core             {:mvn/version "1.0.4"}
+  io.github.kit-clj/kit-core             {:mvn/version "1.0.6"}
   ;; kit-redis
   org.clojure/core.cache                 {:mvn/version "1.0.225"}
   com.taoensso/carmine                   {:mvn/version "3.2.0"}
@@ -34,8 +34,8 @@
   ;; kit-selmer
   selmer/selmer                          {:mvn/version "1.12.59"}
   ;; kit-sql
-  io.github.kit-clj/kit-sql-conman       {:mvn/version "1.0.8"}
-  io.github.kit-clj/kit-sql-migratus     {:mvn/version "1.0.3"}
+  io.github.kit-clj/kit-sql-conman       {:mvn/version "1.10.0"}
+  io.github.kit-clj/kit-sql-migratus     {:mvn/version "1.0.4"}
   ;; kit-sql-conman
   conman/conman                          {:mvn/version "0.9.6"}
   ;; kit-sql-hikari

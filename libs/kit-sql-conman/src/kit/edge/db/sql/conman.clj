@@ -23,15 +23,13 @@
       :or   {options {}}}]
   (let [filenames (or filenames [filename])
         queries (apply conman/bind-connection-map conn options filenames)]
-    {:mtimes (map ig-utils/last-modified filenames)
-     :query-fn (fn
-                 ([query params]
-                  (conman/query queries query params))
-                 ([conn query params & opts]
-                  (apply conman/query conn queries query params opts)))}))
-
-(defmethod ig/resolve-key :db.sql/query-fn [_ {:keys [query-fn]}]
-  query-fn)
+    (with-meta
+      (fn
+        ([query params]
+         (conman/query queries query params))
+        ([conn query params & opts]
+         (apply conman/query conn queries query params opts)))
+      {:mtimes (map ig-utils/last-modified filenames)})))
 
 (defmethod ig/suspend-key! :db.sql/query-fn [_ _])
 
@@ -39,7 +37,7 @@
   [k {:keys [filename filenames] :as opts} old-opts old-impl]
   (if (and (= opts old-opts)
            (= (map ig-utils/last-modified (or filenames [filename]))
-              (:mtimes old-impl)))
+              (:mtimes (meta old-impl))))
     old-impl
     (do (ig/halt-key! k old-impl)
         (ig/init-key k opts))))
