@@ -1,5 +1,6 @@
 (ns kit.edge.db.sql.conman
   (:require
+    [clojure.tools.logging :as log]
     [conman.core :as conman]
     [integrant.core :as ig]
     [kit.ig-utils :as ig-utils]))
@@ -35,9 +36,11 @@
 
 (defmethod ig/resume-key :db.sql/query-fn
   [k {:keys [filename filenames] :as opts} old-opts old-impl]
-  (if (and (= opts old-opts)
-           (= (map ig-utils/last-modified (or filenames [filename]))
-              (:mtimes (meta old-impl))))
-    old-impl
-    (do (ig/halt-key! k old-impl)
-        (ig/init-key k opts))))
+  (let [check-res (and (= opts old-opts)
+                       (= (map ig-utils/last-modified (or filenames [filename]))
+                          (:mtimes (meta old-impl))))]
+    (log/info k "resume check. Same?" check-res)
+    (if check-res
+      old-impl
+      (do (ig/halt-key! k old-impl)
+          (ig/init-key k opts)))))
