@@ -8,11 +8,11 @@
 
            ;; Ring
            metosin/ring-http-response      {:mvn/version "0.9.3"}
-           ring/ring-core                  {:mvn/version "1.10.0"}
-           ring/ring-defaults              {:mvn/version "0.3.4"}
+           ring/ring-core                  {:mvn/version "1.11.0"}
+           ring/ring-defaults              {:mvn/version "0.4.0"}
 
            ;; Logging
-           ch.qos.logback/logback-classic  {:mvn/version "1.4.11"}
+           ch.qos.logback/logback-classic  {:mvn/version "1.4.14"}
            
            ;; Data coercion
            luminus-transit/luminus-transit {:mvn/version "0.1.6"
@@ -36,18 +36,17 @@
            io.github.kit-clj/kit-repl {:mvn/version "<<versions.kit-repl>>"}<% endif %><% if nrepl? %>
            io.github.kit-clj/kit-nrepl {:mvn/version "<<versions.kit-nrepl>>"}<% endif %>
            }
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/sha "24f2894"
-                                                         :git/tag "v0.9.5" :git/url "https://github.com/clojure/tools.build.git"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}}
                    :ns-default build}
 
 
-           :dev  {:extra-deps  {com.lambdaisland/classpath      {:mvn/version "0.4.44"}
+           :dev  {:extra-deps  {com.lambdaisland/classpath      {:mvn/version "0.5.48"}
                                 criterium/criterium             {:mvn/version "0.4.6"}
                                 expound/expound                 {:mvn/version "0.9.0"}
                                 integrant/repl                  {:mvn/version "0.3.3"}
-                                mvxcvi/cljstyle                 {:mvn/version "0.15.0"}
+                                mvxcvi/cljstyle                 {:mvn/version "0.16.630"}
                                 pjstadig/humane-test-output     {:mvn/version "0.11.0"}
-                                ring/ring-devel                 {:mvn/version "1.10.0"}
+                                ring/ring-devel                 {:mvn/version "1.11.0"}
                                 ring/ring-mock                  {:mvn/version "0.4.0"}
                                 io.github.kit-clj/kit-generator {:mvn/version "<<versions.kit-generator>>"}
                                 org.clojure/tools.namespace     {:mvn/version "1.4.4"}<% if xtdb? %>
@@ -68,11 +67,11 @@
                                                                       :git/tag "v0.5.1"
                                                                       :git/sha "dfb30dd"}
                                 pjstadig/humane-test-output          {:mvn/version "0.11.0"}
-                                ring/ring-devel                      {:mvn/version "1.10.0"}
+                                ring/ring-devel                      {:mvn/version "1.11.0"}
                                 ring/ring-mock                       {:mvn/version "0.4.0"}
                                 io.github.kit-clj/kit-generator      {:mvn/version "<<versions.kit-generator>>"}
-                                org.clojure/tools.namespace          {:mvn/version "1.4.4"}
-                                com.lambdaisland/classpath           {:mvn/version "0.4.44"}}
+                                org.clojure/tools.namespace          {:mvn/version "1.4.5"}
+                                com.lambdaisland/classpath           {:mvn/version "0.5.48"}}
                   :exec-fn      cognitect.test-runner.api/test
                   :extra-paths ["env/dev/clj" "env/dev/resources" "env/test/resources" "test/clj"]
                   :main-opts   ["-e" "(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)"
