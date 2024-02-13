@@ -5,6 +5,7 @@ profiles.clj
 pom.xml.asc
 *.jar
 *.class
+*.bak
 .lein-*/
 .nrepl-port/
 .prepl-port/

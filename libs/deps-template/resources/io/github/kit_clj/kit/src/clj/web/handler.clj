@@ -9,7 +9,7 @@
 (defmethod ig/init-key :handler/ring
   [_ {:keys [router api-path] :as opts}]
   (ring/ring-handler
-    router
+   (router)
     (ring/routes
      ;; Handle trailing slash in routes - add it + redirect to it
      ;; https://github.com/metosin/reitit/blob/master/doc/ring/slash_handler.md 
@@ -32,8 +32,15 @@
 
 (defmethod ig/init-key :router/routes
   [_ {:keys [routes]}]
-  (apply conj [] routes))
+  (mapv (fn [route]
+          (if (fn? route)
+            (route)
+            route))
+        routes))
 
 (defmethod ig/init-key :router/core
-  [_ {:keys [routes] :as opts}]
-  (ring/router ["" opts routes]))
+  [_ {:keys [routes env] :as opts}]
+  (let [router #(ring/router ["" opts routes])]
+    (if (= env :dev)
+      router
+      (constantly router))))

@@ -62,7 +62,8 @@
  {:routes #ig/refset :reitit/routes}
 
  :router/core
- {:routes #ig/ref :router/routes} <% if quartz? %>
+ {:routes #ig/ref :router/routes
+  :env #ig/ref :system/env} <% if quartz? %>
 
  :cronut/scheduler
  {:schedule []}<% endif %> <% if selmer? %>
