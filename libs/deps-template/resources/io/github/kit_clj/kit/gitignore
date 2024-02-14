@@ -12,6 +12,7 @@ modules/
 # IntelliJ
 *.iml
 .idea/
+*.bak
 
 # clj-kondo
 .clj-kondo/.cache/
