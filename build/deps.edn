@@ -19,7 +19,7 @@
   ;; kit-mysql
   com.mysql/mysql-connector-j            {:mvn/version "8.1.0"}
   ;; kit-nrepl
-  nrepl/nrepl                            {:mvn/version "1.0.0"}
+  nrepl/nrepl                            {:mvn/version "1.1.1"}
   ;; kit-postgres
   io.github.kit-clj/kit-postgres         {:mvn/version "1.0.6"}
   org.postgresql/postgresql              {:mvn/version "42.6.0"}
