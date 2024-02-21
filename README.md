@@ -3,12 +3,6 @@
 Lightweight, modular framework for scalable production
 systems.
 
-**ALPHA WARNING**: `kit-generator` and Kit modules / code
-generation is in **ALPHA** meaning the API for code
-generation is subject to change. This should not affect
-users of Kit, but will affect anyone developing modules or
-extending them. The libs/libraries are stable.
-
 ## Goal
 
 The goal of Kit is to provide a template for a robust,
