@@ -40,7 +40,6 @@
 
 (defmethod ig/init-key :router/core
   [_ {:keys [routes env] :as opts}]
-  (let [router #(ring/router ["" opts routes])]
-    (if (= env :dev)
-      router
-      (constantly router))))
+  (if (= env :dev)
+    #(ring/router ["" opts routes])
+    (constantly (ring/router ["" opts routes]))))
