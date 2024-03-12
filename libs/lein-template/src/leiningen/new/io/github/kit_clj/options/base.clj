@@ -27,6 +27,7 @@
    ["resources/system.edn" (helpers/render "resources/system.edn" data)]
 
    ["src/clj/{{sanitized}}/config.clj" (helpers/render "src/clj/config.clj" data)]
+   ["src/clj/{{sanitized}}/log.clj" (helpers/render "src/clj/log.clj" data)]
    ["src/clj/{{sanitized}}/core.clj" (helpers/render "src/clj/core.clj" data)]
    ["src/clj/{{sanitized}}/web/handler.clj" (helpers/render "src/clj/web/handler.clj" data)]
    ["src/clj/{{sanitized}}/web/controllers/health.clj" (helpers/render "src/clj/web/controllers/health.clj" data)]
