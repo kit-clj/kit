@@ -21,13 +21,13 @@
      (ring/create-default-handler
       {:not-found
        (constantly (-> {:status 404, :body "Page not found"}
-                       (http-response/content-type "text/html")))
+                       (http-response/content-type "text/plain")))
        :method-not-allowed
        (constantly (-> {:status 405, :body "Not allowed"}
-                       (http-response/content-type "text/html")))
+                       (http-response/content-type "text/plain")))
        :not-acceptable
        (constantly (-> {:status 406, :body "Not acceptable"}
-                       (http-response/content-type "text/html")))}))
+                       (http-response/content-type "text/plain")))}))
     {:middleware [(middleware/wrap-base opts)]}))
 
 (defmethod ig/init-key :router/routes
