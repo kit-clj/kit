@@ -30,7 +30,7 @@
          (conman/query queries query params))
         ([conn query params & opts]
          (apply conman/query conn queries query params opts)))
-      {:mtimes (map ig-utils/last-modified filenames)})))
+      {:mtimes (doall (map ig-utils/last-modified filenames))})))
 
 (defmethod ig/suspend-key! :db.sql/query-fn [_ _])
 
