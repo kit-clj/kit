@@ -30,14 +30,14 @@
          (conman/query queries query params))
         ([conn query params & opts]
          (apply conman/query conn queries query params opts)))
-      {:mtimes (doall (map ig-utils/last-modified filenames))})))
+      {:mtimes (mapv ig-utils/last-modified filenames)})))
 
 (defmethod ig/suspend-key! :db.sql/query-fn [_ _])
 
 (defmethod ig/resume-key :db.sql/query-fn
   [k {:keys [filename filenames] :as opts} old-opts old-impl]
   (let [check-res (and (= opts old-opts)
-                       (= (map ig-utils/last-modified (or filenames [filename]))
+                       (= (mapv ig-utils/last-modified (or filenames [filename]))
                           (:mtimes (meta old-impl))))]
     (log/info k "resume check. Same?" check-res)
     (if check-res

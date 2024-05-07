@@ -34,7 +34,7 @@
   ;; kit-selmer
   selmer/selmer                          {:mvn/version "1.12.59"}
   ;; kit-sql
-  io.github.kit-clj/kit-sql-conman       {:mvn/version "1.10.1"}
+  io.github.kit-clj/kit-sql-conman       {:mvn/version "1.10.2"}
   io.github.kit-clj/kit-sql-migratus     {:mvn/version "1.0.4"}
   ;; kit-sql-conman
   conman/conman                          {:mvn/version "0.9.6"}
