@@ -5,7 +5,7 @@
     [next.jdbc.prepare :as prepare]
     [next.jdbc.result-set :as result-set])
   (:import
-    [clojure.lang IPersistentMap]
+    [clojure.lang IPersistentMap IPersistentVector]
     [java.sql Array PreparedStatement Timestamp]
     [java.time Instant LocalDate LocalDateTime]
     [org.postgresql.util PGobject]))
@@ -57,4 +57,14 @@
 
   IPersistentMap
   (set-parameter [m ^PreparedStatement s i]
-    (.setObject s i (->pgobject m))))
+    (.setObject s i (->pgobject m)))
+
+  IPersistentVector
+  (set-parameter [^clojure.lang.IPersistentVector v ^java.sql.PreparedStatement stmt ^long idx]
+    (let [conn      (.getConnection stmt)
+          meta      (.getParameterMetaData stmt)
+          type-name (.getParameterTypeName meta idx)]
+      (if-let [elem-type (when (= (first type-name) \_)
+                           (apply str (rest type-name)))]
+        (.setObject stmt idx (.createArrayOf conn elem-type (to-array v)))
+        (.setObject stmt idx (->pgobject v))))))
