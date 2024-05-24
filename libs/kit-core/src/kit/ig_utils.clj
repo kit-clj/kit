@@ -16,7 +16,14 @@
         (ig/init-key k opts))))
 
 (defn last-modified [filename]
-  (-> (io/resource filename) (.toURI)
-      (Paths/get)
-      (Files/getLastModifiedTime (into-array LinkOption []))
-      (.toMillis)))
+  (let [url (io/resource filename)]
+    (if url
+      (case (.getProtocol url)
+        "file" (-> (.toURI url)
+                   (Paths/get)
+                   (Files/getLastModifiedTime (into-array LinkOption []))
+                   (.toMillis))
+        "jar" 0
+        (throw (ex-info "Unsupported URL protocol" {:protocol (.getProtocol url)})))
+      (throw (ex-info "Resource not found" {:filename filename})))))
+

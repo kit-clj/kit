@@ -1,4 +1,4 @@
-{"kit-core"         "1.0.6"
+{"kit-core"         "1.0.7"
  "kit-http-kit"     "1.0.3"
  "kit-xtdb"         "1.0.3"
  "kit-generator"    "0.2.1"
@@ -12,9 +12,9 @@
  "kit-repl"         "1.0.2"
  "kit-selmer"       "1.0.3"
  "kit-sql-migratus" "1.0.4"
- "kit-sql-conman"   "1.10.2"
+ "kit-sql-conman"   "1.10.3"
  "kit-sql-hikari"   "1.0.4"
  "kit-sql"          "1.1.4"
  "kit-undertow"     "1.0.6"
- "lein-template"    "0.1.62"
- "deps-template"    "0.1.62"}
+ "lein-template"    "0.1.63"
+ "deps-template"    "0.1.63"}
