@@ -6,7 +6,7 @@
   ch.qos.logback/logback-classic         {:mvn/version "1.4.11"}
   com.lambdaisland/classpath             {:mvn/version "0.4.44"}
   ;; kit-hato
-  hato/hato                              {:mvn/version "0.9.0"}
+  hato/hato                              {:mvn/version "1.0.0"}
   ;; kit-http-kit
   http-kit/http-kit                      {:mvn/version "2.7.0"}
   ;; kit-metrics

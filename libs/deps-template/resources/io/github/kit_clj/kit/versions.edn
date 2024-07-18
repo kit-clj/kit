@@ -2,7 +2,7 @@
  "kit-http-kit"     "1.0.3"
  "kit-xtdb"         "1.0.3"
  "kit-generator"    "0.2.1"
- "kit-hato"         "1.0.2"
+ "kit-hato"         "1.0.3"
  "kit-nrepl"        "1.0.4"
  "kit-metrics"      "1.0.3"
  "kit-mysql"        "1.0.5"
