@@ -116,7 +116,8 @@
  :db.sql/query-fn
  {:conn     #ig/ref :db.sql/connection
   :options  {}
-  :filename "queries.sql"} <% endif %><% if migratus? %>
+  :filename "queries.sql"
+  :env #ig/ref :system/env} <% endif %><% if migratus? %>
 
  :db.sql/migrations
  {:store            :database
