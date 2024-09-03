@@ -19,17 +19,30 @@
   [key opts old-opts old-impl]
   (ig-utils/resume-handler key opts old-opts old-impl))
 
+(defn queries-dev [load-queries]
+  (fn
+    ([query params]
+     (conman/query (load-queries) query params))
+    ([conn query params & opts]
+     (conman/query conn (load-queries) query params opts))))
+
+(defn queries-prod [load-queries]
+  (let [queries (load-queries)]
+    (fn
+      ([query params]
+       (conman/query queries query params))
+      ([conn query params & opts]
+       (conman/query conn queries query params opts)))))
+
 (defmethod ig/init-key :db.sql/query-fn
-  [_ {:keys [conn options filename filenames]
+  [_ {:keys [conn options filename filenames env]
       :or   {options {}}}]
   (let [filenames (or filenames [filename])
-        queries (apply conman/bind-connection-map conn options filenames)]
+        load-queries #(apply conman/bind-connection-map conn options filenames)]
     (with-meta
-      (fn
-        ([query params]
-         (conman/query queries query params))
-        ([conn query params & opts]
-         (apply conman/query conn queries query params opts)))
+      (if (= env :dev)
+        (queries-dev load-queries)
+        (queries-prod load-queries))
       {:mtimes (mapv ig-utils/last-modified filenames)})))
 
 (defmethod ig/suspend-key! :db.sql/query-fn [_ _])
