@@ -24,13 +24,13 @@
   []
   (integrant.repl/set-prep! (fn []
                               (-> (<<ns-name>>.config/system-config {:profile :dev})
-                                  (ig/prep)))))
+                                  (ig/expand)))))
 
 (defn test-prep!
   []
   (integrant.repl/set-prep! (fn []
                               (-> (<<ns-name>>.config/system-config {:profile :test})
-                                  (ig/prep)))))
+                                  (ig/expand)))))
 
 ;; Can change this to test-prep! if want to run tests as the test profile in your repl
 ;; You can run tests in the dev profile, too, but there are some differences between

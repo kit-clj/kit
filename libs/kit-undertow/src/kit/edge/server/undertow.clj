@@ -16,11 +16,11 @@
   (.stop server)
   (log/info "HTTP server stopped"))
 
-(defmethod ig/prep-key :server/http
-  [_ config]
-  (merge {:port 3000
-          :host "0.0.0.0"}
-         config))
+(defmethod ig/expand-key :server/http
+  [k config]
+  {k (merge {:port 3000
+             :host "0.0.0.0"}
+            config)})
 
 (defmethod ig/init-key :server/http
   [_ opts]

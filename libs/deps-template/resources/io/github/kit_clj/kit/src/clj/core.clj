@@ -45,7 +45,7 @@
 (defn start-app [& [params]]
   ((or (:start params) (:start defaults) (fn [])))
   (->> (config/system-config (or (:opts params) (:opts defaults) {}))
-       (ig/prep)
+       (ig/expand)
        (ig/init)
        (reset! system))
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
