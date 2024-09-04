@@ -94,7 +94,7 @@
 (comment
   (def test-code
     "{:paths [\"src\"]
- :deps  {integrant/integrant       {:mvn/version \"0.7.0\"}
+ :deps  {integrant/integrant       {:mvn/version \"0.9.0\"}
          com.xtdb/xtdb-core        {:mvn/version \"1.20.0\"}}}")
 
   (replace-dependencies test-code dependencies))

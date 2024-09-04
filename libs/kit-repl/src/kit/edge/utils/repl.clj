@@ -4,9 +4,9 @@
     [clojure.tools.logging :as log]
     [integrant.core :as ig]))
 
-(defmethod ig/prep-key :repl/server
-  [_ config]
-  (merge {:name "main"} config))
+(defmethod ig/expand-key :repl/server
+  [k config]
+  {k (merge {:name "main"} config)})
 
 (defmethod ig/init-key :repl/server
   [_ {:keys [port host name] :as config}]
