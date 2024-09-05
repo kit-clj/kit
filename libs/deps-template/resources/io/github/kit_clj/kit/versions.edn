@@ -1,7 +1,7 @@
 {"kit-core"         "1.0.8"
  "kit-http-kit"     "1.0.4"
  "kit-xtdb"         "1.0.4"
- "kit-generator"    "0.2.2"
+ "kit-generator"    "0.2.3"
  "kit-hato"         "1.0.4"
  "kit-nrepl"        "1.0.5"
  "kit-metrics"      "1.0.3"
