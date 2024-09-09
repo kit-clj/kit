@@ -46,9 +46,9 @@
   (->> (config/system-config (or (:opts params) (:opts defaults) {}))
        (ig/expand)
        (ig/init)
-       (reset! system))
-  (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app))
-  (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown-agents)))
+       (reset! system)))
 
 (defn -main [& _]
-  (start-app))
+  (start-app)
+  (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app))
+  (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown-agents)))
