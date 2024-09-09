@@ -48,7 +48,7 @@
        (ig/init)
        (reset! system))
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app))
-  (.addShutdownHook (Runtime/getRuntime) (shutdown-agents)))
+  (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown-agents)))
 
 (defn -main [& _]
   (start-app))
