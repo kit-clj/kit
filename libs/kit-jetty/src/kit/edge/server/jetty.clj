@@ -1,25 +1,25 @@
-(ns kit.edge.server.http-kit
+(ns kit.edge.server.jetty
   (:require
-    [integrant.core :as ig]
-    [clojure.tools.logging :as log]
-    [org.httpkit.server :as http-kit]))
+   [integrant.core :as ig]
+   [clojure.tools.logging :as log]
+   [ring.adapter.jetty :as jetty]))
 
 (defn start [handler {:keys [host port] :as opts}]
   (try
     (log/info "starting HTTP server on port" port)
-    (http-kit/run-server
+    (jetty/run-jetty
      handler
      (-> opts
-         (assoc  :legacy-return-value? false)
+         (assoc :join? false)
          (dissoc :handler :init)))
     (catch Throwable t
       (log/error t (str "server failed to start on" host "port" port))
       (throw t))))
 
-(defn stop [http-server timeout]
-  (let [result @(future (http-kit/server-stop! http-server {:timeout (or timeout 100)}))]
-     (log/info "HTTP server stopped")
-     result))
+(defn stop [http-server]
+  (let [result @(future (.stop http-server))]
+    (log/info "HTTP server stopped")
+    result))
 
 (defmethod ig/expand-key :server/http
   [k config]
@@ -34,8 +34,8 @@
      :server  (start (fn [req] (@@handler req)) (dissoc opts :handler))}))
 
 (defmethod ig/halt-key! :server/http
-  [{:keys [timeout]} {:keys [server]}]
-  (stop server timeout))
+  [_ {:keys [server]}]
+  (stop server))
 
 (defmethod ig/suspend-key! :server/http
   [_ {:keys [handler]}]

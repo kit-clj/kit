@@ -9,6 +9,8 @@
   hato/hato                              {:mvn/version "1.0.0"}
   ;; kit-http-kit
   http-kit/http-kit                      {:mvn/version "2.7.0"}
+  ;; kit-jetty
+  ring/ring-jetty-adapter                {:mvn/version "1.12.2"}
   ;; kit-metrics
   clj-commons/iapetos                    {:mvn/version "0.1.13"}
   io.prometheus/simpleclient             {:mvn/version "0.16.0"}
