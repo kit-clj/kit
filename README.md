@@ -33,6 +33,8 @@ To create a new Kit application:
 |------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | io.github.kit-clj/kit-core         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-core.svg)](https://clojars.org/io.github.kit-clj/kit-core)                 |
 | io.github.kit-clj/kit-hato         | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-hato.svg)](https://clojars.org/io.github.kit-clj/kit-hato)                 |
+| io.github.kit-clj/kit-http-kit     | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-http-kit.svg)](https://clojars.org/io.github.kit-clj/kit-http-kit)         |
+| io.github.kit-clj/kit-jetty        | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-jetty.svg)](https://clojars.org/io.github.kit-clj/kit-jetty)               |
 | io.github.kit-clj/kit-metrics      | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-metrics.svg)](https://clojars.org/io.github.kit-clj/kit-metrics)           |
 | io.github.kit-clj/kit-nrepl        | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-nrepl.svg)](https://clojars.org/io.github.kit-clj/kit-nrepl)               |
 | io.github.kit-clj/kit-quartz       | [![Clojars Project](https://img.shields.io/clojars/v/io.github.kit-clj/kit-quartz.svg)](https://clojars.org/io.github.kit-clj/kit-quartz)             |
