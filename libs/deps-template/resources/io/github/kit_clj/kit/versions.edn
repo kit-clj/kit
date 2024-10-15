@@ -1,4 +1,4 @@
-{"kit-core"         "1.0.8"
+{"kit-core"         "1.0.9"
  "kit-http-kit"     "1.0.5"
  "kit-jetty"        "1.0.0"
  "kit-xtdb"         "1.0.4"
@@ -17,5 +17,5 @@
  "kit-sql-hikari"   "1.0.6"
  "kit-sql"          "1.1.4"
  "kit-undertow"     "1.0.7"
- "lein-template"    "0.1.67"
- "deps-template"    "0.1.67"}
+ "lein-template"    "0.1.68"
+ "deps-template"    "0.1.68"}
