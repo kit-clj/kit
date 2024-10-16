@@ -12,7 +12,7 @@
            ring/ring-defaults              {:mvn/version "0.5.0"}
 
            ;; Logging
-           ch.qos.logback/logback-classic  {:mvn/version "1.5.10"}
+           ch.qos.logback/logback-classic  {:mvn/version "1.5.7"}
            
            ;; Data coercion
            luminus-transit/luminus-transit {:mvn/version "0.1.6"
