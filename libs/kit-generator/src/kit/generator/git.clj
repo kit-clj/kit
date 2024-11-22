@@ -37,6 +37,9 @@
                                :bare?              false
                                :clone-all?         false)))
         (when callback (callback path))))
+    (catch org.eclipse.jgit.api.errors.TransportException e
+      (println (.getMessage e)
+               "\nif you do not have a key file, set the :name key in kit.git-config.edn to an empty string"))
     (catch Exception e
       (println "failed to clone module:" url "\ncause:" (.getMessage e))
       (.printStackTrace e))))
