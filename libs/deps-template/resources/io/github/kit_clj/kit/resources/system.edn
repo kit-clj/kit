@@ -9,11 +9,12 @@
 <% if repl? %>
  :repl/server
  {:port #long #or [#env REPL_PORT 7200]
-  :host #or [#env REPL_HOST "127.0.0.1"]}<% endif %> <% if nrepl? %>
+  :host #or [#env REPL_HOST "127.0.0.1"]}<% endif %>
+<% if nrepl? %>
  :nrepl/server
  {:port #long #or [#env NREPL_PORT 7000]
   :bind #or [#env NREPL_HOST "127.0.0.1"]}<% endif %>
- <% if redis? %>
+<% if redis? %>
  :cache/redis
  {:ttl  3600
   :conn {:pool {}
@@ -25,8 +26,8 @@
   :handler #ig/ref :handler/ring}
 
  :handler/ring
- {:router                #ig/ref :router/core <% if metrics? %>
-  :metrics               #ig/ref :metrics/prometheus <% endif %>
+ {:router                #ig/ref :router/core<% if metrics? %>
+  :metrics               #ig/ref :metrics/prometheus<% endif %>
   :api-path              "/api"
   :cookie-secret         #or [#env COOKIE_SECRET "<<default-cookie-secret>>"]
   ;; from ring.middleware.defaults. anti-forgery `false` by default because services may not require it
@@ -53,8 +54,8 @@
 
  :reitit.routes/api
  {:base-path "/api"
-  :env       #ig/ref :system/env <% if metrics? %>
-  :metrics   #ig/ref :metrics/prometheus <% endif %><% if conman? %>
+  :env       #ig/ref :system/env<% if metrics? %>
+  :metrics   #ig/ref :metrics/prometheus<% endif %><% if conman? %>
   :query-fn #ig/ref :db.sql/query-fn<% endif %>
   }
 
@@ -63,13 +64,13 @@
 
  :router/core
  {:routes #ig/ref :router/routes
-  :env #ig/ref :system/env} <% if quartz? %>
+  :env #ig/ref :system/env}<% if quartz? %>
 
  :cronut/scheduler
- {:schedule []}<% endif %> <% if selmer? %>
+ {:schedule []}<% endif %><% if selmer? %>
 
  :templating/selmer
- {}<% endif %> <% if xtdb? %>
+ {}<% endif %><% if xtdb? %>
 
  ;; https://docs.xtdb.com/administration/configuring/
  :db.xtdb/node
@@ -84,7 +85,7 @@
                                                   :db-dir      "data/dev/index-store"
                                                   :sync?       true}}}
            :test {}
-           :prod {}} <% endif %><% if hikari? %>
+           :prod {}}<% endif %><% if hikari? %>
 
  :db.sql/hikari-connection
  #profile {:dev  {:jdbc-url "jdbc:mysql://127.0.0.1:3306/<<name>>?characterEncoding=utf8"}
@@ -102,7 +103,7 @@
                   :password           "123456"
                   :jdbc-url           #env JDBC_URL
                   :driver-class-name  "com.mysql.jdbc.Driver"
-                  :register-mbeans    false}} <% endif %><% if conman? %>
+                  :register-mbeans    false}}<% endif %><% if conman? %>
 
  :db.sql/connection
  #profile {:dev  {:jdbc-url "jdbc:postgresql://localhost/<<name>>?user=<<name>>&password=<<name>>"}
@@ -117,10 +118,10 @@
  {:conn     #ig/ref :db.sql/connection
   :options  {}
   :filename "queries.sql"
-  :env #ig/ref :system/env} <% endif %><% if migratus? %>
+  :env #ig/ref :system/env}<% endif %><% if migratus? %>
 
  :db.sql/migrations
  {:store            :database
   :db               {:datasource #ig/ref :db.sql/connection}
-  :migrate-on-init? true} <% endif %>
+  :migrate-on-init? true}<% endif %>
 }
