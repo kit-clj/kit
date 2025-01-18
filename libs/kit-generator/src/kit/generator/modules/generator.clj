@@ -157,5 +157,3 @@
                                          :name "kit"}]
                          :modules      {:html {:path "html"}}}}]
     (generate ctx :html {:feature-flag :default})))
-
-    

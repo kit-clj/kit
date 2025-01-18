@@ -3,7 +3,7 @@
     [<<ns-name>>.core :as core]
     [integrant.repl.state :as state]))
 
-(defn system-state 
+(defn system-state
   []
   (or @core/system state/system))
 
