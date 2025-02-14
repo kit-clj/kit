@@ -71,6 +71,8 @@
                                 ring/ring-mock                       {:mvn/version "0.4.0"}
                                 io.github.kit-clj/kit-generator      {:mvn/version "<<versions.kit-generator>>"}
                                 org.clojure/tools.namespace          {:mvn/version "1.4.5"}
+                                peridot/peridot                      {:mvn/version "0.5.4"}
+                                org.clj-commons/byte-streams         {:mvn/version "0.3.4"}
                                 com.lambdaisland/classpath           {:mvn/version "0.5.48"}}
                   :exec-fn      cognitect.test-runner.api/test
                   :extra-paths ["env/dev/clj" "env/dev/resources" "env/test/resources" "test/clj"]
