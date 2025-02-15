@@ -1,8 +1,6 @@
 (ns <<ns-name>>.web.request-test
   (:require  [clojure.test :refer [deftest testing is use-fixtures]]
-             [<<ns-name>>.test-utils :refer [system-state system-fixture GET]]
-             [integrant.core :as ig]
-             [<<ns-name>>.config :as config]))
+             [<<ns-name>>.test-utils :refer [system-state system-fixture GET]]))
 
 (use-fixtures :once (system-fixture))
 

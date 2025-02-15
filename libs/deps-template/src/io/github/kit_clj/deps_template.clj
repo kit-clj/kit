@@ -1,11 +1,10 @@
 (ns io.github.kit-clj.deps-template
-  (:require [clojure.java.io :as io]
-            [clojure.pprint :as pprint]
-            [clojure.string :as str]
-            [babashka.fs :as fs]
-            [selmer.parser :as selmer]
-            [clojure.edn :as edn]
-            [io.github.kit-clj.deps-template.helpers :as helpers]))
+  (:require
+   [clojure.string :as str]
+   [babashka.fs :as fs]
+   [clojure.edn :as edn]
+   [io.github.kit-clj.deps-template.helpers :as helpers])
+  (:import java.io.File))
 
 (defn- excluded-template-files
   "Returns a sequence of files that will be excluded from the output."
@@ -47,7 +46,7 @@
 
 
 (defn adapt-separator [pattern]
-  (let [separator (java.io.File/separator)
+  (let [separator File/separator
         escaped-separator (if (= "\\" separator) "\\\\" separator)]
     (clojure.string/replace pattern "/" escaped-separator)))
 
@@ -74,7 +73,7 @@
   This can be used to rename files when they don't map directly to the template
   files in the resource path."
   [file-path]
-  (let [separator (java.io.File/separator)]
+  (let [separator File/separator]
     (or (when-let [{:keys [prefix suffix]} (match-namespaced-file file-path)]
           (str prefix separator "{{name/file}}" separator suffix))
         (let [[m] (re-seq #"^gitignore$" file-path)]

@@ -37,4 +37,6 @@
    ["src/clj/{{sanitized}}/web/routes/utils.clj" (helpers/render "src/clj/web/routes/utils.clj" data)]
 
    ["test/clj/{{sanitized}}/test_utils.clj" (helpers/render "test/clj/test_utils.clj" data)]
-   ["test/clj/{{sanitized}}/core_test.clj" (helpers/render "test/clj/core_test.clj" data)]])
+   ["test/clj/{{sanitized}}/core_test.clj" (helpers/render "test/clj/core_test.clj" data)]
+   ["test/clj/{{sanitized}}/web/request_test.clj" (helpers/render "test/clj/web/request_test.clj" data)]])
+
