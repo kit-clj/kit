@@ -28,8 +28,7 @@
 
 (defn stop-app []
   ((or (:stop defaults) (fn [])))
-  (some-> (deref system) (ig/halt!))
-  (shutdown-agents))
+  (some-> (deref system) (ig/halt!)))
 
 (defn start-app [& [params]]
   ((or (:start params) (:start defaults) (fn [])))
@@ -37,7 +36,7 @@
        (ig/expand)
        (ig/init)
        (reset! system))
-  (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
+  (.addShutdownHook (Runtime/getRuntime) (Thread. (fn [] (stop-app) (shutdown-agents)))))
 
 (defn -main [& _]
   (start-app))

@@ -48,5 +48,4 @@
 
 (defn -main [& _]
   (start-app)
-  (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app))
-  (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown-agents)))
+  (.addShutdownHook (Runtime/getRuntime) (Thread. (fn [] (stop-app) (shutdown-agents)))))
