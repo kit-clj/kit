@@ -11,5 +11,4 @@
    :stop       (fn []
                  (log/info "\n-=[<<name>> has shut down successfully]=-"))
    :middleware wrap-dev
-   :opts       {:profile       :dev
-                :persist-data? true}})
+   :opts       {:profile       :dev}})
