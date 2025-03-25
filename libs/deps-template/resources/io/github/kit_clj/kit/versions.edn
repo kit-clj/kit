@@ -1,7 +1,7 @@
 {"kit-core"         "1.0.9"
  "kit-http-kit"     "1.0.5"
  "kit-jdk-http"     "1.0.0"
- "kit-jetty"        "1.0.0" 
+ "kit-jetty"        "1.0.0"
  "kit-xtdb"         "1.0.4"
  "kit-generator"    "0.2.4"
  "kit-hato"         "1.0.4"
@@ -18,5 +18,5 @@
  "kit-sql-hikari"   "1.0.6"
  "kit-sql"          "1.1.4"
  "kit-undertow"     "1.0.8"
- "lein-template"    "0.1.76"
- "deps-template"    "0.1.76"}
+ "lein-template"    "0.1.77"
+ "deps-template"    "0.1.77"}
