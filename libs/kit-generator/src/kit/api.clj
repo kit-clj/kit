@@ -1,10 +1,11 @@
 (ns kit.api
   (:require
-    [clojure.string :as string]
-    [kit.generator.modules.generator :as generator]
-    [kit.generator.modules :as modules]
-    [kit.generator.snippets :as snippets]
-    [kit.generator.io :as io]))
+   [clojure.string :as string]
+   [kit.generator.modules.generator :as generator]
+   [kit.generator.modules.dependencies :as deps]
+   [kit.generator.modules :as modules]
+   [kit.generator.snippets :as snippets]
+   [kit.generator.io :as io]))
 
 ;; TODO: Add docstrings
 
@@ -36,9 +37,10 @@
   ([module-key {:keys [feature-flag] :as opts}]
    (let [{:keys [modules] :as ctx} (modules/load-modules (read-ctx))]
      (if (modules/module-exists? ctx module-key)
-       (let [module-config (generator/read-module-config ctx modules module-key)]
-         (println module-key "requires following modules:" (get-in module-config [feature-flag :requires]))
-         (doseq [module-key (get-in module-config [feature-flag :requires])]
+       (let [module-config (generator/read-module-config ctx modules module-key)
+             deps (deps/resolve-dependencies module-config  feature-flag)]
+         (println module-key "requires following modules:" deps)
+         (doseq [module-key deps]
            (install-dependency module-key))
          (generator/generate ctx module-key opts))
        (println "no module found with name:" module-key))
