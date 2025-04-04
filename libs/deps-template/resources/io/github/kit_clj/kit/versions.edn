@@ -3,7 +3,7 @@
  "kit-jdk-http"     "1.0.0"
  "kit-jetty"        "1.0.0"
  "kit-xtdb"         "1.0.4"
- "kit-generator"    "0.2.4"
+ "kit-generator"    "0.2.5"
  "kit-hato"         "1.0.4"
  "kit-nrepl"        "1.0.5"
  "kit-metrics"      "1.0.3"
