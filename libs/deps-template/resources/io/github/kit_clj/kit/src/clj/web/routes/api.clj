@@ -38,7 +38,10 @@
            :swagger {:info {:title "<<ns-name>> API"}}
            :handler (swagger/create-swagger-handler)}}]
    ["/health"
-    {:get health/healthcheck!}]])
+    ;; note that use of the var is necessary
+    ;; for reitit to reload routes without
+    ;; restarting the system
+    {:get #'health/healthcheck!}]])
 
 (derive :reitit.routes/api :reitit/routes)
 
