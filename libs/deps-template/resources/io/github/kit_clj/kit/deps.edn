@@ -4,7 +4,7 @@
  :deps    {org.clojure/clojure             {:mvn/version "1.12.0"}
 
            ;; Routing
-           metosin/reitit                  {:mvn/version "0.7.2"}
+           metosin/reitit                  {:mvn/version "0.8.0"}
 
            ;; Ring
            metosin/ring-http-response      {:mvn/version "0.9.3"}
