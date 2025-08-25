@@ -46,7 +46,7 @@
   ;; kit-sql-migratus
   migratus/migratus                      {:mvn/version "1.5.1"}
   ;; kit-undertow
-  luminus/ring-undertow-adapter          {:mvn/version "1.3.1"}
+  luminus/ring-undertow-adapter          {:mvn/version "1.4.1"}
   ;; kit-xtdb
   com.xtdb/xtdb-core                     {:mvn/version "1.23.0"}
   ;; UNSTABLE:
