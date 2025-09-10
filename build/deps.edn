@@ -1,7 +1,7 @@
 {:deps
  {;; kit-core
   aero/aero                              {:mvn/version "1.1.6"}
-  integrant/integrant                    {:mvn/version "0.9.0"}
+  integrant/integrant                    {:mvn/version "1.0.0"}
   org.clojure/tools.logging              {:mvn/version "1.2.4"}
   ch.qos.logback/logback-classic         {:mvn/version "1.5.16"}
   com.lambdaisland/classpath             {:mvn/version "0.4.44"}
