@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@10.2
+        uses: DeLaGuardo/setup-clojure@13.4
         with:
           cli: latest
           bb: latest
