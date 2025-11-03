@@ -3,7 +3,8 @@
    [clojure.string :as str]
    [babashka.fs :as fs]
    [clojure.edn :as edn]
-   [io.github.kit-clj.deps-template.helpers :as helpers])
+   [io.github.kit-clj.deps-template.helpers :as helpers]
+   [selmer.parser :as selmer])
   (:import java.io.File))
 
 (defn- excluded-template-files
@@ -30,7 +31,8 @@
   "Returns the data to be passed into the Selmer templates."
   [{:keys [template-dir default-cookie-secret] :as data}]
   (let [full-name (:name data)
-        [_ name] (str/split full-name #"/")
+        parts (str/split full-name #"/")
+        name (last parts)
         versions (edn/read-string (slurp (fs/file template-dir "versions.edn")))
         default-cookie-secret' (or default-cookie-secret
                                    (helpers/generate-cookie-secret))]
@@ -55,9 +57,10 @@
 
 
 
-(defn- match-namespaced-file [file-path]
+(defn- match-namespaced-file
   "If a file needs to include the namespace in its path, return a map with the
   prefix and suffix."
+  [file-path]
   (let [pattern1 (adapt-separator #"^((?:src|test)/clj)/(.+)$")
         pattern2 (adapt-separator #"^(env/(?:dev|prod)/clj)/((?:dev_middleware|env)\.clj)$")]
     (or (let [[[_ prefix suffix]] (re-seq (re-pattern pattern1) file-path)]
@@ -75,7 +78,7 @@
   [file-path]
   (let [separator File/separator]
     (or (when-let [{:keys [prefix suffix]} (match-namespaced-file file-path)]
-          (str prefix separator "{{name/file}}" separator suffix))
+          (str prefix separator "{{sanitized}}" separator suffix))
         (let [[m] (re-seq #"^gitignore$" file-path)]
           (when m ".gitignore"))
         file-path)))
@@ -83,16 +86,19 @@
 (defn- render-templates
   "Returns a sequence containing a map for each rendered Selmer template file."
   [{:keys [template-dir] :as data}]
-  (->> (file-seq (fs/file template-dir))
-       (filter #(and (.isFile %) (not (.isHidden %))))
-       (map #(fs/relativize template-dir %))
-       (filter #(not (contains? (set (excluded-template-files data)) (windows-to-unix-slash (str %)))))
-       (map (fn [f]
-              {:src-path (str f)
-               :dest-path (dest-path (str f))
-               :output (helpers/render-selmer (slurp (fs/file template-dir f))
-                                              (selmer-opts data))
-               :temp-name (str (random-uuid))}))))
+  (let [opts (selmer-opts data)
+        render-path (fn [path-template]
+                      (selmer/render path-template opts))]
+    (->> (file-seq (fs/file template-dir))
+         (filter #(and (.isFile %) (not (.isHidden %))))
+         (map #(fs/relativize template-dir %))
+         (filter #(not (contains? (set (excluded-template-files data)) (windows-to-unix-slash (str %)))))
+         (map (fn [f]
+                {:src-path (str f)
+                 :dest-path (render-path (dest-path (str f)))
+                 :output (helpers/render-selmer (slurp (fs/file template-dir f))
+                                                opts)
+                 :temp-name (str (random-uuid))})))))
 
 (defn data-fn
   "Returns template data with template files added.
@@ -105,7 +111,10 @@
   "Writes template files to the temp-dir."
   [temp-dir template-files]
   (doseq [{:keys [temp-name output]} template-files]
-    (spit (fs/file temp-dir temp-name) output)))
+    (let [output-with-newline (if (.endsWith output "\n")
+                                 output
+                                 (str output "\n"))]
+      (spit (fs/file temp-dir temp-name) output-with-newline))))
 
 (defn transform-temporary-files
   "A deps-new transform to copy the temporary files to the output directory."

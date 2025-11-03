@@ -4,9 +4,9 @@
 (defn render-selmer
   [text options]
   (selmer/render
-    (str "<% safe %>" text "<% endsafe %>")
-    options
-    {:tag-open \< :tag-close \> :filter-open \< :filter-close \>}))
+   (str "<% safe %>" text "<% endsafe %>")
+   options
+   {:tag-open \< :tag-close \> :filter-open \< :filter-close \>}))
 
 (defn generate-cookie-secret
   ([] (generate-cookie-secret 16))
