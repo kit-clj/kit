@@ -1,14 +1,14 @@
 {:deps {io.github.kit-clj/deps-template {:local/root "libs/deps-template"}}
- :aliases {:new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.2.381"}}
+ :aliases {:new {:extra-deps {com.github.seancorfield/clj-new {:mvn/version "1.3.415"}}
                  :exec-fn    clj-new/create
                  :exec-args  {:template kit-clj}}
-           :deps-new {:extra-deps {io.github.seancorfield/deps-new {:git/tag "v0.5.0" :git/sha "48bf01e"}}
+           :deps-new {:extra-deps {io.github.seancorfield/deps-new {:git/tag "v0.10.1" :git/sha "a90029c"}}
                       :exec-fn    org.corfield.new/create}
-           :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
-                          slipset/deps-deploy {:mvn/version "0.2.0"}
-                          weavejester/dependency {:mvn/version "0.2.1"}
-                          rewrite-clj/rewrite-clj {:mvn/version "1.1.46"}
-                          babashka/fs {:mvn/version "0.3.17"}}
+           :build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.11"}
+                          slipset/deps-deploy {:mvn/version "0.2.2"}
+                          weavejester/dependency {:mvn/version "1.0.0"}
+                          rewrite-clj/rewrite-clj {:mvn/version "1.2.50"}
+                          babashka/fs {:mvn/version "0.5.27"}}
                    :extra-paths ["build"]
                    :ns-default build}
 
@@ -16,7 +16,7 @@
            {:extra-paths ["test"]
             :extra-deps {io.github.cognitect-labs/test-runner
                           {:git/tag "v0.5.1" :git/sha "dfb30dd"}
-                         babashka/fs {:mvn/version "0.3.17"}
-                         babashka/process {:mvn/version "0.4.16"}}
+                         babashka/fs {:mvn/version "0.5.27"}
+                         babashka/process {:mvn/version "0.6.23"}}
             :main-opts ["-m" "cognitect.test-runner"]
             :exec-fn cognitect.test-runner.api/test}}}
