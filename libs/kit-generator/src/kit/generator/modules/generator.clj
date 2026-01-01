@@ -1,13 +1,13 @@
 (ns kit.generator.modules.generator
   (:require
-    [kit.generator.io :as io]
-    [kit.generator.modules :as modules]
-    [kit.generator.modules.injections :as ij]
-    [kit.generator.renderer :as renderer]
-    [clojure.java.io :as jio]
-    [clojure.pprint :refer [pprint]]
-    [deep.merge :as deep-merge]
-    [rewrite-clj.zip :as z])
+   [kit.generator.io :as io]
+   [kit.generator.modules :as modules]
+   [kit.generator.modules.injections :as ij]
+   [kit.generator.renderer :as renderer]
+   [clojure.java.io :as jio]
+   [clojure.pprint :refer [pprint]]
+   [deep.merge :as deep-merge]
+   [rewrite-clj.zip :as z])
   (:import java.io.File
            java.nio.file.Files))
 
@@ -27,7 +27,9 @@
       (slurp asset-path)
       (Files/readAllBytes (.toPath (jio/file asset-path))))
     (catch Exception e
-      (println "failed to read asset:" asset-path (.getMessage e)))))
+      (throw (ex-info (str "failed to read asset " asset-path)
+                      {:asset-path asset-path}
+                      e)))))
 
 (defn write-string [template-string target-path]
   (spit target-path template-string))
@@ -56,10 +58,10 @@
       (and (sequential? asset) (contains? #{2 3} (count asset)))
       (let [[asset-path target-path force?] asset]
         (write-asset
-          (->> (read-asset (concat-path module-path asset-path))
-               (renderer/render-asset ctx))
-          (renderer/render-template ctx target-path)
-          force?))
+         (->> (read-asset (concat-path module-path asset-path))
+              (renderer/render-asset ctx))
+         (renderer/render-template ctx target-path)
+         force?))
       :else
       (println "unrecognized asset type:" asset))))
 
@@ -69,7 +71,7 @@
 (defmethod handle-action :default [_ [id]]
   (println "undefined action:" id))
 
-(defn read-config [ctx module-path]
+(defn- render-module-config [ctx module-path]
   (some->> (str module-path File/separator "config.edn")
            (slurp)
            (renderer/render-template ctx)))
@@ -89,8 +91,10 @@
 (defn read-module-config [ctx modules module-key]
   (let [module-path (get-in modules [:modules module-key :path])
         ctx         (assoc ctx :module-path module-path)
-        config-str  (read-config ctx module-path)]
-    (io/str->edn config-str)))
+        config-str  (render-module-config ctx module-path)]
+    {:config-str    config-str
+     :module-config (io/str->edn config-str)
+     :module-path   module-path}))
 
 (defn get-throw-on-not-found
   [m k]
@@ -104,8 +108,8 @@
     (do
       (println "applying features to config:" feature-requires)
       (apply deep-merge/concat-merge
-            (conj (mapv #(get-throw-on-not-found edn-config %) feature-requires)
-                  config)))
+             (conj (mapv #(get-throw-on-not-found edn-config %) feature-requires)
+                   config)))
     config))
 
 (defn generate [{:keys [modules] :as ctx} module-key {:keys [feature-flag]
@@ -115,14 +119,12 @@
     (if (= :success (module-log module-key))
       (println "module" module-key "is already installed!")
       (try
-        (let [module-path (get-in modules [:modules module-key :path])
-              ctx         (assoc ctx :module-path module-path)
-              config-str  (read-config ctx module-path)
-              edn-config  (io/str->edn config-str)
-              zip-config  (z/of-string config-str)
-              config      (get edn-config feature-flag)]
+        (let [{:keys [module-path module-config config-str]} (read-module-config ctx modules module-key)
+              ctx                                            (assoc ctx :module-path module-path)
+              config                                         (get module-config feature-flag)
+              zip-config                                     (z/of-string config-str)]
           (cond
-            (nil? edn-config)
+            (nil? module-config)
             (do
               (println "module" module-key "not found, available modules:")
               (pprint (modules/list-modules ctx)))
@@ -130,11 +132,11 @@
             (nil? config)
             (do
               (println "feature" feature-flag "not found for module" module-key ", available features:")
-              (pprint (keys edn-config)))
+              (pprint (keys module-config)))
 
             :else
-            (let [{:keys [actions success-message require-restart?]} (apply-features edn-config config)
-                  ctx (assoc ctx :zip-config zip-config)]
+            (let [{:keys [actions success-message require-restart?]} (apply-features module-config config)
+                  ctx                                                (assoc ctx :zip-config zip-config)]
               (doseq [action actions]
                 (handle-action ctx action))
               (write-modules-log modules-root (assoc module-log module-key :success))

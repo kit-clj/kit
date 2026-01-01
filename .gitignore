@@ -19,3 +19,6 @@ pom.xml.asc
 .lsp
 .clj-kondo/.cache/
 .aider*
+/libs/kit-generator/test/resources/generated/
+/libs/kit-generator/test/resources/modules/install-log.edn
+/.clj-kondo/

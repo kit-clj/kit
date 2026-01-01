@@ -34,10 +34,10 @@
 (defn install-module
   ([module-key]
    (install-module module-key {:feature-flag :default}))
-  ([module-key {:keys [feature-flag] :as opts}]
-   (let [{:keys [modules] :as ctx} (modules/load-modules (read-ctx))]
+  ([module-key {:keys [feature-flag kit-edn-path] :or {kit-edn-path "kit.edn"} :as opts}]
+   (let [{:keys [modules] :as ctx} (modules/load-modules (read-ctx kit-edn-path))]
      (if (modules/module-exists? ctx module-key)
-       (let [module-config (generator/read-module-config ctx modules module-key)
+       (let [{:keys [module-config]} (generator/read-module-config ctx modules module-key)
              deps (deps/resolve-dependencies module-config  feature-flag)]
          (println module-key "requires following modules:" deps)
          (doseq [module-key deps]
@@ -83,4 +83,3 @@
 
 (defn snippet [id & args]
   (snippets/gen-snippet (snippets-db (read-ctx)) id args))
-
