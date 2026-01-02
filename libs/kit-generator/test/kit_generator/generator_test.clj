@@ -55,7 +55,7 @@
       (is (empty? (target-folder-mismatches expected-files))))))
 
 (deftest test-edn-injection-with-feature-flag
-  (testing "testing injection with a fetaure flag"
+  (testing "testing injection with a feature flag"
     (is (not (module-installed? :html)))
     (let [ctx (m/load-modules ctx)]
       (g/generate ctx :html {:feature-flag :empty}))
@@ -64,10 +64,10 @@
       (is (empty? (target-folder-mismatches expected-files))))))
 
 (deftest test-edn-injection-with-feature-requires
-  (testing "testing injection with a fetaure flag"
+  (testing "testing injection with a feature flag + feature-requires"
     (is (not (module-installed? :meta)))
     (let [ctx (m/load-modules ctx)]
-      (g/generate ctx :meta {}))
+      (g/generate ctx :meta {:feature-flag :full}))
     (is (module-installed? :meta))
     (let [expected-files {"resources/public/css/styles.css" [#".body"]
                           "resources/public/css/app.css"    [#".app"]}]

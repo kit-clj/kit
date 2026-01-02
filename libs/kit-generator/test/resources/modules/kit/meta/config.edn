@@ -1,7 +1,9 @@
 {:default
- {:actions {:assets [["assets/app.css" "test/resources/generated/resources/public/css/app.css"]]}
-  :feature-requires [:extras]}
+ {:actions {:assets [["assets/app.css" "test/resources/generated/resources/public/css/app.css"]]}}
 
  :extras
  {:actions {:assets [["assets/styles.css" "test/resources/generated/resources/public/css/styles.css"]]}
-  :feature-requires [:extras]}}
+  :requires [:db]}
+
+ :full
+ {:feature-requires [:default :extras]}}

@@ -1,7 +1,7 @@
 (ns kit-generator.core-test
   (:require
    [clojure.string :as str]
-   [clojure.test :refer [deftest is testing]]
+   [clojure.test :refer [deftest is testing are]]
    [kit-generator.generator-test]
    [kit-generator.injections]
    [kit-generator.io :as io]
@@ -39,26 +39,44 @@
     (io/write-edn ctx kit-edn-path)
     kit-edn-path))
 
-(deftest test-install-module
-  (testing "installing a module"
-    (let [kit-edn-path (prepare-project)]
-      (is (not (module-installed? :meta)))
-      (is (= :done (kit/install-module :meta {:kit-edn-path kit-edn-path})))
-      (is (module-installed? :meta))
-      (is (empty? (io/folder-mismatches project-root
-                                        {"resources/public/css/styles.css" []
-                                         "resources/public/css/app.css"    []
-                                         "kit.edn"                         []}
-                                        {:filter #(not (str/starts-with? % "modules/"))}))))))
+(defn test-install-module*
+  [module-key opts expected-files]
+  (let [kit-edn-path (prepare-project)]
+    (is (not (module-installed? module-key)))
+    (is (= :done (kit/install-module module-key kit-edn-path opts)))
+    (is (module-installed? module-key))
+    (is (empty? (io/folder-mismatches project-root
+                                      expected-files
+                                      {:filter #(not (str/starts-with? % "modules/"))})))))
 
-(deftest test-install-module-with-feature-flag
-  (testing "installing a module with a feature flag"
-    (let [kit-edn-path (prepare-project)]
-      (is (not (module-installed? :meta)))
-      (is (= :done (kit/install-module :meta {:feature-flag :extras
-                                              :kit-edn-path kit-edn-path})))
-      (is (module-installed? :meta))
-      (is (empty? (io/folder-mismatches project-root
-                                        {"resources/public/css/styles.css" []
-                                         "kit.edn"                         []}
-                                        {:filter #(not (str/starts-with? % "modules/"))}))))))
+(deftest test-install-meta-module
+  (are [module-key opts expected-files] (test-install-module* module-key opts expected-files)
+    :meta {}                                {"resources/public/css/app.css"        []
+                                             "kit.edn"                             []}
+    :meta {:feature-flag :extras}           {"resources/public/css/styles.css"     []
+                                             "src/clj/myapp/db.clj"                []
+                                             "kit.edn"                             []}
+    :meta {:feature-flag :full}             {"resources/public/css/app.css"        []
+                                             "resources/public/css/styles.css"     []
+                                             "src/clj/myapp/db.clj"                []
+                                             "kit.edn"                             []}
+    :meta {:feature-flag :extras
+           :db {:feature-flag :postgres}}   {"resources/public/css/styles.css"     []
+                                             "src/clj/myapp/db.clj"                []
+                                             "src/clj/myapp/db/postgres.clj"       []
+                                             "kit.edn"                             []}
+    :meta {:feature-flag :extras
+           :db {:feature-flag :migrations}} {"resources/public/css/styles.css"     []
+                                             "src/clj/myapp/db.clj"                []
+                                             "src/clj/myapp/db/postgres.clj"       []
+                                             "src/clj/myapp/db/migratus.clj"       []
+                                             "src/clj/myapp/db/migrations/001.clj" []
+                                             "kit.edn"                             []}
+
+;;
+    ))
+
+;; TODO: Should feature-requires be transient? If so, add tests for that.
+
+(comment
+  (clojure.test/run-tests 'kit-generator.core-test))

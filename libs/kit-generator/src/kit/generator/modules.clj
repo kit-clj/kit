@@ -1,9 +1,10 @@
 (ns kit.generator.modules
   (:require
-    [clojure.java.io :as jio]
-    [kit.generator.git :as git]
-    [kit.generator.io :as io])
-  (:import java.io.File))
+   [clojure.java.io :as jio]
+   [deep.merge :as deep-merge]
+   [kit.generator.git :as git])
+  (:import
+   java.io.File))
 
 (defn sync-modules!
   "Clones or pulls modules from git repositories.
@@ -18,18 +19,18 @@
   [{:keys [modules]}]
   (doseq [{:keys [name url] :as repository} (-> modules :repositories)]
     (git/sync-repository!
-      (:root modules)
-      repository)))
+     (:root modules)
+     repository)))
 
 (defn set-module-path [module-config base-path]
   (update module-config :path #(str base-path File/separator %)))
 
 (defn set-module-paths [root {:keys [module-root modules]}]
   (reduce
-    (fn [modules [id config]]
-      (assoc modules id (set-module-path config (str root File/separator module-root))))
-    {}
-    modules))
+   (fn [modules [id config]]
+     (assoc modules id (set-module-path config (str root File/separator module-root))))
+   {}
+   modules))
 
 (defn load-modules [{:keys [modules] :as ctx}]
   (let [root (:root modules)]

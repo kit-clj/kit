@@ -40,7 +40,7 @@
 (defn write-asset [asset path force?]
   (jio/make-parents path)
   (if (and (.exists (jio/file path)) (not force?))
-    (println "asset already exists:" path)
+    (println "WARNING: Asset already exists:" path)
     ((if (string? asset) write-string write-binary) asset path)))
 
 (defmulti handle-action (fn [_ [id]] id))
@@ -63,13 +63,13 @@
          (renderer/render-template ctx target-path)
          force?))
       :else
-      (println "unrecognized asset type:" asset))))
+      (println "ERROR: Unrecognized asset type:" asset))))
 
 (defmethod handle-action :injections [ctx [_ injections]]
   (ij/inject-data ctx injections))
 
 (defmethod handle-action :default [_ [id]]
-  (println "undefined action:" id))
+  (println "ERROR: Undefined action:" id))
 
 (defn- render-module-config [ctx module-path]
   (some->> (str module-path File/separator "config.edn")
@@ -106,7 +106,6 @@
   [edn-config {:keys [feature-requires] :as config}]
   (if (some? feature-requires)
     (do
-      (println "applying features to config:" feature-requires)
       (apply deep-merge/concat-merge
              (conj (mapv #(get-throw-on-not-found edn-config %) feature-requires)
                    config)))
@@ -117,7 +116,7 @@
   (let [modules-root (:root modules)
         module-log   (read-modules-log modules-root)]
     (if (= :success (module-log module-key))
-      (println "module" module-key "is already installed!")
+      (println "WARNING: Module" module-key "is already installed!")
       (try
         (let [{:keys [module-path module-config config-str]} (read-module-config ctx modules module-key)
               ctx                                            (assoc ctx :module-path module-path)
@@ -126,12 +125,12 @@
           (cond
             (nil? module-config)
             (do
-              (println "module" module-key "not found, available modules:")
+              (println "ERROR: Module" module-key "not found, available modules:")
               (pprint (modules/list-modules ctx)))
 
             (nil? config)
             (do
-              (println "feature" feature-flag "not found for module" module-key ", available features:")
+              (println "ERROR: Feature" feature-flag "not found for module" module-key ", available features:")
               (pprint (keys module-config)))
 
             :else
@@ -141,11 +140,11 @@
                 (handle-action ctx action))
               (write-modules-log modules-root (assoc module-log module-key :success))
               (println (or success-message
-                           (str module-key " installed successfully!")))
+                           (str "Module " module-key " installed successfully!")))
               (when require-restart?
                 (println "restart required!")))))
         (catch Exception e
-          (println "failed to install module" module-key)
+          (println "ERROR: Failed to install module" module-key)
           (write-modules-log modules-root (assoc module-log module-key :error))
           (.printStackTrace e))))))
 
