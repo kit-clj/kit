@@ -1,8 +1,17 @@
 {:module-root "kit"
  :modules
-              {:html
-               {:path "html"
-                :doc  "adds support for HTML templating using Selmer"}
-               :kit/cljs
-               {:path "cljs"
-                :doc "adds support for cljs using shadow-cljs"}}}
+ {:html
+  {:path "html"
+   :doc  "adds support for HTML templating using Selmer"}
+  :kit/cljs
+  {:path "cljs"
+   :doc "adds support for cljs using shadow-cljs"}
+  :meta
+  {:path "meta"
+   :doc "meta-module adding support for html and cljs"}
+  :db
+  {:path "db"
+   :doc "adds support for database access"}
+  :migratus
+  {:path "migratus"
+   :doc "adds support for migrations"}}}

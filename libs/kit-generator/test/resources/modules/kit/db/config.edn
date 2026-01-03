@@ -1,0 +1,9 @@
+{:default    {:actions
+              {:assets [["assets/db.clj" "test/resources/generated/src/clj/<<sanitized>>/db.clj"]]}}
+ :postgres   {:actions
+              {:assets [["assets/postgres.clj" "test/resources/generated/src/clj/<<sanitized>>/db/postgres.clj"]]}
+              :feature-requires [:default]}
+ :migrations {:actions
+              {:assets [["assets/migrations/001.clj" "test/resources/generated/src/clj/<<sanitized>>/db/migrations/001.clj"]]}
+              :requires [:migratus]
+              :feature-requires [:postgres :default]}}

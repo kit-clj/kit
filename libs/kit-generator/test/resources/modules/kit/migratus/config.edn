@@ -1,0 +1,2 @@
+{:default
+ {:actions {:assets [["assets/migratus.clj" "test/resources/generated/src/clj/<<sanitized>>/db/migratus.clj"]]}}}

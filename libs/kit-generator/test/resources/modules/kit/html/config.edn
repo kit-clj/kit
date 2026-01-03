@@ -4,17 +4,19 @@
   :actions          {:assets [["assets/home.html" "test/resources/generated/resources/public/home.html"]
                               ["assets/img/luminus.png" "test/resources/generated/resources/public/img/luminus.png"]
                               ["assets/pages.clj" "test/resources/generated/src/clj/<<ns-name>>/web/routes/pages.clj"]]
-                     :injections
-                             [{:type   :edn
-                               :path   "test/resources/generated/resources/system.edn"
-                               :target []
-                               :action :merge
-                               :value  {:reitit.routes/pages
-                                        {:base-path "/"
-                                         :env       #ig/ref :system/env}
-                                        :templating/selmer
-                                        {}}}
-                              {:type   :clj
-                               :path   "test/resources/generated/src/<<sanitized>>/core.clj"
-                               :action :append-requires
-                               :value  ["[<<ns-name>>.web.routes.pages]"]}]}}}
+                     :injections [{:type   :edn
+                                   :path   "test/resources/generated/resources/system.edn"
+                                   :target []
+                                   :action :merge
+                                   :value  {:reitit.routes/pages
+                                            {:base-path "/"
+                                             :env       #ig/ref :system/env}
+                                            :templating/selmer
+                                            {}}}
+                                  {:type   :clj
+                                   :path   "test/resources/generated/src/<<sanitized>>/core.clj"
+                                   :action :append-requires
+                                   :value  ["[<<ns-name>>.web.routes.pages]"]}]}}
+ :empty {:success-message "Empty module installed successfully!"
+         :actions         {:assets []
+                           :injections []}}}

@@ -15,11 +15,11 @@
                  :action :append
                  :target [:body]
                  :value  [:script {:src "/js/app.js"}]}
-                 {:type :edn
-                  :path "deps.edn"
-                  :target [:paths]
-                  :action :append
-                  :value "target/classes/cljsbuild"}
+                {:type :edn
+                 :path "deps.edn"
+                 :target [:paths]
+                 :action :append
+                 :value "target/classes/cljsbuild"}
                 {:type   :clj
                  :path   "build.clj"
                  :action :append-requires
