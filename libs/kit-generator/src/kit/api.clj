@@ -1,12 +1,15 @@
 (ns kit.api
   (:require
    [clojure.string :as str]
+   [clojure.test :as t]
+   [kit.generator.hooks :as hooks]
    [kit.generator.io :as io]
    [kit.generator.modules :as modules]
+   [kit.generator.modules-log :refer [install-once installed-modules
+                                      module-installed?]]
    [kit.generator.modules.dependencies :as deps]
    [kit.generator.modules.generator :as generator]
-   [kit.generator.snippets :as snippets]
-   [clojure.test :as t]))
+   [kit.generator.snippets :as snippets]))
 
 ;; TODO: Add docstrings
 
@@ -89,6 +92,34 @@
     (modules/list-modules ctx))
   :done)
 
+(defn- report-install-module-error
+  [module-key e]
+  (println "ERROR: Failed to install module" module-key)
+  (.printStackTrace e))
+
+(defn- report-install-module-success
+  [module-key {:keys [success-message require-restart?]}]
+  (println (or success-message
+               (str "module " module-key " installed successfully!")))
+  (when require-restart?
+    (println "restart required!")))
+
+(defn- report-already-installed
+  [installed-modules]
+  (doseq [{:module/keys [key]} installed-modules]
+    (println "WARNING: Module" key "was already installed successfully. Skipping installation.")))
+
+(defn installation-plan
+  [module-key kit-edn-path opts]
+  (let [ctx (modules/load-modules (read-ctx kit-edn-path))
+        opts (flat-module-options opts module-key)
+        {installed true pending false} (->> (deps/dependency-list ctx module-key opts)
+                                            (group-by (partial module-installed? ctx)))]
+    {:ctx ctx
+     :installed-modules installed
+     :pending-modules pending
+     :opts opts}))
+
 (defn install-module
   "Installs a kit module into the current project or the project specified by a
    path to kit.edn file.
@@ -99,20 +130,24 @@
   ([module-key opts]
    (install-module module-key "kit.edn" opts))
   ([module-key kit-edn-path opts]
-   (let [ctx (modules/load-modules (read-ctx kit-edn-path))
-         opts (flat-module-options opts module-key)]
-     (doseq [{:module/keys [key opts]} (deps/dependency-list ctx module-key opts)]
-       (generator/generate ctx key opts))
-     :done)))
+   (let [{:keys [ctx pending-modules installed-modules]} (installation-plan module-key kit-edn-path opts)]
+     (report-already-installed installed-modules)
+     (doseq [{:module/keys [key config] :as module} pending-modules]
+       (try
+         (install-once ctx key
+                       (generator/generate ctx module)
+                       (hooks/run-hooks :post-install config)
+                       (report-install-module-success key config))
+         (catch Exception e
+           (report-install-module-error key e)))))
+   :done))
 
 (defn list-installed-modules
   "Lists installed modules and modules that failed to install, for the current
    project."
   []
   (doseq [[id status] (-> (read-ctx)
-                          :modules
-                          :root
-                          (generator/read-modules-log))]
+                          (installed-modules))]
     (println id (if (= status :success)
                   "installed successfully"
                   "failed to install")))

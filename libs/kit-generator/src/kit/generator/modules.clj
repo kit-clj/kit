@@ -5,6 +5,9 @@
   (:import
    java.io.File))
 
+(defn root [ctx]
+  (get-in ctx [:modules :root]))
+
 (defn sync-modules!
   "Clones or pulls modules from git repositories.
 
@@ -15,10 +18,10 @@
   :name - the name which will be used as the path locally
   :url - the git repository URL
   :tag - the branch to pull from"
-  [{:keys [modules]}]
-  (doseq [{:keys [name url] :as repository} (-> modules :repositories)]
+  [{:keys [modules] :as ctx}]
+  (doseq [repository  (-> modules :repositories)]
     (git/sync-repository!
-     (:root modules)
+     (root ctx)
      repository)))
 
 (defn set-module-path [module-config base-path]
@@ -31,8 +34,8 @@
    {}
    modules))
 
-(defn load-modules [{:keys [modules] :as ctx}]
-  (let [root (:root modules)]
+(defn load-modules [ctx]
+  (let [root (root ctx)]
     (->> root
          (jio/file)
          (file-seq)

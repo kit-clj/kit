@@ -13,6 +13,9 @@
   [module-key opts expected-files]
   (let [kit-edn-path (prepare-project module-repo-path)]
     (is (not (module-installed? module-key)))
+    (println "** installing:" (->> (kit/installation-plan module-key kit-edn-path opts)
+                                   :pending-modules
+                                   (map :module/key)))
     (is (= :done (kit/install-module module-key kit-edn-path opts)))
     (is (module-installed? module-key))
     (is (empty? (io/folder-mismatches project-root
@@ -48,7 +51,7 @@
 
 ;;
     ))
-
+;; TODO: accept-hooks? works
 (deftest test-install-module-cyclic-dependency
   (let [kit-edn-path (prepare-project module-repo-path)]
     (is (thrown? Exception
