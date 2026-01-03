@@ -13,11 +13,13 @@
 (def default-edn "kit.edn")
 
 (defn- read-ctx
-  [path]
-  (assert (not (str/blank? path)))
-  (-> path
-      (slurp)
-      (io/str->edn)))
+  ([]
+   (read-ctx default-edn))
+  ([path]
+   (assert (not (str/blank? path)))
+   (-> path
+       (slurp)
+       (io/str->edn))))
 
 (defn- log-install-dependency [module-key feature-flag deps]
   (print "Installing module" module-key)
@@ -77,13 +79,13 @@
 (defn sync-modules
   "Downloads modules for the current project."
   []
-  (modules/sync-modules! (read-ctx default-edn))
+  (modules/sync-modules! (read-ctx))
   :done)
 
 (defn list-modules
   "List modules available for the current project."
   []
-  (let [ctx (modules/load-modules (read-ctx default-edn))]
+  (let [ctx (modules/load-modules (read-ctx))]
     (modules/list-modules ctx))
   :done)
 
@@ -97,14 +99,17 @@
   ([module-key opts]
    (install-module module-key "kit.edn" opts))
   ([module-key kit-edn-path opts]
-   (let [ctx (modules/load-modules (read-ctx kit-edn-path))]
-     (install-dependency ctx module-key (flat-module-options opts module-key)))))
+   (let [ctx (modules/load-modules (read-ctx kit-edn-path))
+         opts (flat-module-options opts module-key)]
+     (doseq [{:module/keys [key opts]} (deps/dependency-list ctx module-key opts)]
+       (generator/generate ctx key opts))
+     :done)))
 
 (defn list-installed-modules
   "Lists installed modules and modules that failed to install, for the current
    project."
   []
-  (doseq [[id status] (-> (read-ctx default-edn)
+  (doseq [[id status] (-> (read-ctx)
                           :modules
                           :root
                           (generator/read-modules-log))]
@@ -121,25 +126,25 @@
         @db))))
 
 (defn sync-snippets []
-  (let [ctx (read-ctx default-edn)]
+  (let [ctx (read-ctx)]
     (snippets/sync-snippets! ctx)
     (snippets-db ctx true)
     :done))
 
 (defn find-snippets [query]
-  (snippets/print-snippets (snippets-db (read-ctx default-edn)) query)
+  (snippets/print-snippets (snippets-db (read-ctx)) query)
   :done)
 
 (defn find-snippet-ids [query]
-  (println (str/join ", " (map :id (snippets/match-snippets (snippets-db (read-ctx default-edn)) query))))
+  (println (str/join ", " (map :id (snippets/match-snippets (snippets-db (read-ctx)) query))))
   :done)
 
 (defn list-snippets []
-  (println (str/join "\n" (keys (snippets-db (read-ctx default-edn)))))
+  (println (str/join "\n" (keys (snippets-db (read-ctx)))))
   :done)
 
 (defn snippet [id & args]
-  (snippets/gen-snippet (snippets-db (read-ctx default-edn)) id args))
+  (snippets/gen-snippet (snippets-db (read-ctx)) id args))
 
 (comment
   (t/run-tests 'kit.api))

@@ -105,10 +105,9 @@
 (defn apply-features
   [edn-config {:keys [feature-requires] :as config}]
   (if (some? feature-requires)
-    (do
-      (apply deep-merge/concat-merge
-             (conj (mapv #(get-throw-on-not-found edn-config %) feature-requires)
-                   config)))
+    (apply deep-merge/concat-merge
+           (conj (mapv #(get-throw-on-not-found edn-config %) feature-requires)
+                 config))
     config))
 
 (defn generate [{:keys [modules] :as ctx} module-key {:keys [feature-flag]
@@ -140,7 +139,7 @@
                 (handle-action ctx action))
               (write-modules-log modules-root (assoc module-log module-key :success))
               (println (or success-message
-                           (str "Module " module-key " installed successfully!")))
+                           (str "module " module-key " installed successfully!")))
               (when require-restart?
                 (println "restart required!")))))
         (catch Exception e
