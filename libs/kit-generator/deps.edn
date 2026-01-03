@@ -11,16 +11,17 @@
            cljfmt/cljfmt                         {:mvn/version "0.9.2"}
            clj-fuzzy/clj-fuzzy                   {:mvn/version "0.4.1"}
            clojure-deep-merge/clojure-deep-merge {:mvn/version "0.1.2"}}
- :aliases {:cider
+ :aliases {:dev
+           {:extra-paths ["test"]}
+           :cider
            {:extra-deps {nrepl/nrepl       {:mvn/version "1.5.1"}
                          cider/cider-nrepl {:mvn/version "0.58.0"}}
             :main-opts  ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]" "-i"]}
 
            :test
-           {:extra-paths ["test"]
-            :extra-deps  {io.github.cognitect-labs/test-runner
+           {:extra-deps  {io.github.cognitect-labs/test-runner
                           {:git/tag "v0.5.1" :git/sha "dfb30dd"}
-                          babashka/fs      {:mvn/version "0.5.27"}
-                          babashka/process {:mvn/version "0.6.23"}}
+                          babashka/fs                {:mvn/version "0.5.27"}
+                          babashka/process           {:mvn/version "0.6.23"}}
             :main-opts   ["-m" "cognitect.test-runner"]
             :exec-fn     cognitect.test-runner.api/test}}}

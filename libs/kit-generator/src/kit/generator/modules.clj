@@ -1,7 +1,6 @@
 (ns kit.generator.modules
   (:require
    [clojure.java.io :as jio]
-   [deep.merge :as deep-merge]
    [kit.generator.git :as git])
   (:import
    java.io.File))

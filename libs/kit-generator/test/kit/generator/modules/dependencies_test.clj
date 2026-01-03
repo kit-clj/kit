@@ -1,6 +1,7 @@
 (ns kit.generator.modules.dependencies-test
-  (:require [kit.generator.modules.dependencies :as deps]
-            [clojure.test :refer :all]))
+  (:require
+   [clojure.test :refer [deftest is testing]]
+   [kit.generator.modules.dependencies :as deps]))
 
 (deftest resolve-requires
   (testing "empty requires"
@@ -20,7 +21,7 @@
     (is (= #{:a :b} (deps/resolve-dependencies {:default {:feature-requires [:base :tool]}
                                                 :base {:requires [:a]}
                                                 :tool {:requires [:b] :feature-requires [:base]}} :default))))
-  (testing "ciclic feature require"
+  (testing "cyclic feature require"
     (is (= #{:a :b} (deps/resolve-dependencies {:default {:feature-requires [:base :tool]}
                                                 :base {:requires [:a] :feature-requires [:tool]}
                                                 :tool {:requires [:b] :feature-requires [:base]}} :default)))))
