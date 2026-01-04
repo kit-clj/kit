@@ -2,22 +2,27 @@
   (:require
    [babashka.process :refer [sh]]))
 
-(defmulti run-hooks (fn [hook _] hook))
+(defmulti run-hooks (fn [hook _ _] hook))
 
-(defmethod run-hooks :post-install [hook module-config]
+(defmethod run-hooks :post-install
+  [hook module-config {:keys [confirm] :or {confirm (fn [] true)}}]
   (println "run-hooks:" hook module-config)
-  (doseq [action (seq (get-in module-config [:hooks hook]))]
-    (println "$" action)
-    (let [{:keys [exit out]} (sh {:continue true
-                                  :out      :string
-                                  :err      :out} "sh" "-c" action)]
-      (println out)
-      (when (not (zero? exit))
-        (throw (ex-info (str "Hook command failed: " action)
-                        {:error  ::hook-failed
-                         :action action
-                         :exit   exit
-                         :out    out}))))))
+  (when-let [actions (seq (get-in module-config [:hooks hook]))]
+    (if (confirm actions)
+      (doseq [action actions]
+        (println "$" action)
+        (let [{:keys [exit out]} (sh {:continue true
+                                      :out      :string
+                                      :err      :out} "sh" "-c" action)]
+          (println out)
+          (when (not (zero? exit))
+            (throw (ex-info (str "Hook command failed: " action)
+                            {:error  ::hook-failed
+                             :action action
+                             :exit   exit
+                             :out    out})))))
+      (println "Skipping hooks for" hook))))
 
-(defmethod run-hooks :default [hook _]
+(defmethod run-hooks :default
+  [hook _ _]
   (throw (ex-info (str "Unsupported hook type: " hook) {:hook hook})))
