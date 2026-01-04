@@ -32,10 +32,10 @@
   `(let [modules-root# (modules/root ~ctx)
          install-log# (read-modules-log modules-root#)]
      (try
-       ~@body
-       (let [updated-log# (assoc install-log# ~module-key :success)]
+       (let [result#  (do ~@body)
+             updated-log# (assoc install-log# ~module-key :success)]
          (write-modules-log modules-root# updated-log#)
-         :success)
+         result#)
        (catch Exception e#
          (let [updated-log# (assoc install-log# ~module-key :failed)]
            (write-modules-log modules-root# updated-log#)

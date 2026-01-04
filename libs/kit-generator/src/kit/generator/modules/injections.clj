@@ -15,7 +15,15 @@
   (:import
    org.jsoup.Jsoup))
 
+;; When adding new injection types, be sure to make sure `describe-injection`
+;; multimethod implementations are still correct. Currently they assume there is
+;; always a `:path` key.
 (defmulti inject :type)
+(defmulti describe-injection (fn [{:keys [type]}] type))
+
+(defmethod describe-injection :default
+  [{:keys [path]}]
+  (str "modify " path))
 
 (defn topmost [z-loc]
   (loop [z-loc z-loc]
@@ -345,8 +353,10 @@
             (read-file path)
             (assoc path->data path))
        (catch Exception e
-         (println "failed to read asset in project:" path
-                  "\nerror:" (.getMessage e)))))
+         (throw (ex-info (str "Failed to read asset:" path)
+                         {:error ::read-asset
+                          :path :path}
+                         e)))))
    {} paths))
 
 (defn inject-at-path [ctx data path injections]

@@ -36,7 +36,10 @@
     (println "WARNING: Asset already exists:" path)
     ((if (string? asset) write-string write-binary) asset path)))
 
+;; IMPORTANT: When adding new action types, be sure
+;; to update `describe-action` multimethods below.
 (defmulti handle-action (fn [_ _ [id]] id))
+(defmulti describe-actions-by-type (fn [type _] type))
 
 (comment
   (ns-unmap 'kit.generator.modules.generator 'handle-action))
@@ -69,3 +72,28 @@
   (let [{:keys [actions]} resolved-config]
     (doseq [action actions]
       (handle-action ctx path action))))
+
+(defn describe-asset-action [[_ target]]
+  (str "create " target))
+
+(defn describe-injection-action [injection]
+  (ij/describe-injection injection))
+
+(defmethod describe-actions-by-type :assets [_ {:module/keys [resolved-config]}]
+  (map describe-asset-action (get-in resolved-config [:actions :assets])))
+
+(defmethod describe-actions-by-type :injections [_ {:module/keys [resolved-config]}]
+  (->> (get-in resolved-config [:actions :injections])
+       (map describe-injection-action)
+       (distinct)))
+
+(defmethod describe-actions-by-type :default [type _]
+  (throw (ex-info (str "Undefined action type: " type) {:error ::undefined-action
+                                                        :type type})))
+
+(defn describe-actions
+  "A sequence of strings describing the asset actions defined by the module."
+  [{:module/keys [resolved-config] :as module}]
+  (->> (get-in resolved-config [:actions])
+       (keys)
+       (mapcat #(describe-actions-by-type % module))))
