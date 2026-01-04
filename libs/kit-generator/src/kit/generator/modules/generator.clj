@@ -45,7 +45,6 @@
   (ns-unmap 'kit.generator.modules.generator 'handle-action))
 
 (defmethod handle-action :assets [ctx module-path [_ assets]]
-  (println "** handling assets for module at path:" module-path)
   (doseq [asset assets]
     (cond
       ;; if asset is a string assume it's a directory to be created
@@ -54,6 +53,7 @@
       ;; otherwise asset should be a tuple of [source target] path strings
       (and (sequential? asset) (contains? #{2 3} (count asset)))
       (let [[asset-path target-path force?] asset]
+        (println "rendering asset to:" target-path)
         (write-asset
          (->> (read-asset (concat-path module-path asset-path))
               (renderer/render-asset ctx))
@@ -68,7 +68,7 @@
 (defmethod handle-action :default [_ _ [id]]
   (println "ERROR: Undefined action:" id))
 
-(defn generate [ctx {:module/keys [path config]}]
-  (let [{:keys [actions]} config]
+(defn generate [ctx {:module/keys [path resolved-config]}]
+  (let [{:keys [actions]} resolved-config]
     (doseq [action actions]
       (handle-action ctx path action))))

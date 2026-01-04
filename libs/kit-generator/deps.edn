@@ -11,9 +11,11 @@
            cljfmt/cljfmt                         {:mvn/version "0.9.2"}
            clj-fuzzy/clj-fuzzy                   {:mvn/version "0.4.1"}
            clojure-deep-merge/clojure-deep-merge {:mvn/version "0.1.2"}
-           babashka/process                      {:mvn/version "0.6.23"}}
+           babashka/process                      {:mvn/version "0.6.23"}
+           com.stuartsierra/dependency           {:mvn/version "1.0.0"}}
  :aliases {:dev
-           {:extra-paths ["test"]}
+           {:extra-paths ["test"]
+            :extra-deps  {nubank/matcher-combinators {:mvn/version "3.9.2"}}}
            :cider
            {:extra-deps {nrepl/nrepl       {:mvn/version "1.5.1"}
                          cider/cider-nrepl {:mvn/version "0.58.0"}}
@@ -22,6 +24,7 @@
            :test
            {:extra-deps {io.github.cognitect-labs/test-runner
                          {:git/tag "v0.5.1" :git/sha "dfb30dd"}
-                         babashka/fs {:mvn/version "0.5.27"}}
+                         nubank/matcher-combinators {:mvn/version "3.9.2"}
+                         babashka/fs                {:mvn/version "0.5.27"}}
             :main-opts  ["-m" "cognitect.test-runner"]
             :exec-fn    cognitect.test-runner.api/test}}}

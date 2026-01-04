@@ -10,5 +10,5 @@
 
  :with-hooks
  ;; Demonstrates that dependency hooks are run first.
- {:hooks {:post-install ["mv install.sh post-install.txt"]}
+ {:hooks {:post-install ["mv test/resources/generated/install.sh test/resources/generated/post-install.txt"]}
   :requires [:hooks]}}
