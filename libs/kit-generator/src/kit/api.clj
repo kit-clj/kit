@@ -120,6 +120,33 @@
      :pending-modules pending
      :opts opts}))
 
+(defn prompt-y-n
+  [prompt accept-hooks-atom]
+  (if (nil? @accept-hooks-atom)
+    (let [answers ["y" "n" "all"]]
+      (print prompt (str " (" (str/join "/" answers) "): "))
+      (flush)
+      (loop []
+        (let [response (str/trim (str/lower-case (read-line)))]
+          (case response
+            "y"      true
+            "n"      false
+            "all" (reset! accept-hooks-atom true)
+            (do (println "\nPlease answer one of:" (str/join ", " answers))
+                (recur))))))
+    @accept-hooks-atom))
+
+(defn prompt-run-hooks
+  [accept-hooks-atom hooks]
+  (prompt-y-n
+   (str/join "\n"
+             (flatten
+              ["About to run the following script:"
+               ""
+               hooks
+               ""
+               "Run?"])) accept-hooks-atom))
+
 (defn install-module
   "Installs a kit module into the current project or the project specified by a
    path to kit.edn file.
@@ -129,15 +156,20 @@
    (install-module module-key {:feature-flag :default}))
   ([module-key opts]
    (install-module module-key "kit.edn" opts))
-  ([module-key kit-edn-path opts]
-   (let [{:keys [ctx pending-modules installed-modules]} (installation-plan module-key kit-edn-path opts)]
+  ([module-key kit-edn-path {:keys [accept-hooks?] :as opts}]
+   (println opts)
+   (let [{:keys [ctx pending-modules installed-modules]} (installation-plan module-key kit-edn-path opts)
+         accept-hooks-atom (atom accept-hooks?)]
      (report-already-installed installed-modules)
      (doseq [{:module/keys [key resolved-config] :as module} pending-modules]
        (try
-         (install-once ctx key
-                       (generator/generate ctx module)
-                       (hooks/run-hooks :post-install resolved-config)
-                       (report-install-module-success key resolved-config))
+         (install-once
+          ctx key
+          (generator/generate ctx module)
+          (hooks/run-hooks
+           :post-install resolved-config
+           {:confirm (partial prompt-run-hooks accept-hooks-atom)})
+          (report-install-module-success key resolved-config))
          (catch Exception e
            (report-install-module-error key e)))))
    :done))
