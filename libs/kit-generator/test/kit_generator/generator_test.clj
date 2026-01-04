@@ -1,11 +1,12 @@
 (ns kit-generator.generator-test
   (:require
    [clojure.java.io :as jio]
-   [clojure.test :refer [use-fixtures deftest testing is]]
-   [kit-generator.io :refer [delete-folder folder-mismatches clone-file read-edn-safe]]
-   [kit.generator.modules :as m]
-   [kit.generator.modules.generator :as g]
-   [kit.api :as kit]))
+   [clojure.test :refer [deftest is testing use-fixtures]]
+   [kit-generator.io :refer [clone-file delete-folder folder-mismatches
+                             read-edn-safe]]
+   [kit.api :as kit]
+   [kit.generator.io :as io]
+   [kit.generator.modules.generator :as g]))
 
 (def source-folder "test/resources")
 (def target-folder "test/resources/generated")
@@ -38,7 +39,7 @@
         (.delete install-log))
       (delete-folder target-folder)
       (doseq [[source target] seeded-files]
-        (clone-file (str source-folder "/" source) (str target-folder "/" target)))
+        (clone-file (io/concat-path source-folder source) (io/concat-path target-folder target)))
       (f))))
 
 (defn prepare-install

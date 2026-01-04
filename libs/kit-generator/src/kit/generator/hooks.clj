@@ -1,4 +1,5 @@
 (ns kit.generator.hooks
+  "Execute script hooks defined in module configuration."
   (:require
    [babashka.process :refer [sh]]))
 
@@ -6,7 +7,6 @@
 
 (defmethod run-hooks :post-install
   [hook module-config {:keys [confirm] :or {confirm (fn [] true)}}]
-  (println "run-hooks:" hook module-config)
   (when-let [actions (seq (get-in module-config [:hooks hook]))]
     (if (confirm actions)
       (doseq [action actions]

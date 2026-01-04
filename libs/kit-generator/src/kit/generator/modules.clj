@@ -1,12 +1,11 @@
 (ns kit.generator.modules
+  "Module loading and resolution."
   (:require
    [clojure.java.io :as jio]
    [kit.generator.features :as features]
    [kit.generator.git :as git]
    [kit.generator.io :as io]
-   [kit.generator.renderer :as renderer])
-  (:import
-   java.io.File))
+   [kit.generator.renderer :as renderer]))
 
 (defn root [ctx]
   (get-in ctx [:modules :root]))
@@ -27,22 +26,22 @@
      (root ctx)
      repository)))
 
-(defn set-module-path [module-config base-path]
-  (update module-config :path #(str base-path File/separator %)))
+(defn- set-module-path [module-config base-path]
+  (update module-config :path #(io/concat-path base-path %)))
 
-(defn set-module-paths [root {:keys [module-root modules]}]
+(defn- set-module-paths [root {:keys [module-root modules]}]
   (reduce
    (fn [modules [id config]]
-     (assoc modules id (set-module-path config (str root File/separator module-root))))
+     (assoc modules id (set-module-path config (io/concat-path root module-root))))
    {}
    modules))
 
 (defn- render-module-config [ctx module-path]
-  (some->> (str module-path File/separator "config.edn")
+  (some->> (io/concat-path module-path "config.edn")
            (slurp)
            (renderer/render-template ctx)))
 
-(defn read-module-config [ctx path]
+(defn- read-module-config [ctx path]
   (-> (render-module-config ctx path)
       (io/str->edn)))
 
@@ -53,18 +52,20 @@
    :module/doc          module-doc
    :module/config       module-config})
 
-(defn load-module
+(defn- load-module
   [ctx [key {:keys [path doc]}]]
   (let [config (read-module-config ctx path)]
     [key (module-info key path doc config)]))
 
-(defn resolve-module
+(defn- resolve-module
   [opts [key {:module/keys [config] :as module}]]
   (let [feature-flag (get-in opts [key :feature-flag] :default)
         resolved-config (features/resolve-module-config config feature-flag)]
     [key (merge module {:module/resolved-config resolved-config})]))
 
 (defn resolve-modules
+  "Updates context by resolving all loaded modules using feature flags provided
+   in opts map."
   [ctx opts]
   (update-in ctx [:modules :modules]
              (fn [existing-modules]

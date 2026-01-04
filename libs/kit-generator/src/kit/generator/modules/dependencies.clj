@@ -1,4 +1,5 @@
 (ns kit.generator.modules.dependencies
+  "Module dependency order resolution."
   (:require
    [kit.generator.modules :as modules]
    [com.stuartsierra.dependency :as dep]))
@@ -17,7 +18,7 @@
                     {:module-key module-key}))))
 
 (defn- dependency-tree
-  "A tree of module configs and their dependencies.
+  "A tree of module keys and their dependencies.
    > NOTE: opts must be flat options. See kit.api/flat-module-options for more details."
   [ctx module-key opts]
   (build-dependency-tree #{} ctx module-key opts))
