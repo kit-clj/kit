@@ -11,8 +11,7 @@
     (is (= 6 (count (modules/modules ctx))))
     (let [html-module (modules/lookup-module ctx :html)]
       (is (match? {:module/key :html
-                   ;; TODO: Fix double slash in path
-                   :module/path "test/resources/generated/modules//kit/html"
+                   :module/path "test/resources/generated/modules/kit/html"
                    :module/doc "adds support for HTML templating using Selmer"
                    :module/config map?}
                   html-module)))))
@@ -25,7 +24,7 @@
     (is (= 6 (count (modules/modules ctx))))
     (let [meta-module (modules/lookup-module ctx :meta)]
       (is (match? {:module/key :meta
-                   :module/path "test/resources/generated/modules//kit/meta"
+                   :module/path "test/resources/generated/modules/kit/meta"
                    :module/doc string?
                    :module/config map?
                    :module/resolved-config map?}

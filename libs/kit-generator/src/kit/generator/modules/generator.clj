@@ -1,16 +1,13 @@
 (ns kit.generator.modules.generator
+  "Module responsible for generating assets and injecting data into context,
+   based on `:actions` defined in module configuration."
   (:require
    [clojure.java.io :as jio]
+   [kit.generator.io :as io]
    [kit.generator.modules.injections :as ij]
    [kit.generator.renderer :as renderer])
   (:import
-   java.io.File
    java.nio.file.Files))
-
-(defn concat-path [base-path asset-path]
-  (str base-path File/separator (if (.startsWith asset-path "/")
-                                  (subs asset-path 1)
-                                  asset-path)))
 
 (defn template? [asset-path]
   (->> [".txt" ".md" "Dockerfile" "gitignore" ".html" ".edn" ".clj" ".cljs"]
@@ -55,7 +52,7 @@
       (let [[asset-path target-path force?] asset]
         (println "rendering asset to:" target-path)
         (write-asset
-         (->> (read-asset (concat-path module-path asset-path))
+         (->> (read-asset (io/concat-path module-path asset-path))
               (renderer/render-asset ctx))
          (renderer/render-template ctx target-path)
          force?))

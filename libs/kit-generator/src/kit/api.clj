@@ -1,11 +1,12 @@
 (ns kit.api
+  "Public API for kit-generator."
   (:require
    [clojure.string :as str]
    [clojure.test :as t]
    [kit.generator.hooks :as hooks]
    [kit.generator.io :as io]
    [kit.generator.modules :as modules]
-   [kit.generator.modules-log :refer [install-once installed-modules
+   [kit.generator.modules-log :refer [track-installation installed-modules
                                       module-installed?]]
    [kit.generator.modules.dependencies :as deps]
    [kit.generator.modules.generator :as generator]
@@ -82,13 +83,13 @@
 (defn sync-modules
   "Downloads modules for the current project."
   []
-  (modules/sync-modules! (read-ctx))
+  (modules/sync-modules! (read-kit-edn))
   :done)
 
 (defn list-modules
   "List modules available for the current project."
   []
-  (let [ctx (modules/load-modules (read-ctx))]
+  (let [ctx (modules/load-modules (read-kit-edn))]
     (modules/list-modules ctx))
   :done)
 
@@ -110,9 +111,12 @@
     (println "WARNING: Module" key "was already installed successfully. Skipping installation.")))
 
 (defn installation-plan
+  "Loads and resolves modules in preparation for installation, as
+   well as determining which modules are already installed vs which
+   need to be installed."
   [module-key kit-edn-path opts]
   (let [opts (flat-module-options opts module-key)
-        ctx (modules/load-modules (read-ctx kit-edn-path) opts)
+        ctx (modules/load-modules (read-kit-edn kit-edn-path) opts)
         {installed true pending false} (->> (deps/dependency-list ctx module-key opts)
                                             (group-by (partial module-installed? ctx)))]
     {:ctx ctx
@@ -120,7 +124,10 @@
      :pending-modules pending
      :opts opts}))
 
-(defn prompt-y-n
+(defn- prompt-y-n-all
+  "Prompts the user to accept actions with a yes/no/all question.
+   If the user answers 'all', the accept-hooks-atom is set to true
+   and all subsequent calls will return true without prompting."
   [prompt accept-hooks-atom]
   (if (nil? @accept-hooks-atom)
     (let [answers ["y" "n" "all"]]
@@ -136,9 +143,11 @@
                 (recur))))))
     @accept-hooks-atom))
 
-(defn prompt-run-hooks
+(defn- prompt-run-hooks
+  "Prompts the user to accept running hooks defined in a module.
+   See prompt-y-n-all for details."
   [accept-hooks-atom hooks]
-  (prompt-y-n
+  (prompt-y-n-all
    (str/join "\n"
              (flatten
               ["About to run the following script:"
@@ -163,7 +172,7 @@
      (report-already-installed installed-modules)
      (doseq [{:module/keys [key resolved-config] :as module} pending-modules]
        (try
-         (install-once
+         (track-installation
           ctx key
           (generator/generate ctx module)
           (hooks/run-hooks
@@ -178,7 +187,7 @@
   "Lists installed modules and modules that failed to install, for the current
    project."
   []
-  (doseq [[id status] (-> (read-ctx)
+  (doseq [[id status] (-> (read-kit-edn)
                           (installed-modules))]
     (println id (if (= status :success)
                   "installed successfully"
@@ -193,25 +202,25 @@
         @db))))
 
 (defn sync-snippets []
-  (let [ctx (read-ctx)]
+  (let [ctx (read-kit-edn)]
     (snippets/sync-snippets! ctx)
     (snippets-db ctx true)
     :done))
 
 (defn find-snippets [query]
-  (snippets/print-snippets (snippets-db (read-ctx)) query)
+  (snippets/print-snippets (snippets-db (read-kit-edn)) query)
   :done)
 
 (defn find-snippet-ids [query]
-  (println (str/join ", " (map :id (snippets/match-snippets (snippets-db (read-ctx)) query))))
+  (println (str/join ", " (map :id (snippets/match-snippets (snippets-db (read-kit-edn)) query))))
   :done)
 
 (defn list-snippets []
-  (println (str/join "\n" (keys (snippets-db (read-ctx)))))
+  (println (str/join "\n" (keys (snippets-db (read-kit-edn)))))
   :done)
 
 (defn snippet [id & args]
-  (snippets/gen-snippet (snippets-db (read-ctx)) id args))
+  (snippets/gen-snippet (snippets-db (read-kit-edn)) id args))
 
 (comment
   (t/run-tests 'kit.api))

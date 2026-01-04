@@ -1,4 +1,5 @@
 (ns kit.generator.features
+  "Feature flag resolution based on :feature-requires."
   (:require
    [deep.merge :as deep-merge]))
 

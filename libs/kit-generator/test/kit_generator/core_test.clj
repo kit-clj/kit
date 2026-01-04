@@ -75,8 +75,8 @@
                              dep-tree))
   (clojure.test/run-tests 'kit-generator.core-test)
   (require '[kit.generator.modules.dependencies :as deps])
-  (deps/dependency-list :meta (kit/read-ctx (prepare-project module-repo-path)) {:feature-flag :full
-                                                                                 :db          {:feature-flag :migrations}})
+  (deps/dependency-list :meta (kit/read-kit-edn (prepare-project module-repo-path)) {:feature-flag :full
+                                                                                     :db          {:feature-flag :migrations}})
 
 ;
   )

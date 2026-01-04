@@ -1,9 +1,11 @@
 (ns kit.generator.git
   (:require
-    [clojure.string :as string]
-    [clj-jgit.porcelain :as git])
+   [clj-jgit.porcelain :as git]
+   [clojure.java.io :as jio]
+   [clojure.string :as string]
+   [kit.generator.io :as io])
   (:import
-    [java.io File FileNotFoundException]))
+   [java.io FileNotFoundException]))
 
 (defn repo-root [name git-url]
   (or name
@@ -14,10 +16,10 @@
           (first))))
 
 (defn repo-path [root name git-url]
-  (str root File/separator (repo-root name git-url)))
+  (io/concat-path root (repo-root name git-url)))
 
 (defn git-config []
-  (if (.exists (clojure.java.io/file "kit.git-config.edn"))
+  (if (.exists (jio/file "kit.git-config.edn"))
     (read-string (slurp "kit.git-config.edn"))
     {:name "~/.ssh/id_rsa"}))
 
@@ -32,10 +34,10 @@
             (git/git-pull repo))
           (catch FileNotFoundException _e
             (git/git-clone url :dir                path
-                               :remote             "origin"
-                               :branch             (or tag "master")
-                               :bare?              false
-                               :clone-all?         false)))
+                           :remote             "origin"
+                           :branch             (or tag "master")
+                           :bare?              false
+                           :clone-all?         false)))
         (when callback (callback path))))
     (catch org.eclipse.jgit.api.errors.TransportException e
       (println (.getMessage e)
