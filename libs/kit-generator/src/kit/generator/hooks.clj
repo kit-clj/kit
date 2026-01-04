@@ -26,3 +26,11 @@
 (defmethod run-hooks :default
   [hook _ _]
   (throw (ex-info (str "Unsupported hook type: " hook) {:hook hook})))
+
+(defn describe-hooks
+  "A sequence of strings describing the hooks defined by the module."
+  [{:module/keys [resolved-config]}]
+  (->> resolved-config
+       :hooks
+       keys
+       (map #(str "run " (name %) " hook"))))
