@@ -13,9 +13,6 @@
   [module-key opts expected-files]
   (let [kit-edn-path (prepare-project module-repo-path)]
     (is (not (module-installed? module-key)))
-    (println "** installing:" (->> (kit/installation-plan module-key kit-edn-path opts)
-                                   :pending-modules
-                                   (map :module/key)))
     (is (= :done (kit/install-module module-key kit-edn-path opts)))
     (is (module-installed? module-key))
     (is (empty? (io/folder-mismatches project-root
@@ -45,9 +42,9 @@
                                              "src/clj/myapp/db/migratus.clj"       []
                                              "src/clj/myapp/db/migrations/001.clj" []
                                              "kit.edn"                             []}
-    ;; :meta {:accept-hooks? true
-    ;;        :feature-flag :with-hooks}       {"post-install.txt"                    []
-    ;;                                          "kit.edn"                             []}
+    :meta {:accept-hooks? true
+           :feature-flag :with-hooks}       {"post-install.txt"                    []
+                                             "kit.edn"                             []}
 
 ;;
     ))

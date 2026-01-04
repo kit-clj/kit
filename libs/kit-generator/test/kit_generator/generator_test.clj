@@ -54,21 +54,21 @@
   (let [{:keys [ctx module]} (prepare-install module-key opts)]
     (g/generate ctx module)))
 
+(deftest test-edn-injection-with-feature-flag
+  (testing "testing injection with a feature flag"
+    (generate :html {:feature-flag :empty})
+    (let [expected-files {}]
+      (is (empty? (target-folder-mismatches expected-files))))))
+
 (deftest test-edn-injection
   (testing "testing EDN injection"
-    (generate :html {:feature-flag :default})
+    (generate :html {:html {:feature-flag :default}})
     (let [expected-files {"resources/system.edn"               [#"^\{:system/env"
                                                                 #":templating/selmer \{}}$"]
                           "src/myapp/core.clj"                 [#"^\(ns myapp.core"]
                           "resources/public/home.html"         [#"^$"]
                           "resources/public/img/luminus.png"   []
                           "src/clj/myapp/web/routes/pages.clj" [#"^\(ns resources\.modules"]}]
-      (is (empty? (target-folder-mismatches expected-files))))))
-
-(deftest test-edn-injection-with-feature-flag
-  (testing "testing injection with a feature flag"
-    (generate :html {:feature-flag :empty})
-    (let [expected-files {}]
       (is (empty? (target-folder-mismatches expected-files))))))
 
 (deftest test-edn-injection-with-feature-requires

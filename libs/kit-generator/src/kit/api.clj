@@ -111,8 +111,8 @@
 
 (defn installation-plan
   [module-key kit-edn-path opts]
-  (let [ctx (modules/load-modules (read-ctx kit-edn-path))
-        opts (flat-module-options opts module-key)
+  (let [opts (flat-module-options opts module-key)
+        ctx (modules/load-modules (read-ctx kit-edn-path) opts)
         {installed true pending false} (->> (deps/dependency-list ctx module-key opts)
                                             (group-by (partial module-installed? ctx)))]
     {:ctx ctx
@@ -132,12 +132,12 @@
   ([module-key kit-edn-path opts]
    (let [{:keys [ctx pending-modules installed-modules]} (installation-plan module-key kit-edn-path opts)]
      (report-already-installed installed-modules)
-     (doseq [{:module/keys [key config] :as module} pending-modules]
+     (doseq [{:module/keys [key resolved-config] :as module} pending-modules]
        (try
          (install-once ctx key
                        (generator/generate ctx module)
-                       (hooks/run-hooks :post-install config)
-                       (report-install-module-success key config))
+                       (hooks/run-hooks :post-install resolved-config)
+                       (report-install-module-success key resolved-config))
          (catch Exception e
            (report-install-module-error key e)))))
    :done))
