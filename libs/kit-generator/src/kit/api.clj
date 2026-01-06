@@ -16,7 +16,7 @@
 
 (def default-edn "kit.edn")
 
-(defn- read-ctx
+(defn read-ctx
   ([]
    (read-ctx default-edn))
   ([path]
@@ -35,33 +35,6 @@
 
 (defn- log-missing-module [module-key]
   (println "ERROR: no module found with name:" module-key))
-
-(defn- install-dependency
-  "Installs a module and its dependencies recursively. Asumes ctx has loaded :modules.
-   Note that `opts` have a different schema than the one passed to `install-module`,
-   the latter being preserved for backwards compatibility. Here `opts` is a map of
-   module-key to module-specific options.
-
-   For example, let's say `:html` is the main module. It would still be on the same level
-   as `:auth`, its dependency:
-
-   ```clojure
-   {:html {:feature-flag :default}
-    :auth {:feature-flag :oauth}}
-   ```
-
-   See flat-module-options for more details."
-  [{:keys [modules] :as ctx} module-key opts]
-  (if (modules/module-exists? ctx module-key)
-    (let [{:keys [module-config]} (generator/read-module-config ctx modules module-key)
-          {:keys [feature-flag] :or {feature-flag :default} :as module-opts} (get opts module-key {})
-          deps (deps/resolve-dependencies module-config feature-flag)]
-      (log-install-dependency module-key feature-flag deps)
-      (doseq [module-key deps]
-        (install-dependency ctx module-key opts))
-      (generator/generate ctx module-key module-opts))
-    (log-missing-module module-key))
-  :done)
 
 (defn- flat-module-options
   "Converts options map passed to install-module into a flat map of module-key to
