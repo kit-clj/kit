@@ -36,14 +36,22 @@
    {}
    modules))
 
-(defn- render-module-config [ctx module-path]
-  (some->> (io/concat-path module-path "config.edn")
+(defn- render-module-config [ctx path]
+  (some->> path
            (slurp)
            (renderer/render-template ctx)))
 
-(defn- read-module-config [ctx path]
-  (-> (render-module-config ctx path)
-      (io/str->edn)))
+(defn- read-module-config [ctx module-path]
+  (let [path (io/concat-path module-path "config.edn")]
+    (try
+      (-> (render-module-config ctx path)
+          (io/str->edn))
+      (catch Exception e
+        (throw (ex-info (str "Failed to read and render module config at " path)
+                        {:error ::read-module-config
+                         :path path
+                         :ctx  ctx}
+                        e))))))
 
 (defn- module-info
   [module-key module-path module-doc module-config]
