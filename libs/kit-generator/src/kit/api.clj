@@ -10,6 +10,8 @@
 
 ;; TODO: Add docstrings
 
+(def default-edn "kit.edn")
+
 (defn- read-ctx
   [path]
   (assert (not (str/blank? path)))
@@ -75,13 +77,13 @@
 (defn sync-modules
   "Downloads modules for the current project."
   []
-  (modules/sync-modules! (read-ctx "kit-edn"))
+  (modules/sync-modules! (read-ctx default-edn))
   :done)
 
 (defn list-modules
   "List modules available for the current project."
   []
-  (let [ctx (modules/load-modules (read-ctx "kit.edn"))]
+  (let [ctx (modules/load-modules (read-ctx default-edn))]
     (modules/list-modules ctx))
   :done)
 
@@ -102,7 +104,7 @@
   "Lists installed modules and modules that failed to install, for the current
    project."
   []
-  (doseq [[id status] (-> (read-ctx "kit.edn")
+  (doseq [[id status] (-> (read-ctx default-edn)
                           :modules
                           :root
                           (generator/read-modules-log))]
@@ -119,25 +121,25 @@
         @db))))
 
 (defn sync-snippets []
-  (let [ctx (read-ctx "kit.edn")]
+  (let [ctx (read-ctx default-edn)]
     (snippets/sync-snippets! ctx)
     (snippets-db ctx true)
     :done))
 
 (defn find-snippets [query]
-  (snippets/print-snippets (snippets-db (read-ctx "kit.edn")) query)
+  (snippets/print-snippets (snippets-db (read-ctx default-edn)) query)
   :done)
 
 (defn find-snippet-ids [query]
-  (println (str/join ", " (map :id (snippets/match-snippets (snippets-db (read-ctx "kit.edn")) query))))
+  (println (str/join ", " (map :id (snippets/match-snippets (snippets-db (read-ctx default-edn)) query))))
   :done)
 
 (defn list-snippets []
-  (println (str/join "\n" (keys (snippets-db (read-ctx "kit.edn")))))
+  (println (str/join "\n" (keys (snippets-db (read-ctx default-edn)))))
   :done)
 
 (defn snippet [id & args]
-  (snippets/gen-snippet (snippets-db (read-ctx "kit.edn")) id args))
+  (snippets/gen-snippet (snippets-db (read-ctx default-edn)) id args))
 
 (comment
   (t/run-tests 'kit.api))
