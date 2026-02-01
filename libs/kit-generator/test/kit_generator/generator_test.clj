@@ -1,14 +1,16 @@
 (ns kit-generator.generator-test
   (:require
    [clojure.java.io :as jio]
-   [clojure.test :refer [use-fixtures deftest testing is]]
-   [kit-generator.io :refer [delete-folder folder-mismatches clone-file read-edn-safe]]
-   [kit.generator.modules :as m]
+   [clojure.test :refer [deftest is testing use-fixtures]]
+   [kit-generator.io :refer [clone-file delete-folder folder-mismatches
+                             read-edn-safe]]
+   [kit.api :as kit]
+   [kit.generator.io :as io]
    [kit.generator.modules.generator :as g]))
 
 (def source-folder "test/resources")
 (def target-folder "test/resources/generated")
-(def ctx (read-string (slurp "test/resources/kit.edn")))
+(def kit-edn-path "test/resources/kit.edn")
 
 (defn module-installed? [module-key]
   (when-let [install-log (read-edn-safe (str source-folder "/modules/install-log.edn"))]
@@ -37,15 +39,31 @@
         (.delete install-log))
       (delete-folder target-folder)
       (doseq [[source target] seeded-files]
-        (clone-file (str source-folder "/" source) (str target-folder "/" target)))
+        (clone-file (io/concat-path source-folder source) (io/concat-path target-folder target)))
       (f))))
+
+(defn prepare-install
+  "Generates an installation plan and returns the context and module info for the specified module."
+  [module-key opts]
+  (let [{:keys [ctx pending-modules]} (kit/installation-plan module-key kit-edn-path opts)
+        module (first (filter #(= (:module/key %) module-key) pending-modules))]
+    {:ctx    ctx
+     :module module}))
+
+(defn generate
+  [module-key opts]
+  (let [{:keys [ctx module]} (prepare-install module-key opts)]
+    (g/generate ctx module)))
+
+(deftest test-edn-injection-with-feature-flag
+  (testing "testing injection with a feature flag"
+    (generate :html {:feature-flag :empty})
+    (let [expected-files {}]
+      (is (empty? (target-folder-mismatches expected-files))))))
 
 (deftest test-edn-injection
   (testing "testing EDN injection"
-    (is (not (module-installed? :html)))
-    (let [ctx (m/load-modules ctx)]
-      (g/generate ctx :html {:feature-flag :default}))
-    (is (module-installed? :html))
+    (generate :html {:html {:feature-flag :default}})
     (let [expected-files {"resources/system.edn"               [#"^\{:system/env"
                                                                 #":templating/selmer \{}}$"]
                           "src/myapp/core.clj"                 [#"^\(ns myapp.core"]
@@ -54,21 +72,9 @@
                           "src/clj/myapp/web/routes/pages.clj" [#"^\(ns resources\.modules"]}]
       (is (empty? (target-folder-mismatches expected-files))))))
 
-(deftest test-edn-injection-with-feature-flag
-  (testing "testing injection with a feature flag"
-    (is (not (module-installed? :html)))
-    (let [ctx (m/load-modules ctx)]
-      (g/generate ctx :html {:feature-flag :empty}))
-    (is (module-installed? :html))
-    (let [expected-files {}]
-      (is (empty? (target-folder-mismatches expected-files))))))
-
 (deftest test-edn-injection-with-feature-requires
   (testing "testing injection with a feature flag + feature-requires"
-    (is (not (module-installed? :meta)))
-    (let [ctx (m/load-modules ctx)]
-      (g/generate ctx :meta {:feature-flag :full}))
-    (is (module-installed? :meta))
+    (generate :meta {:feature-flag :full})
     (let [expected-files {"resources/public/css/styles.css" [#".body"]
                           "resources/public/css/app.css"    [#".app"]}]
       (is (empty? (target-folder-mismatches expected-files))))))

@@ -1,0 +1,2 @@
+{:default {:actions {:assets [["assets/install.sh" "test/resources/generated/tmp-install.sh"]]}
+           :hooks {:post-install ["sh -c 'mv test/resources/generated/tmp-install.sh test/resources/generated/install.sh'"]}}}

@@ -2,13 +2,14 @@
   (:require [clojure.tools.build.api :as b]
             [clojure.string :as string]
             [clojure.java.shell :refer [sh]]
-            [deps-deploy.deps-deploy :as deploy]))
+            [deps-deploy.deps-deploy :as deploy]
+            [kit.generator.io :as io]))
 
 (def lib 'com.example/test)
 (def main-cls (string/join "." (filter some? [(namespace lib) (name lib) "core"])))
 (def version (format "0.0.1-SNAPSHOT"))
 (def target-dir "target")
-(def class-dir (str target-dir "/" "classes"))
+(def class-dir (io/concat-path target-dir "classes"))
 (def uber-file (format "%s/%s-standalone.jar" target-dir (name lib)))
 (def basis (b/create-basis {:project "deps.edn"}))
 

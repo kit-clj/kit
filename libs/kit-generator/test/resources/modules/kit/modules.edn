@@ -14,4 +14,7 @@
    :doc "adds support for database access"}
   :migratus
   {:path "migratus"
-   :doc "adds support for migrations"}}}
+   :doc "adds support for migrations"}
+  :hooks
+  {:path "hooks"
+   :doc "test hooks"}}}

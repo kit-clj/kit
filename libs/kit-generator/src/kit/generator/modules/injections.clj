@@ -1,19 +1,29 @@
 (ns kit.generator.modules.injections
+  "Low-level helpers for injecting content into files of various types."
   (:require
-    [kit.generator.renderer :as renderer]
-    [kit.generator.io :as io]
-    [borkdude.rewrite-edn :as rewrite-edn]
-    [clojure.pprint :refer [pprint]]
-    [clojure.walk :refer [prewalk]]
-    [cljstyle.config :as fmt-config]
-    [net.cgrand.enlive-html :as html]
-    [rewrite-clj.node :as n]
-    [rewrite-clj.parser :as parser]
-    [rewrite-clj.zip :as z]
-    [cljfmt.core :as cljfmt])
-  (:import org.jsoup.Jsoup))
+   [borkdude.rewrite-edn :as rewrite-edn]
+   [cljfmt.core :as cljfmt]
+   [cljstyle.config :as fmt-config]
+   [clojure.pprint :refer [pprint]]
+   [clojure.walk :refer [prewalk]]
+   [kit.generator.io :as io]
+   [kit.generator.renderer :as renderer]
+   [net.cgrand.enlive-html :as html]
+   [rewrite-clj.node :as n]
+   [rewrite-clj.parser :as parser]
+   [rewrite-clj.zip :as z])
+  (:import
+   org.jsoup.Jsoup))
 
+;; When adding new injection types, be sure to make sure `describe-injection`
+;; multimethod implementations are still correct. Currently they assume there is
+;; always a `:path` key.
 (defmulti inject :type)
+(defmulti describe-injection (fn [{:keys [type]}] type))
+
+(defmethod describe-injection :default
+  [{:keys [path]}]
+  (str "modify " path))
 
 (defn topmost [z-loc]
   (loop [z-loc z-loc]
@@ -23,11 +33,11 @@
 
 (defn format-str [s]
   (cljfmt/reformat-string
-    s
-    {:indentation?                          true
-     :split-keypairs-over-multiple-lines?   true
-     :insert-missing-whitespace?            true
-     :remove-multiple-non-indenting-spaces? true}))
+   s
+   {:indentation?                          true
+    :split-keypairs-over-multiple-lines?   true
+    :insert-missing-whitespace?            true
+    :remove-multiple-non-indenting-spaces? true}))
 
 (defn reformat-string [form-string rules-config]
   (-> form-string
@@ -51,15 +61,15 @@
     (if-not (and (some? k) (some? v))
       (format-zloc (z/up zloc))
       (recur
-        (-> zloc
-            (z/insert-right (z/node k))
-            (z/right)
-            (z/insert-newline-left)
-            (z/insert-right (z/node v))
-            (z/right))
-        (-> kw-zipper
-            (z/right)
-            (z/right))))))
+       (-> zloc
+           (z/insert-right (z/node k))
+           (z/right)
+           (z/insert-newline-left)
+           (z/insert-right (z/node v))
+           (z/right))
+       (-> kw-zipper
+           (z/right)
+           (z/right))))))
 
 (defn spaces-of-zloc
   [zloc]
@@ -78,20 +88,20 @@
 
 (comment
   (z/root-string ((edn-merge-value
-                    {:c {:d     1
-                         {:e 3} 4}
-                     :d 3})
+                   {:c {:d     1
+                        {:e 3} 4}
+                    :d 3})
                   (z/of-string "{:a 1
                 :b 2}")))
 
   (z/root-string ((edn-merge-value
-                    {:c {:d     1
-                         {:e 3} 4}
-                     :d 3})
+                   {:c {:d     1
+                        {:e 3} 4}
+                    :d 3})
                   (z/of-string "{}")))
 
   (z/root-string ((edn-merge-value
-                    (io/str->edn "{:reitit.routes/pages\n                          {:base-path \"\"\n                             :env       #ig/ref :system/env}}"))
+                   (io/str->edn "{:reitit.routes/pages\n                          {:base-path \"\"\n                             :env       #ig/ref :system/env}}"))
                   (z/of-string "{:a 1}"))))
 
 (defn edn-safe-merge [zloc value]
@@ -140,19 +150,19 @@
 (defmethod inject :edn [{:keys [data target action value ctx]}]
   (let [value (normalize-value value)]
     (->
-      (case action
-        :append
-        (if (empty? target)
-          (zloc-conj data value)
-          (or (z-update-in data target #(zloc-conj % value))
-              (println "could not find injection target:" target "in data:" (z/node data))))
-        :merge
-        (if-let [zloc (zloc-get-in data target)]
-          (edn-safe-merge zloc value)
-          (println "could not find injection target:" target "in data:" (z/node data))))
+     (case action
+       :append
+       (if (empty? target)
+         (zloc-conj data value)
+         (or (z-update-in data target #(zloc-conj % value))
+             (println "could not find injection target:" target "in data:" (z/node data))))
+       :merge
+       (if-let [zloc (zloc-get-in data target)]
+         (edn-safe-merge zloc value)
+         (println "could not find injection target:" target "in data:" (z/node data))))
       ;;TODO find a better way to do this
-      z/root-string
-      z/of-string)))
+     z/root-string
+     z/of-string)))
 
 (comment
 
@@ -160,15 +170,14 @@
     (let [data  (z/of-string "{:foo :bar}")
           value (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")]
       (clojure.walk/postwalk
-        (fn [node]
-          (if (and (seq? node) #_(= 'read-string (first node)))
-            (println ">>>" (first node))
-            node))
-        (z/assoc data :z (n/sexpr value)))
+       (fn [node]
+         (if (and (seq? node) #_(= 'read-string (first node)))
+           (println ">>>" (first node))
+           node))
+       (z/assoc data :z (n/sexpr value)))
       #_(-> (z/assoc data :z (n/sexpr value))
             z/node
-            str))
-    )
+            str)))
 
   (let [data  (z/of-string "{:foo :bar}")
         value (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")]
@@ -187,45 +196,43 @@
                                   (z/node))))
     (println "could not find injection target:" target "in data:" data))
 
-
   (z/root-string (z/edit
-                   (z/of-string "{:z :r :deps {:wooo :waaa} :paths [\"foo\"]}")
-                   (fn [x] (update x :paths conj "bar"))))
+                  (z/of-string "{:z :r :deps {:wooo :waaa} :paths [\"foo\"]}")
+                  (fn [x] (update x :paths conj "bar"))))
 
   (type (clojure.edn/read-string "foo"))
   (zloc-get-in (z/of-string "{:z :r :deps {:wooo :waaa}}") [])
 
-
   (let [data  (z/of-string "{:z :r :deps {:foo :bar}}")
         updated (inject
-                {:type   :edn
-                 :data   data
-                 :target []
-                 :action :merge
-                 :value  (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")})]
+                 {:type   :edn
+                  :data   data
+                  :target []
+                  :action :merge
+                  :value  (io/str->edn "{:db.sql/connection #profile\n {:prod {:jdbc-url #env JDBC_URL}}}")})]
     #_(z/root-string updated)
     (z/root-string
-      (inject
-        {:type   :edn
-         :data   updated
-         :target []
-         :action :merge
-         :value  (io/str->edn "{:x :y}")})))
+     (inject
+      {:type   :edn
+       :data   updated
+       :target []
+       :action :merge
+       :value  (io/str->edn "{:x :y}")})))
 
   ;; get-in test
   (z/root-string (edn-safe-merge
-                   (zloc-get-in (z/of-string "{:a 1
+                  (zloc-get-in (z/of-string "{:a 1
                 :b 2
                 :q {:jj 1}}") [:q])
-                   "{:c {:d 1
+                  "{:c {:d 1
                                 {:e 3} 4}
                         :d 3}"))
   ;; get-in empty map test
   (z/root-string (edn-safe-merge
-                   (zloc-get-in (z/of-string "{:a 1
+                  (zloc-get-in (z/of-string "{:a 1
                 :b 2
                 :q {}}") [:q])
-                   "{:c {:d 1
+                  "{:c {:d 1
                                 {:e 3} 4}
                         :d 3}")))
 
@@ -236,23 +243,23 @@
   (let [zloc-ns      (z/find-value zloc z/next 'ns)
         zloc-require (z/up (z/find-value zloc-ns z/next :require))]
     (reduce
-      (fn [zloc child]
-        (let [child-data (io/str->edn child)]
-          (if (require-exists? (z/sexpr zloc) child-data)
-            (do
-              (println "require" child-data "already exists, skipping")
-              zloc)
+     (fn [zloc child]
+       (let [child-data (io/str->edn child)]
+         (if (require-exists? (z/sexpr zloc) child-data)
+           (do
+             (println "require" child-data "already exists, skipping")
+             zloc)
             ;; TODO: formatting
-            (-> zloc
+           (-> zloc
                 ;; change #1: I might replace this line:
                 ;; (z/insert-newline-right)
                 ;; with this line:
-                (z/append-child (n/newline-node "\n"))
+               (z/append-child (n/newline-node "\n"))
                 ;; change #2: and now indent to first existing require
-                (z/append-child* (n/spaces (-> zloc (z/down) (spaces-of-zloc))))
-                (z/append-child child-data #_(format-zloc child-data))))))
-      zloc-require
-      requires)))
+               (z/append-child* (n/spaces (-> zloc (z/down) (spaces-of-zloc))))
+               (z/append-child child-data #_(format-zloc child-data))))))
+     zloc-require
+     requires)))
 
 (defn append-build-task [zloc child]
   (let [ns-loc (z/up (z/find-value zloc z/next 'ns))]
@@ -286,11 +293,11 @@
 (defmethod inject :clj [{:keys [data action value]}]
   (println "applying\n action:" action "\n value:" (pr-str value))
   (topmost
-    ((case action
-       :append-requires append-requires
-       :append-build-task append-build-task
-       :append-build-task-call append-build-task-call)
-     data value)))
+   ((case action
+      :append-requires append-requires
+      :append-build-task append-build-task
+      :append-build-task-call append-build-task-call)
+    data value)))
 
 (defmethod inject :html [{:keys [data action target value]}]
   (case action
@@ -298,7 +305,7 @@
                                        []
                                        target
                                        (html/append
-                                         (html/html value)))))))
+                                        (html/html value)))))))
 
 (defmethod inject :default [{:keys [type] :as injection}]
   (println "unrecognized injection type" type "for injection\n"
@@ -339,31 +346,33 @@
 
 (defn read-files [ctx paths]
   (reduce
-    (fn [path->data path]
-      (try
-        (->> (slurp path)
-             (renderer/render-template ctx)
-             (read-file path)
-             (assoc path->data path))
-        (catch Exception e
-          (println "failed to read asset in project:" path
-                   "\nerror:" (.getMessage e)))))
-    {} paths))
+   (fn [path->data path]
+     (try
+       (->> (slurp path)
+            (renderer/render-template ctx)
+            (read-file path)
+            (assoc path->data path))
+       (catch Exception e
+         (throw (ex-info (str "Failed to read asset:" path)
+                         {:error ::read-asset
+                          :path :path}
+                         e)))))
+   {} paths))
 
 (defn inject-at-path [ctx data path injections]
   {:type (-> injections first :type)
    :path path
    :data (reduce
-           (fn [data injection]
-             (inject (assoc injection :ctx ctx :data data)))
-           data injections)})
+          (fn [data injection]
+            (inject (assoc injection :ctx ctx :data data)))
+          data injections)})
 
 (defn group-by-path [xs]
   (reduce
-    (fn [m {:keys [path] :as item}]
-      (update m path (fnil conj []) item))
-    {}
-    xs))
+   (fn [m {:keys [path] :as item}]
+     (update m path (fnil conj []) item))
+   {}
+   xs))
 
 (defn inject-data [ctx injections]
   (let [injections (->> injections
@@ -374,13 +383,6 @@
       (println "updating file:" path)
       (->> (inject-at-path ctx (path->data path) path injections)
            (serialize)))))
-
-
-
-
-
-
-
 
 (comment
 
@@ -399,35 +401,33 @@
     #_(-> uber-loc
           (z/insert-right child)
           (z/insert-space-right)
-          (z/insert-right (n/newline-node "\n")))
-
-    )
+          (z/insert-right (n/newline-node "\n"))))
 
   (z/root-string
-    (inject
-      {:type   :clj
-       :data   (z/of-string "(ns foo (:require [bar.baz] [web.routes.pages]))")
-       :action :append-requires
-       :value  ["[web.routes.pages]"]}))
+   (inject
+    {:type   :clj
+     :data   (z/of-string "(ns foo (:require [bar.baz] [web.routes.pages]))")
+     :action :append-requires
+     :value  ["[web.routes.pages]"]}))
 
   (println
-    (str
-      (inject
-        {:type   :edn
-         :data   (z/of-string "{:z :r :deps {:wooo :waaa}}")
-         :target []
-         :action :merge
-         :value  "{:foo #ig/ref :bar :baz \"\"}"})))
+   (str
+    (inject
+     {:type   :edn
+      :data   (z/of-string "{:z :r :deps {:wooo :waaa}}")
+      :target []
+      :action :merge
+      :value  "{:foo #ig/ref :bar :baz \"\"}"})))
 
   (let [zloc  (-> #_(slurp "test/resources/sample-system.edn")
-                "{:z :r :deps {:wooo :waaa}}"
-                (rewrite-edn/parse-string))
+               "{:z :r :deps {:wooo :waaa}}"
+                  (rewrite-edn/parse-string))
         child (->> (io/str->edn "{:x {:foo #ig/ref :bar}}")
                    (prewalk
-                     (fn [node]
-                       (if (string? node)
-                         (renderer/render-template {} node)
-                         node))))]
+                    (fn [node]
+                      (if (string? node)
+                        (renderer/render-template {} node)
+                        node))))]
     (str (rewrite-edn/assoc zloc [:deps] (-> child (io/edn->str) (rewrite-edn/parse-string))))
     #_(str (rewrite-edn/assoc-in zloc [:deps] (-> child (io/edn->str) (rewrite-edn/parse-string)))))
 
@@ -437,15 +437,13 @@
   (rewrite-edn/sexpr (rewrite-edn/parse-string "{:foo #ig/ref :bar}"))
 
   (append-requires
-    "(ns wake.guestbook.core\n  (:require\n    [clojure.tools.logging :as log]\n    [integrant.core :as ig]\n    [wake.guestbook.config :as config]\n    [wake.guestbook.env :refer [defaults]]\n\n    ;; Edges\n\n\n\n\n\n\n\n    [kit.edge.utils.repl]\n    [kit.edge.server.undertow]\n    [wake.guestbook.web.handler]\n\n    ;; Routes\n    [wake.guestbook.web.routes.api]\n    [wake.guestbook.web.routes.pages]    )\n  (:gen-class))"
-    ['[myapp.core :as foo]
-     '[myapp.core.roures :as routes]])
-
+   "(ns wake.guestbook.core\n  (:require\n    [clojure.tools.logging :as log]\n    [integrant.core :as ig]\n    [wake.guestbook.config :as config]\n    [wake.guestbook.env :refer [defaults]]\n\n    ;; Edges\n\n\n\n\n\n\n\n    [kit.edge.utils.repl]\n    [kit.edge.server.undertow]\n    [wake.guestbook.web.handler]\n\n    ;; Routes\n    [wake.guestbook.web.routes.api]\n    [wake.guestbook.web.routes.pages]    )\n  (:gen-class))"
+   ['[myapp.core :as foo]
+    '[myapp.core.roures :as routes]])
 
   (let [child "(defn build-cljs [_]\n  (println \"npx shadow-cljs release app...\")\n  (let [{:keys [exit] :as s} (sh \"npx\" \"shadow-cljs\" \"release\" \"app\")]\n    (when-not (zero? exit)\n      (throw (ex-info \"could not compile cljs\" s)))))"
         ctx   {}]
     (io/str->edn (template-value ctx child)))
-
 
   {:default
    {:require-restart? true
@@ -472,7 +470,6 @@
                    :action :append-build-task-call
                    :value  (build-cljs)}]}}}
 
-
   (defn uber [_]
     (b/compile-clj {:basis     basis
                     :src-dirs  ["src/clj" "env/prod/clj"]
@@ -482,5 +479,4 @@
     (b/uber {:class-dir class-dir
              :uber-file uber-file
              :main      main-cls
-             :basis     basis}))
-  )
+             :basis     basis})))
