@@ -9,6 +9,11 @@
   (:import
    java.nio.file.Files))
 
+(defn slurp-bytes
+  "Reads a file as a byte array."
+  [path]
+  (Files/readAllBytes (.toPath (jio/file path))))
+
 (defn template? [asset-path]
   (->> [".txt" ".md" "Dockerfile" "gitignore" ".html" ".edn" ".clj" ".cljs"]
        (map #(.endsWith asset-path %))
