@@ -8,8 +8,7 @@ systems.
 The goal of Kit is to provide a template for a robust,
 scalable Clojure web application. It hides common plumbing
 that is standard across projects via its libs system, while
-exposing code that tends to be customized in the clj-new
-template.
+exposing code that tends to be customized in the template.
 
 Thanks to `integrant`, and `aero`, the libs are simple
 skeletons with the bulk of the customization being done in
@@ -17,15 +16,21 @@ the system configuration EDN file.
 
 ## Quick start
 
-Kit
-requires [clj-new](https://github.com/seancorfield/clj-new),
-installed preferably as a tool:
+The recommended way to create a new Kit application is using [deps-new](https://github.com/seancorfield/deps-new).
 
-`clojure -Ttools install com.github.seancorfield/clj-new '{:git/tag "v1.2.381"}' :as clj-new`
+Using [neil](https://github.com/babashka/neil) (recommended):
 
-To create a new Kit application:
+```
+brew install babashka/brew/neil
+neil new io.github.kit-clj/kit yourname/app
+```
 
-`clojure -Tclj-new create :template io.github.kit-clj :name yourname/app`
+Or directly with deps-new:
+
+```
+clojure -Sdeps '{:deps {io.github.seancorfield/deps-new {:mvn/version "RELEASE"}}}' \
+  -Tnew create :template io.github.kit-clj/kit :name yourname/app
+```
 
 ## Latest versions
 
