@@ -62,6 +62,13 @@
            (throw e#))))))
 
 (defn installed-modules
+  "A list of keys of modules that were installed successfully."
+  [ctx]
+  (let [modules-root (modules/root ctx)
+        install-log (read-modules-log modules-root)]
+    (keys (filter (fn [[_ entry]] (entry-success? entry)) install-log))))
+
+(defn installed-modules-log
   "A map of module keys to their log entries, for modules that were installed successfully."
   [ctx]
   (let [modules-root (modules/root ctx)
@@ -106,7 +113,8 @@
 
 (defn build-installation-manifest
   "Builds a detailed manifest of what a module installation did.
-   Called after successful generation to persist the record for later removal."
+   Called after successful generation to persist the record for later removal.
+   Note: SHA-256 hashes are computed from on-disk state after generation completes."
   [ctx {:module/keys [resolved-config]} feature-flag]
   (let [{:keys [actions hooks]} resolved-config
         rendered-assets (for [asset (:assets actions)

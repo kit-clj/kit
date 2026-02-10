@@ -80,6 +80,22 @@
         (is (some #(= (:path %) css-path)
                   (:modified-files report)))))))
 
+;; 4b. Removal report with missing files (deleted between install and report)
+(deftest test-removal-report-missing-files
+  (testing "Files deleted after installation appear in :missing-files"
+    (kit/install-module :meta kit-edn-path {:feature-flag :default})
+    (let [report-before (kit/removal-report :meta kit-edn-path {})
+          target-file (first (:safe-to-remove report-before))]
+      (is (some? target-file) "Need at least one safe file to test with")
+      ;; Delete the file manually
+      (jio/delete-file (jio/file target-file))
+      ;; Now the report should show it as missing
+      (let [report-after (kit/removal-report :meta kit-edn-path {})]
+        (is (some #{target-file} (:missing-files report-after))
+            "Deleted file should appear in :missing-files")
+        (is (not (some #{target-file} (:safe-to-remove report-after)))
+            "Deleted file should not appear in :safe-to-remove")))))
+
 ;; 5. Remove module deletes files and cleans log
 (deftest test-remove-module
   (testing "remove-module deletes safe files and removes log entry"

@@ -7,8 +7,7 @@
    [kit.generator.hooks :as hooks]
    [kit.generator.io :as io]
    [kit.generator.modules :as modules]
-   [kit.generator.modules-log :as modules-log :refer [installed-modules
-                                                       module-installed?]]
+   [kit.generator.modules-log :as modules-log :refer [module-installed?]]
    [kit.generator.modules.dependencies :as deps]
    [kit.generator.modules.generator :as generator]
    [kit.generator.snippets :as snippets]))
@@ -182,11 +181,11 @@
   ([module-key kit-edn-path {:keys [accept-hooks? dry?] :as opts}]
    (if dry?
      (print-installation-plan module-key kit-edn-path opts)
-     (let [{:keys [ctx pending-modules installed-modules opts]} (installation-plan module-key kit-edn-path opts)
+     (let [{:keys [ctx pending-modules installed-modules] plan-opts :opts} (installation-plan module-key kit-edn-path opts)
            accept-hooks-atom (atom accept-hooks?)]
        (report-already-installed installed-modules)
        (doseq [{:module/keys [key resolved-config] :as module} pending-modules]
-         (let [feature-flag (get-in opts [key :feature-flag] :default)]
+         (let [feature-flag (get-in plan-opts [key :feature-flag] :default)]
            (try
              (generator/generate ctx module)
              (let [manifest (modules-log/build-installation-manifest ctx module feature-flag)]
@@ -264,6 +263,7 @@
    - :has-manifest? (whether detailed installation manifest is available)
    - :safe-to-remove (files that can be auto-deleted, SHA matches)
    - :modified-files (files modified since installation)
+   - :missing-files (files deleted since installation)
    - :manual-steps (human-readable injection removal instructions)
    - :dependents (installed modules that depend on this one)
    Returns nil if the module is not installed."
@@ -281,7 +281,9 @@
              manifest (when manifest? entry)
              dependents (try
                           (find-dependents ctx module-key)
-                          (catch Exception _ #{}))]
+                          (catch Exception e
+                            (println "WARNING: error resolving dependents:" (.getMessage e))
+                            #{}))]
          (if manifest?
            ;; New format: detailed manifest with SHA comparison
            (let [file-statuses (map (fn [asset]
@@ -291,11 +293,13 @@
                  modified (vec (keep #(when (= :modified (:file-status %))
                                         {:path (:target %) :reason "content changed since installation"})
                                      file-statuses))
+                 missing (vec (keep #(when (= :missing (:file-status %)) (:target %)) file-statuses))
                  manual-steps (mapv :description (:injections manifest))]
              {:module-key module-key
               :has-manifest? true
               :safe-to-remove safe
               :modified-files modified
+              :missing-files missing
               :manual-steps manual-steps
               :dependents dependents})
            ;; Old format: best-effort report from module config on disk
@@ -342,6 +346,11 @@
            (doseq [{:keys [path reason]} (:modified-files report)]
              (println "  REVIEW" path "-" reason))
            (println))
+         (when (seq (:missing-files report))
+           (println "FILES (already deleted, no action needed):")
+           (doseq [f (:missing-files report)]
+             (println "  GONE" f))
+           (println))
          (when (seq (:manual-steps report))
            (println "MANUAL STEPS (undo code injections):")
            (doseq [step (:manual-steps report)]
@@ -385,7 +394,7 @@
          ;; Auto-delete safe files
          (doseq [f (:safe-to-remove report)]
            (println "Deleting" f)
-           (jio/delete-file (jio/file f)))
+           (jio/delete-file (jio/file f) true))
 
          ;; Report modified files
          (when (seq (:modified-files report))
