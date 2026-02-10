@@ -51,3 +51,17 @@
   (->> (dependency-tree ctx module-key opts)
        (dependency-order)
        (map #(modules/lookup-module ctx %))))
+
+(defn immediate-dependents
+  "Returns the set of installed module keys that directly require target-key.
+   Used to check whether a module can be safely removed."
+  [ctx installed-module-keys target-key]
+  (->> installed-module-keys
+       (filter (fn [mk]
+                 (when (not= mk target-key)
+                   (try
+                     (let [module (modules/lookup-module ctx mk)
+                           requires (get-in module [:module/resolved-config :requires])]
+                       (some #{target-key} requires))
+                     (catch Exception _ false)))))
+       set))

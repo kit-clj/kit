@@ -14,7 +14,9 @@
 
 (defn module-installed? [module-key]
   (when-let [install-log (read-edn-safe (str source-folder "/modules/install-log.edn"))]
-    (= :success (get install-log module-key))))
+    (let [entry (get install-log module-key)]
+      (or (= :success entry)
+          (= :success (:status entry))))))
 
 (def seeded-files
   "Files that are directly copied. They will always be present in the target folder,

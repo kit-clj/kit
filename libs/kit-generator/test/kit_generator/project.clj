@@ -11,7 +11,9 @@
 
 (defn module-installed? [module-key]
   (when-let [install-log (io/read-edn-safe (str project-root "/modules/install-log.edn"))]
-    (= :success (get install-log module-key))))
+    (let [entry (get install-log module-key)]
+      (or (= :success entry)
+          (= :success (:status entry))))))
 
 (defn prepare-project
   "Sets up a test project in `project-root` and returns the path to the kit.edn file.
