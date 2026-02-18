@@ -116,10 +116,15 @@
   "Deploy jar locally or to remote artifactory"
   [{:keys [src-pom installer sign-releases? jar-file] :or {installer :local sign-releases? false}}]
   (println "Deploying: " jar-file)
-  (deploy/deploy {:installer      installer
-                  :sign-releases? sign-releases?
-                  :pom-file       src-pom
-                  :artifact       jar-file}))
+  (try
+    (deploy/deploy {:installer      installer
+                    :sign-releases? sign-releases?
+                    :pom-file       src-pom
+                    :artifact       jar-file})
+    (catch org.apache.maven.wagon.authorization.AuthorizationException e
+      (if (str/includes? (.getMessage e) "redeploying non-snapshots is not allowed")
+        (println "Skipping" jar-file "- version already published")
+        (throw e)))))
 
 (defn- sync-lib-deps [{:keys [lib] :as m}]
   (println "Syncing lib deps...")
