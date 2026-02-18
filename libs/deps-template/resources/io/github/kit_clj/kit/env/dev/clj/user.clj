@@ -10,11 +10,8 @@
     [integrant.repl :refer [clear go halt prep init reset reset-all]]
     [integrant.repl.state :as state]
     [kit.api :as kit]
-    [lambdaisland.classpath.watch-deps :as watch-deps]      ;; hot loading for deps
+    [lambdaisland.classpath :as licp]
     [<<ns-name>>.core :refer [start-app]]))
-
-;; uncomment to enable hot loading for deps
-(watch-deps/start! {:aliases [:dev :test]})
 
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
 
@@ -54,6 +51,12 @@
 (def query-fn (:db.sql/query-fn state/system))
 <% endif %>
 
+(defn update-deps
+  "Refresh classpath to pick up deps.edn changes."
+  []
+  (licp/update-classpath! {:aliases [:dev :test]}))
+
 (comment
   (go)
-  (reset))
+  (reset)
+  (update-deps))
