@@ -2,6 +2,12 @@
 
 ## 2026-02-18
 
+### New Features
+
+- Add module removal report and `remove-module` command — auto-deletes unchanged files, prints manual steps for injections, checks reverse dependencies [PR #171](https://github.com/kit-clj/kit/pull/171). Thanks [@kovan](https://github.com/kovan)
+- Add options for dependencies with more advanced feature flags [PR #167](https://github.com/kit-clj/kit/pull/167). Thanks [@bilus](https://github.com/bilus)
+- Update `kit.git-config.edn` template to match clj-jgit 1.0 syntax [PR #164](https://github.com/kit-clj/kit/pull/164). Thanks [@michaelglass](https://github.com/michaelglass)
+
 ### Bug Fixes
 
 - Fix NPE in EDN injection when target path doesn't exist — now returns data unchanged
