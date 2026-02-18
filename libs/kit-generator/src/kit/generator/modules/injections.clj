@@ -115,13 +115,16 @@
               zloc)
           ((edn-merge-value value) zloc))))
     (catch Exception e
-      (throw (Exception. (str "error merging!\n target:" zloc "\n value:" value) e)))))
+      (throw (ex-info (str "error merging!\n target:" zloc "\n value:" value)
+                      {:error ::merge-error}
+                      e)))))
 
 (defn zloc-get-in
   [zloc [k & ks]]
   (if-not k
     zloc
-    (recur (z/get zloc k) ks)))
+    (when zloc
+      (recur (z/get zloc k) ks))))
 
 (defn zloc-conj [zloc value]
   (-> zloc
@@ -137,7 +140,8 @@
 
 (defn z-update-in [zloc [k & ks] f]
   (if k
-    (z-update-in (z/get zloc k) ks f)
+    (when zloc
+      (z-update-in (z/get zloc k) ks f))
     (when zloc
       (f zloc))))
 
@@ -155,11 +159,13 @@
        (if (empty? target)
          (zloc-conj data value)
          (or (z-update-in data target #(zloc-conj % value))
-             (println "could not find injection target:" target "in data:" (z/node data))))
+             (do (println "could not find injection target:" target "in data:" (z/node data))
+                 data)))
        :merge
        (if-let [zloc (zloc-get-in data target)]
          (edn-safe-merge zloc value)
-         (println "could not find injection target:" target "in data:" (z/node data))))
+         (do (println "could not find injection target:" target "in data:" (z/node data))
+             data)))
       ;;TODO find a better way to do this
      z/root-string
      z/of-string)))
@@ -353,9 +359,9 @@
             (read-file path)
             (assoc path->data path))
        (catch Exception e
-         (throw (ex-info (str "Failed to read asset:" path)
+         (throw (ex-info (str "Failed to read asset: " path)
                          {:error ::read-asset
-                          :path :path}
+                          :path path}
                          e)))))
    {} paths))
 

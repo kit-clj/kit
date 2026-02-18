@@ -6,6 +6,7 @@
     [leiningen.new.io.github.kit-clj.options.helpers :as helpers]
     [leiningen.new.io.github.kit-clj.options.sql :as sql]
     [io.github.kit-clj.deps-template.helpers :refer [generate-cookie-secret]]
+    [clojure.edn :as edn]
     [clojure.java.io :as io]
     [clojure.set :as set]
     [clojure.walk :as walk]))
@@ -23,7 +24,7 @@
 
 (def versions (-> (io/resource "io/github/kit_clj/kit/versions.edn")
                   (slurp)
-                  (read-string)
+                  (edn/read-string)
                   (walk/keywordize-keys)))
 
 (defn template-data [name options]
@@ -35,7 +36,7 @@
      :default-cookie-secret (if (helpers/option? "+override-default-cookie-secret" options)
                               "test-secret"
                               (generate-cookie-secret))
-     :xtdb?                 (or full? (helpers/option? "+xtdb" options) (helpers/option? "+xtdb" options))
+     :xtdb?                 (or full? (helpers/option? "+xtdb" options))
      ;; SQL data coercion
      :sql?                  (or full? 
                                 (helpers/option? "+sql" options))
@@ -104,18 +105,11 @@
     (when abort?
       (throw (ex-info "Error: invalid profile(s)" {})))))
 
-(defn check-conflicts
-  [options]
-  #_(when (> (count (filter #{"+full" "+bare"} options))
-             1)
-      (throw (ex-info "Cannot have both +full and +bare profile present" {}))))
-
 (defn check-options
   "Check the user-provided options"
   [options]
   (doto options
-    (check-available)
-    (check-conflicts)))
+    (check-available)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

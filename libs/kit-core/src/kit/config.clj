@@ -16,6 +16,8 @@
 (defn read-config
   [filename options]
   (log/info "Reading config" filename)
-  (aero/read-config (io/resource filename) options))
+  (if-let [resource (io/resource filename)]
+    (aero/read-config resource options)
+    (throw (ex-info "Config resource not found" {:filename filename}))))
 
 (defmethod ig/init-key :system/env [_ env] env)

@@ -1,6 +1,7 @@
 (ns kit.generator.modules
   "Module loading and resolution."
   (:require
+   [clojure.edn :as edn]
    [clojure.java.io :as jio]
    [kit.generator.features :as features]
    [kit.generator.git :as git]
@@ -92,7 +93,7 @@
                    (file-seq)
                    (keep #(when (= "modules.edn" (.getName %))
                             (set-module-paths root (assoc
-                                                    (read-string (slurp %))
+                                                    (edn/read-string (slurp %))
                                                     :module-root (-> % .getParentFile .getName)))))
                    ;; TODO: Warn if there are modules with the same key from different repositories.
                    (apply merge)

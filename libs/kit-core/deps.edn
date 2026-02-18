@@ -1,4 +1,10 @@
 {:paths   ["src"]
  :deps    {aero/aero                      {:mvn/version "1.1.6"}
            integrant/integrant            {:mvn/version "1.0.0"}
-           org.clojure/tools.logging      {:mvn/version "1.2.4"}}}
+           org.clojure/tools.logging      {:mvn/version "1.2.4"}}
+ :aliases {:test
+           {:extra-paths ["test"]
+            :extra-deps  {io.github.cognitect-labs/test-runner
+                          {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+            :main-opts   ["-m" "cognitect.test-runner"]
+            :exec-fn     cognitect.test-runner.api/test}}}
