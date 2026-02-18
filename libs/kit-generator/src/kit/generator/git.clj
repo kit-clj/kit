@@ -1,6 +1,7 @@
 (ns kit.generator.git
   (:require
    [clj-jgit.porcelain :as git]
+   [clojure.edn :as edn]
    [clojure.java.io :as jio]
    [clojure.string :as string]
    [kit.generator.io :as io])
@@ -20,7 +21,7 @@
 
 (defn git-config []
   (if (.exists (jio/file "kit.git-config.edn"))
-    (read-string (slurp "kit.git-config.edn"))
+    (edn/read-string (slurp "kit.git-config.edn"))
     {:name "~/.ssh/id_rsa"}))
 
 (defn sync-repository! [root {:keys [name url tag]} & [callback]]
@@ -40,8 +41,9 @@
                            :clone-all?         false)))
         (when callback (callback path))))
     (catch org.eclipse.jgit.api.errors.TransportException e
-      (println (.getMessage e)
-               "\nif you do not have a key file, set the :name key in kit.git-config.edn to an empty string"))
+      (throw (ex-info (str (.getMessage e)
+                           "\nif you do not have a key file, set the :name key in kit.git-config.edn to an empty string")
+                      {:error ::transport-error :url url} e)))
     (catch Exception e
-      (println "failed to clone module:" url "\ncause:" (.getMessage e))
-      (.printStackTrace e))))
+      (throw (ex-info (str "failed to clone module: " url)
+                      {:error ::clone-error :url url} e)))))
