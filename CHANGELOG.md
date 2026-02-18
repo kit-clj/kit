@@ -1,5 +1,88 @@
 # Change Log
 
+## 2026-02-18
+
+### Bug Fixes
+
+- Fix NPE in EDN injection when target path doesn't exist — now returns data unchanged
+- Fix error map in `read-files` where `:path` was set to the keyword `:path` instead of the actual path value
+- Fix inconsistent exception type in `edn-safe-merge` — now throws `ExceptionInfo` instead of plain `Exception`
+- Replace unsafe `read-string` with `edn/read-string` in `kit.generator.git`, `kit.generator.modules`, and lein-template
+- Re-throw git sync failures as `ex-info` instead of silently printing and swallowing
+- Add nil check in `kit.config/read-config` for missing resource files
+- Remove duplicate `:xtdb?` condition (copy-paste bug) in lein-template
+- Remove dead `check-conflicts` function in lein-template
+- Add nil guards in `zloc-get-in` and `z-update-in` to prevent `AssertionError` on missing keys
+
+### Improvements
+
+- Replace automatic `watch-deps/start!` with manual `update-deps` function in dev `user.clj` template to prevent REPL hangs on namespace reload
+- Build script gracefully handles publishing a version that already exists on Clojars
+
+### Dependency Updates
+
+<details>
+<summary>template dependencies</summary>
+
+* `org.clojure/clojure` 1.12.3 -> 1.12.4
+* `metosin/reitit` 0.9.2 -> 0.10.0
+* `ch.qos.logback/logback-classic` 1.5.20 -> 1.5.32
+* `io.github.clojure/tools.build` 0.10.11 -> 0.10.12
+* `org.clojure/tools.namespace` 1.5.0 -> 1.5.1
+* `com.xtdb/xtdb-rocksdb` 1.21.0-beta3 -> 1.24.5
+* `com.xtdb/xtdb-http-server` 1.21.0-beta3 -> 1.24.5
+* `selmer/selmer` 1.12.67 -> 1.13.1
+* `babashka/fs` 0.5.27 -> 0.5.31
+* `io.github.seancorfield/deps-new` v0.10.1 -> v0.10.3
+* `com.github.seancorfield/clj-new` 1.2.381 -> 1.3.415
+</details>
+
+<details>
+<summary>lib dependencies (synced)</summary>
+
+* `integrant/integrant` 1.0.0 -> 1.0.1
+* `org.clojure/tools.logging` 1.2.4 -> 1.3.0
+* `http-kit/http-kit` 2.7.0 -> 2.8.1
+* `ring/ring-jetty-adapter` 1.12.2 -> 1.15.3
+* `com.mysql/mysql-connector-j` 8.1.0 -> 9.5.0
+* `org.postgresql/postgresql` 42.6.0 -> 42.7.8
+* `cheshire/cheshire` 5.11.0 -> 6.1.0
+* `nrepl/nrepl` 1.1.1 -> 1.5.1 (kit-nrepl)
+* `com.github.seancorfield/next.jdbc` 1.3.883 -> 1.3.1070
+* `hikari-cp/hikari-cp` 3.0.1 -> 3.3.0
+* `migratus/migratus` 1.5.1 -> 1.6.4
+* `com.taoensso/carmine` 3.2.0 -> 3.4.1
+* `org.clojure/core.cache` 1.0.225 -> 1.1.234
+* `clj-commons/iapetos` 0.1.13 -> 0.1.14
+* `com.xtdb/xtdb-core` 1.23.0 -> 2.0.0
+</details>
+
+<details>
+<summary>version bumps</summary>
+
+* `io.github.kit-clj/kit-core` 1.0.9 -> 1.0.10
+* `io.github.kit-clj/kit-generator` 0.2.8 -> 0.2.9
+* `io.github.kit-clj/deps-template` 0.1.86 -> 0.1.87
+* `io.github.kit-clj/lein-template` 0.1.86 -> 0.1.87
+* `io.github.kit-clj/kit-hato` 1.0.4 -> 1.0.5
+* `io.github.kit-clj/kit-http-kit` 1.0.5 -> 1.0.6
+* `io.github.kit-clj/kit-jetty` 1.0.0 -> 1.0.1
+* `io.github.kit-clj/kit-metrics` 1.0.3 -> 1.0.4
+* `io.github.kit-clj/kit-mysql` 1.0.5 -> 1.0.6
+* `io.github.kit-clj/kit-nrepl` 1.0.5 -> 1.0.6
+* `io.github.kit-clj/kit-postgres` 1.0.7 -> 1.0.8
+* `io.github.kit-clj/kit-quartz` 1.0.4 -> 1.0.5
+* `io.github.kit-clj/kit-redis` 1.0.6 -> 1.0.7
+* `io.github.kit-clj/kit-repl` 1.0.3 -> 1.0.4
+* `io.github.kit-clj/kit-selmer` 1.0.4 -> 1.0.5
+* `io.github.kit-clj/kit-sql-conman` 1.10.5 -> 1.10.6
+* `io.github.kit-clj/kit-sql-hikari` 1.0.6 -> 1.0.7
+* `io.github.kit-clj/kit-sql-migratus` 1.0.5 -> 1.0.6
+* `io.github.kit-clj/kit-xtdb` 1.0.4 -> 1.0.5
+</details>
+
+---
+
 ### `io.github.kit-clj/deps-template {:mvn/version "1.0.4"}`
 <details>
 <summary>version bumps</summary>
