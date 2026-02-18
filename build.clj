@@ -121,7 +121,7 @@
                     :sign-releases? sign-releases?
                     :pom-file       src-pom
                     :artifact       jar-file})
-    (catch org.apache.maven.wagon.authorization.AuthorizationException e
+    (catch org.eclipse.aether.deployment.DeploymentException e
       (if (str/includes? (.getMessage e) "redeploying non-snapshots is not allowed")
         (println "Skipping" jar-file "- version already published")
         (throw e)))))
