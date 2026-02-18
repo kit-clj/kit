@@ -34,7 +34,7 @@
   com.taoensso/carmine                   {:mvn/version "3.4.1"}
   ;; kit-repl
   ;; kit-selmer
-  selmer/selmer                          {:mvn/version "1.12.67"}
+  selmer/selmer                          {:mvn/version "1.13.1"}
   ;; kit-sql
   io.github.kit-clj/kit-sql-conman       {:mvn/version "1.10.5"}
   io.github.kit-clj/kit-sql-migratus     {:mvn/version "1.0.5"}

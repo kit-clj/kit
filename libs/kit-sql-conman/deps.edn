@@ -1,4 +1,4 @@
 {:paths ["src"]
- :deps  {integrant/integrant {:mvn/version "1.0.0"}
+ :deps  {integrant/integrant {:mvn/version "1.0.1"}
          conman/conman              {:mvn/version "0.9.6"}
-         io.github.kit-clj/kit-core {:mvn/version "1.0.8"}}}
+         io.github.kit-clj/kit-core {:mvn/version "1.0.9"}}}

@@ -1,4 +1,4 @@
-{:deps {babashka/fs {:mvn/version "0.5.27"}
-        selmer/selmer {:mvn/version "1.12.67"}
-        io.github.seancorfield/deps-new {:git/tag "v0.10.1" :git/sha "a90029c"}}
+{:deps {babashka/fs {:mvn/version "0.5.31"}
+        selmer/selmer {:mvn/version "1.13.1"}
+        io.github.seancorfield/deps-new {:git/tag "v0.10.3" :git/sha "2c012c4"}}
  :paths ["src" "resources"]}
