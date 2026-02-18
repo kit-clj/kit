@@ -1,3 +1,3 @@
 {:paths   ["src"]
  :deps    {integrant/integrant {:mvn/version "1.0.1"}
-           selmer/selmer       {:mvn/version "1.12.67"}}}
+           selmer/selmer       {:mvn/version "1.13.1"}}}

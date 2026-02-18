@@ -1,4 +1,4 @@
 {:paths   ["src"]
- :deps    {selmer/selmer                   {:mvn/version "1.12.67"}
+ :deps    {selmer/selmer                   {:mvn/version "1.13.1"}
            com.github.seancorfield/clj-new {:mvn/version "1.3.415"}
-           io.github.kit-clj/deps-template {:mvn/version "0.1.86"}}}
+           io.github.kit-clj/deps-template {:mvn/version "0.1.87"}}}
