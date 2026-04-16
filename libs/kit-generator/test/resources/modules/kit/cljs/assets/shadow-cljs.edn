@@ -2,7 +2,7 @@
  :source-paths ["src/cljs"]
  :dependencies [[binaryage/devtools "1.0.3"]
                 [nrepl "0.8.3"]
-                [reagent "1.1.0"]
+                [reagent "2.0.1"]
                 [cljs-ajax "0.8.4"]]
  :builds       {:app {:target     :browser
                       :output-dir "target/classes/cljsbuild/public/js"
