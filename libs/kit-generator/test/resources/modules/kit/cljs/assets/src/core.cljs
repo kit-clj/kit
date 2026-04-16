@@ -1,7 +1,5 @@
 (ns <<ns-name>>.core
-    (:require
-      [reagent.core :as r]
-      [reagent.dom :as d]))
+  (:require [reagent.dom.client :as rdomc]))
 
 ;; -------------------------
 ;; Views
@@ -12,8 +10,10 @@
 ;; -------------------------
 ;; Initialize app
 
+(defonce root (rdomc/create-root (.getElementById js/document "app")))
+
 (defn ^:dev/after-load mount-root []
-  (d/render [home-page] (.getElementById js/document "app")))
+  (rdomc/render root [home-page]))
 
 (defn ^:export ^:dev/once init! []
   (mount-root))
