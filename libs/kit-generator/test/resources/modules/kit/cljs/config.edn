@@ -23,7 +23,8 @@
                 {:type   :clj
                  :path   "build.clj"
                  :action :append-requires
-                 :value  ["[clojure.java.shell :refer [sh]]"]}
+                 :value  ["[clojure.java.shell :refer [sh]]"
+                          "[babashka.fs :refer [copy-tree]]"]}
                 {:type   :clj
                  :path   "build.clj"
                  :action :append-build-task
@@ -32,7 +33,9 @@
                            (let [{:keys [exit]
                                   :as   s} (sh "npx" "shadow-cljs" "release" "app-prod")]
                              (when-not (zero? exit)
-                               (throw (ex-info "could not compile cljs" s)))))}
+                               (throw (ex-info "could not compile cljs" s)))
+                             (b/delete {:path "target/classes/public/js"})
+                             (copy-tree "target/classes/cljsbuild/public" "target/classes/public")))}
                 {:type   :clj
                  :path   "build.clj"
                  :action :append-build-task-call
