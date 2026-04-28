@@ -2,6 +2,7 @@
   (:require [clojure.tools.build.api :as b]
             [clojure.string :as string]
             [clojure.java.shell :refer [sh]]
+            [babashka.fs :refer [copy-tree]]
             [deps-deploy.deps-deploy :as deploy]
             [kit.generator.io :as io]))
 
@@ -32,7 +33,9 @@
   (println "npx shadow-cljs release app-prod...")
   (let [{:keys [exit] :as s} (sh "npx" "shadow-cljs" "release" "app-prod")]
     (when-not (zero? exit)
-      (throw (ex-info "could not compile cljs" s)))))
+      (throw (ex-info "could not compile cljs" s)))
+    (b/delete {:path "target/classes/public/js"})
+    (copy-tree "target/classes/cljsbuild/public" "target/classes/public")))
 
 (defn uber [_]
   (b/compile-clj {:basis basis
