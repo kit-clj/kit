@@ -29,8 +29,8 @@
                :target-dir class-dir}))
 
 (defn build-cljs [_]
-  (println "npx shadow-cljs release app...")
-  (let [{:keys [exit] :as s} (sh "npx" "shadow-cljs" "release" "app")]
+  (println "npx shadow-cljs release app-prod...")
+  (let [{:keys [exit] :as s} (sh "npx" "shadow-cljs" "release" "app-prod")]
     (when-not (zero? exit)
       (throw (ex-info "could not compile cljs" s)))))
 
