@@ -27,6 +27,17 @@
   [n]
   (-> n (str) (str/replace "." "/") (str/replace "-" "_")))
 
+(defn- expand-sql-flags
+  "Expands the :sql flag into individual SQL component flags for template rendering."
+  [{:keys [sql] :as data}]
+  (if sql
+    (assoc data
+           :conman true
+           :migratus true
+           :postgres true
+           :mysql true)
+    data))
+
 (defn- selmer-opts
   "Returns the data to be passed into the Selmer templates."
   [{:keys [template-dir default-cookie-secret] :as data}]
@@ -105,7 +116,8 @@
 
   This is the first step in the deps-new pipeline."
   [data]
-  (assoc data ::template-files (render-templates data)))
+  (let [data' (expand-sql-flags data)]
+    (assoc data' ::template-files (render-templates data'))))
 
 (defn- write-temporary-files
   "Writes template files to the temp-dir."
