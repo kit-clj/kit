@@ -18,5 +18,5 @@
  "kit-sql-hikari"   "1.0.7"
  "kit-sql"          "1.1.4"
  "kit-undertow"     "1.0.12"
- "lein-template"    "0.1.91"
- "deps-template"    "0.1.91"}
+ "lein-template"    "0.1.92"
+ "deps-template"    "0.1.92"}
