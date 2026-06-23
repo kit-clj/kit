@@ -41,6 +41,8 @@
 * `babashka/fs` 0.5.27 -> 0.5.31
 * `io.github.seancorfield/deps-new` v0.10.1 -> v0.10.3
 * `com.github.seancorfield/clj-new` 1.2.381 -> 1.3.415
+* `ring/ring-core` 1.15.4 -> 1.15.5
+* `ring/ring-devel` 1.15.3 -> 1.15.5
 </details>
 
 <details>
