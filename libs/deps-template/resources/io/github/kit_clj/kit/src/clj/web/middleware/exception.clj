@@ -13,6 +13,26 @@
             :data      (ex-data exception)
             :uri       (:uri request)}})
 
+(defn wrap-log-exceptions
+  "Middleware that logs exceptions which escape the route-level `wrap-exception`
+  before they reach the HTTP server.
+
+  `wrap-exception` sits inside the request-body parsing layers (multipart/form
+  params via `wrap-defaults`, and muuntaja's request formatting), so an error
+  thrown while reading the body — e.g. a request exceeding the server's max body
+  size — is never seen by it and would otherwise surface only as an opaque 500
+  with no stack trace in the logs.
+
+  Must be applied as the OUTERMOST handler middleware so it wraps every layer
+  that can throw while serving a request. Logs at error level and rethrows."
+  [handler]
+  (fn [request]
+    (try
+      (handler request)
+      (catch Throwable e
+        (log/error e "unhandled exception processing request" (:uri request))
+        (throw e)))))
+
 (def wrap-exception
   (exception/create-exception-middleware
     (merge
