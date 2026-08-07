@@ -17,6 +17,9 @@
          test      {:doc  "runs tests"
                     :task (clojure {:dir "."} "-M:test")}
 
+         test-watch {:doc  "re-runs tests on file changes"
+                     :task (clojure {:dir "."} "-M:test:test-watch")}
+
          uberjar   {:doc  "builds the uberjar"
                     :task (clojure {:dir "."} "-T:build all")}
 

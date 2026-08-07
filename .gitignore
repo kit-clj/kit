@@ -17,7 +17,9 @@ pom.xml.asc
 .DS_Store
 .nrepl-port
 .lsp
-.clj-kondo/.cache/
+**/.clj-kondo/.cache/
+**/.clj-kondo/imports/
+**/.clj-kondo/inline-configs/
 .aider*
 /libs/kit-generator/test/resources/generated/
 /libs/kit-generator/test/resources/modules/install-log.edn

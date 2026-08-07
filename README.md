@@ -145,6 +145,29 @@ Additional profiles:
 Presently only Clojure deps is supported, however there are
 plans to add Leiningen support.
 
+## Running the tests
+
+Tests are run with [Kaocha](https://github.com/lambdaisland/kaocha). Each project
+that has tests carries its own `tests.edn`.
+
+```
+bb test         # the template parity test in this repo's test/ dir
+bb test-libs    # the test suite of every lib under libs/ that has one
+bb test-watch   # re-run the root tests on file changes
+bb ci           # everything CI runs: test-libs, install the templates, test
+```
+
+`bin/kaocha` is a convenience binstub that runs the root suite with Kaocha's
+bundled profiling plugin always on, so it reports the slowest tests:
+
+```
+bin/kaocha              # equivalent to clj -M:test --plugin profiling
+bin/kaocha --watch      # extra args are passed through to Kaocha
+```
+
+It is not the standard entry point — use `bb test` or `clj -M:test` for a
+normal run. Edit the script if you want different plugins.
+
 ## Documentation
 
 [Documentation can be found here](https://kit-clj.github.io)
