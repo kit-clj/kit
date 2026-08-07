@@ -1,3 +1,5 @@
+.PHONY: clean run repl test test-watch uberjar
+
 clean:
 	rm -rf target
 
@@ -9,6 +11,9 @@ repl:
 
 test:
 	clj -M:test
+
+test-watch:
+	clj -M:test:test-watch
 
 uberjar:
 	clj -T:build all

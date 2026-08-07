@@ -1,5 +1,23 @@
 # Change Log
 
+## 2026-08-07
+
+### Bug Fixes
+
+- Restore `clj -X:test` in generated projects — the Kaocha switch dropped the `:test` alias `:exec-fn` without replacing it. Also added to `kit-core` and `kit-generator`.
+- Stop copying local tooling caches into generated projects. The template copier only skipped hidden *files*, so a `.clj-kondo/.cache` directory sitting in the template resources was copied into the output (and would be baked into a released template jar).
+- Generated projects no longer ship a failing placeholder test — `core-test` asserted `(= 1 2)`, so a brand new project failed its test run out of the box.
+- Add `.PHONY` to the generated `Makefile`. `make test` collided with the `test/` directory and silently did nothing ("make: `test' is up to date").
+
+### Improvements
+
+- `bb test-libs` runs the test suite of every lib under `libs/` that has one, and `bb ci` now includes it. `kit-generator`'s 39 tests were never running: its `:test` alias had no `:extra-paths ["test"]`.
+- Replace the root `:watch-test` alias with `:test-watch`, meant to be combined with `:test` (`clj -M:test:test-watch`) so the deps aren't duplicated, and wire it up as `bb test-watch`. It previously declared both `:main-opts` and `:exec-args {:watch? true ...}`, so `clj -M:watch-test` silently ignored watch and fail-fast.
+- Generated projects get the same `:test-watch` alias, plus `bb test-watch` and `make test-watch`.
+- Generated `tests.edn` declares the project's actual `test/clj` and `src/clj` paths instead of relying on Kaocha's `test`/`src` defaults.
+- Drop `humane-test-output` from the generated `:dev` alias; its only activation site was the test alias `:main-opts` that the Kaocha switch removed.
+- Document how to run the tests, including what `bin/kaocha` hardcodes.
+
 ## 2026-08-05
 
 ### Improvements

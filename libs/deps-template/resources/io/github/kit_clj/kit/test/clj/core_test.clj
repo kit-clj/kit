@@ -1,8 +1,6 @@
 (ns <<ns-name>>.core-test
   (:require
-    [<<ns-name>>.test-utils :as utils]
-    [clojure.test :refer :all]))
+    [clojure.test :refer [deftest is]]))
 
 (deftest example-test
-  (is (= 1 2)))
-
+  (is (= 1 1)))

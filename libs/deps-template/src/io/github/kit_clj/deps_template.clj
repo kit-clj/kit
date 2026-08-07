@@ -66,7 +66,15 @@
 (defn windows-to-unix-slash [s]
   (clojure.string/replace s "\\" "/"))
 
-
+(defn- hidden-path?
+  "True if any segment of the relative path is hidden. File/isHidden only looks
+  at a file's own name, so it misses files living under a hidden directory,
+  e.g. the .clj-kondo/.cache and .lsp caches that local tooling drops into the
+  template dir. Those must never end up in a generated project."
+  [path]
+  (boolean
+    (some #(str/starts-with? % ".")
+          (str/split (windows-to-unix-slash (str path)) #"/"))))
 
 (defn- match-namespaced-file
   "If a file needs to include the namespace in its path, return a map with the
@@ -103,6 +111,7 @@
     (->> (file-seq (fs/file template-dir))
          (filter #(and (.isFile %) (not (.isHidden %))))
          (map #(fs/relativize template-dir %))
+         (remove hidden-path?)
          (filter #(not (contains? (set (excluded-template-files data)) (windows-to-unix-slash (str %)))))
          (map (fn [f]
                 {:src-path (str f)

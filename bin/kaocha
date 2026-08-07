@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
 
+# Runs the root test suite with Kaocha's bundled profiling plugin always on, so
+# it reports the slowest tests. The plugin list is hardcoded here on purpose --
+# this is a convenience binstub, not the standard entry point. Use `bb test` or
+# `clj -M:test` for a normal run, and edit this line to change the plugins.
+#
+# Extra args are passed through to Kaocha, e.g. `bin/kaocha --watch`.
+
 clojure -M:test --plugin profiling "$@"

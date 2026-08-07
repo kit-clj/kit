@@ -8,7 +8,12 @@
                    (println (str
                               ansi/bold-font "+ clojure " (str/join " " args)
                               ansi/reset-font))
-                   (apply clojure args)))
+                   (apply clojure args))
+                 (defn clj-in [dir & args]
+                   (println (str
+                              ansi/bold-font "+ (cd " dir ") clojure " (str/join " " args)
+                              ansi/reset-font))
+                   (apply clojure {:dir dir} args)))
          publish-local (clj "-T:build install-lib" :artifact-id lib)
          publish (clj "-T:build install-lib" :artifact-id lib :publish true)
          publish-all-local (clj "-T:build all" :publish false)
@@ -19,10 +24,18 @@
          ci {:doc "Run all CI tasks locally"
              :requires ([taoensso.timbre :as log])
              :task (do
+                     (log/info "bb run test-libs")
+                     (run 'test-libs)
                      (log/info "bb run publish-local deps-template")
                      (clj "-T:build install-lib" :artifact-id "deps-template")
                      (log/info "bb run publish-local lein-template")
                      (clj "-T:build install-lib" :artifact-id "lein-template")
                      (log/info "bb run test")
                      (run 'test))}
-         test (clj "-M:test")}}
+         test (clj "-M:test")
+         test-watch {:doc "Re-runs the tests on file changes"
+                     :task (clj "-M:test:test-watch")}
+         test-libs {:doc "Runs the test suite of every lib that has one"
+                    :requires ([babashka.fs :as fs])
+                    :task (doseq [tests-edn (sort (fs/glob "libs" "*/tests.edn"))]
+                            (clj-in (str (fs/parent tests-edn)) "-M:test"))}}}
