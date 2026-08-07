@@ -12,10 +12,18 @@
                    :extra-paths ["build"]
                    :ns-default build}
 
-           :test ;; added by neil
-           {:extra-paths ["test"]
-            :extra-deps {io.github.cognitect-labs/test-runner {:git/sha "dfb30dd6605cb6c0efc275e1df1736f6e90d4d73"}
-                         babashka/fs {:mvn/version "0.5.27"}
-                         babashka/process {:mvn/version "0.6.23"}}
-            :main-opts ["-m" "cognitect.test-runner"]
-            :exec-fn cognitect.test-runner.api/test}}}
+           :test {:extra-paths ["test"]
+                  :extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}
+                               babashka/fs {:mvn/version "0.5.27"}
+                               babashka/process {:mvn/version "0.6.23"}}
+                  :main-opts ["-m" "kaocha.runner"]
+                  :exec-fn kaocha.runner/exec-fn
+                  :exec-args {}}
+           :watch-test {:extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}
+                                     babashka/process {:mvn/version "0.6.23"}
+                                     babashka/fs {:mvn/version "0.5.27"}}
+                        :exec-fn kaocha.runner/exec-fn
+                        :exec-args {:watch? true
+                                    :skip-meta :slow
+                                    :fail-fast? true}
+                        :main-opts ["-m" "kaocha.runner"]}}}

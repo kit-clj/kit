@@ -1,5 +1,11 @@
 # Change Log
 
+## 2026-08-05
+
+### Improvements
+
+- Replace `cognitect/test-runner` with `lambdaisland/kaocha` as the test runner in the root project, libs, and the generated deps template. Add a `tests.edn` to the root project and generated projects, and drop `humane-test-output` (superseded by Kaocha's built-in diff output) from the generated project's test alias.
+
 ## 2026-02-18
 
 ### New Features

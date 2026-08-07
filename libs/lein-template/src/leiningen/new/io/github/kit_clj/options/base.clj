@@ -10,6 +10,7 @@
    ["Makefile" (helpers/render "Makefile" data)]
    ["bb.edn" (helpers/render "bb.edn" data)]
    ["deps.edn" (helpers/render "deps.edn" data)]
+   ["tests.edn" (helpers/render "tests.edn" data)]
    ["build.clj" (helpers/render "build.clj" data)]
    ["kit.edn" (helpers/render "kit.edn" data)]
    ["kit.git-config.edn" (helpers/render "kit.git-config.edn" data)]
