@@ -15,7 +15,7 @@
                     :task (clojure {:dir "."} "-M:dev:cider")}
 
          test      {:doc  "runs tests"
-                    :task (clojure {:dir "."} "-M:test")}
+                    :task (apply clojure {:dir "."} "-M:test" *command-line-args*)}
 
          test-watch {:doc  "re-runs tests on file changes"
                      :task (clojure {:dir "."} "-M:test:test-watch")}
