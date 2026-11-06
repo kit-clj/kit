@@ -1,5 +1,11 @@
 # Change Log
 
+## 2026-11-06
+
+### Bug Fixes
+
+- Generated projects no longer serve stale static resources after a deploy. Files under `resources/public` were sent with `Last-Modified` but no `Cache-Control`, so browsers cached them heuristically and kept using old JS, CSS and other assets for days. The new `wrap-static-cache-control` middleware marks such responses `no-cache`, so browsers revalidate and unchanged files cost a 304. Files with a content hash in their name (e.g. `app.<md5>.js`) are cached as `immutable` instead, since a new build gives them a new name. Responses that already set `Cache-Control` are left alone.
+
 ## 2026-08-07
 
 ### Bug Fixes
