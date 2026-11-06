@@ -20,4 +20,7 @@
                           (get-in (handler {}) [:headers "Cache-Control"])))
         last-modified {"Last-Modified" "Thu, 01 Jan 2026 00:00:00 GMT"}]
     (testing "static resources are revalidated"
-      (is (= "no-cache" (cache-control last-modified))))))
+      (is (= "no-cache" (cache-control last-modified))))
+    (testing "an explicit policy is kept"
+      (is (= "max-age=60"
+             (cache-control (assoc last-modified "Cache-Control" "max-age=60")))))))
