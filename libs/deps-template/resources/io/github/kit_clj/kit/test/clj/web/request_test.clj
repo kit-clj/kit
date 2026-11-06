@@ -23,4 +23,6 @@
       (is (= "no-cache" (cache-control last-modified))))
     (testing "an explicit policy is kept"
       (is (= "max-age=60"
-             (cache-control (assoc last-modified "Cache-Control" "max-age=60")))))))
+             (cache-control (assoc last-modified "Cache-Control" "max-age=60")))))
+    (testing "responses without Last-Modified are left alone"
+      (is (nil? (cache-control {}))))))
