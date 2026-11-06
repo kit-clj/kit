@@ -30,4 +30,6 @@
     (testing "fingerprinted static resources are immutable"
       (is (= "public, max-age=31536000, immutable"
              (cache-control "/js/app.0123456789ABCDEF0123456789ABCDEF.js"
-                            last-modified))))))
+                            last-modified))))
+    (testing "a short hex segment is not a fingerprint"
+      (is (= "no-cache" (cache-control "/js/app.1234abcd.js" last-modified))))))
