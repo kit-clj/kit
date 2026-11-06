@@ -14,15 +14,16 @@
       (is (= 200 (:status response))))))
 
 (deftest static-cache-control-test []
-  (let [cache-control (fn [headers]
+  (let [cache-control (fn [uri headers]
                         (let [handler (middleware/wrap-static-cache-control
                                         (constantly {:status 200 :headers headers}))]
-                          (get-in (handler {}) [:headers "Cache-Control"])))
+                          (get-in (handler {:uri uri}) [:headers "Cache-Control"])))
         last-modified {"Last-Modified" "Thu, 01 Jan 2026 00:00:00 GMT"}]
     (testing "static resources are revalidated"
-      (is (= "no-cache" (cache-control last-modified))))
+      (is (= "no-cache" (cache-control "/css/screen.css" last-modified))))
     (testing "an explicit policy is kept"
       (is (= "max-age=60"
-             (cache-control (assoc last-modified "Cache-Control" "max-age=60")))))
+             (cache-control "/css/screen.css"
+                            (assoc last-modified "Cache-Control" "max-age=60")))))
     (testing "responses without Last-Modified are left alone"
-      (is (nil? (cache-control {}))))))
+      (is (nil? (cache-control "/api/health" {}))))))
