@@ -26,4 +26,5 @@
       (cond-> ((:middleware env/defaults) handler opts)
               true (defaults/wrap-defaults
                      (assoc-in site-defaults-config [:session :store] cookie-store))
+              true wrap-revalidate-static
               <% if metrics? %> (some? metrics) (prometheus-ring/wrap-metrics metrics) <% endif %>))))
