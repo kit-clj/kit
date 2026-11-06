@@ -26,4 +26,8 @@
              (cache-control "/css/screen.css"
                             (assoc last-modified "Cache-Control" "max-age=60")))))
     (testing "responses without Last-Modified are left alone"
-      (is (nil? (cache-control "/api/health" {}))))))
+      (is (nil? (cache-control "/api/health" {}))))
+    (testing "fingerprinted static resources are immutable"
+      (is (= "public, max-age=31536000, immutable"
+             (cache-control "/js/app.0123456789ABCDEF0123456789ABCDEF.js"
+                            last-modified))))))
