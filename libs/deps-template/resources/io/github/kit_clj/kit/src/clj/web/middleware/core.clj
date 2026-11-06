@@ -6,7 +6,7 @@
     [ring.util.response :as response]<% if metrics? %>
     [iapetos.collector.ring :as prometheus-ring]<% endif %>))
 
-(defn wrap-revalidate-static
+(defn wrap-static-cache-control
   "Static resources carry a Last-Modified date but no Cache-Control header,
   so browsers cache them heuristically and keep serving stale files after a
   deploy. Require revalidation instead; unchanged files still cost only a
@@ -26,5 +26,5 @@
       (cond-> ((:middleware env/defaults) handler opts)
               true (defaults/wrap-defaults
                      (assoc-in site-defaults-config [:session :store] cookie-store))
-              true wrap-revalidate-static
+              true wrap-static-cache-control
               <% if metrics? %> (some? metrics) (prometheus-ring/wrap-metrics metrics) <% endif %>))))

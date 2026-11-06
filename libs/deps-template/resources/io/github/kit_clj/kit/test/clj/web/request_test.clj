@@ -13,9 +13,9 @@
           response (GET handler "/api/health" params headers)]
       (is (= 200 (:status response))))))
 
-(deftest revalidate-static-test []
+(deftest static-cache-control-test []
   (let [cache-control (fn [headers]
-                        (let [handler (middleware/wrap-revalidate-static
+                        (let [handler (middleware/wrap-static-cache-control
                                         (constantly {:status 200 :headers headers}))]
                           (get-in (handler {}) [:headers "Cache-Control"])))
         last-modified {"Last-Modified" "Thu, 01 Jan 2026 00:00:00 GMT"}]
